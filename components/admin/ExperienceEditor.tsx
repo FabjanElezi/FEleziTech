@@ -10,21 +10,49 @@ interface Props {
   onChanged: (items: Experience[]) => void;
 }
 
-const blank = (): Omit<Experience, 'id'> => ({
+interface FormState extends Omit<Experience, 'id'> {
+  location: string;
+}
+
+const blank = (): FormState => ({
   company: '',
   role: '',
   startDate: '',
   endDate: '',
   current: false,
   description: '',
+  location: '',
   type: 'education',
   order: 0,
 });
 
+// Parse "Location — Description" or plain "Description"
+function parseDescription(raw: string): { location: string; description: string } {
+  if (raw?.includes(' — ')) {
+    const idx = raw.indexOf(' — ');
+    return { location: raw.slice(0, idx).trim(), description: raw.slice(idx + 3).trim() };
+  }
+  return { location: '', description: raw ?? '' };
+}
+
+// Combine back to "Location — Description" or plain description
+function buildDescription(location: string, description: string): string {
+  const loc = location.trim();
+  const desc = description.trim();
+  if (loc && desc) return `${loc} — ${desc}`;
+  if (loc) return loc;
+  return desc;
+}
+
+function expToForm(exp: Experience): FormState {
+  const { location, description } = parseDescription(exp.description);
+  return { ...exp, location, description };
+}
+
 export default function ExperienceEditor({ experiences, onChanged }: Props) {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
-  const [form, setForm] = useState(blank());
+  const [form, setForm] = useState<FormState>(blank());
   const [saving, setSaving] = useState(false);
 
   function setField(key: string, val: unknown) {
@@ -38,7 +66,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
   }
 
   function startEdit(exp: Experience) {
-    setForm({ ...exp });
+    setForm(expToForm(exp));
     setEditing(exp.id);
     setAdding(false);
   }
@@ -46,13 +74,18 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
   async function save() {
     setSaving(true);
     try {
+      const { location, ...rest } = form;
+      const payload: Omit<Experience, 'id'> = {
+        ...rest,
+        description: buildDescription(location, form.description),
+      };
       if (editing) {
-        await updateExperience(editing, form);
-        onChanged(experiences.map((e) => (e.id === editing ? { ...e, ...form } : e)));
+        await updateExperience(editing, payload);
+        onChanged(experiences.map((e) => (e.id === editing ? { ...e, ...payload } : e)));
         toast.success('Updated');
       } else {
-        const id = await addExperience(form);
-        onChanged([...experiences, { ...form, id }]);
+        const id = await addExperience(payload);
+        onChanged([...experiences, { ...payload, id }]);
         toast.success('Added');
       }
       setAdding(false);
@@ -71,7 +104,6 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
     toast.success('Deleted');
   }
 
-  // Inline form JSX — NOT a nested component, so focus is never lost
   const entryForm = (
     <div className="glass rounded-xl p-5 space-y-4 mt-4">
       <div className="grid sm:grid-cols-2 gap-3">
@@ -106,6 +138,10 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
             Current
           </label>
         </div>
+      </div>
+      <div>
+        <label className="block text-xs text-slate-400 mb-1">Location</label>
+        <input className="input-dark" value={form.location} onChange={(e) => setField('location', e.target.value)} placeholder="Tirana, Albania" />
       </div>
       <div>
         <label className="block text-xs text-slate-400 mb-1">Description</label>

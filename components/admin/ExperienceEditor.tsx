@@ -48,8 +48,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
     try {
       if (editing) {
         await updateExperience(editing, form);
-        const updated = experiences.map((e) => (e.id === editing ? { ...e, ...form } : e));
-        onChanged(updated);
+        onChanged(experiences.map((e) => (e.id === editing ? { ...e, ...form } : e)));
         toast.success('Updated');
       } else {
         const id = await addExperience(form);
@@ -72,7 +71,8 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
     toast.success('Deleted');
   }
 
-  const EntryForm = () => (
+  // Inline form JSX — NOT a nested component, so focus is never lost
+  const entryForm = (
     <div className="glass rounded-xl p-5 space-y-4 mt-4">
       <div className="grid sm:grid-cols-2 gap-3">
         <div>
@@ -128,7 +128,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
         <Plus size={15} /> Add Entry
       </button>
 
-      {adding && <EntryForm />}
+      {adding && entryForm}
 
       <div className="space-y-3 mt-4">
         {experiences.map((exp) => (
@@ -142,23 +142,15 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                 </p>
               </div>
               <div className="flex gap-2 flex-shrink-0">
-                <button
-                  onClick={() => startEdit(exp)}
-                  className="p-1.5 text-slate-500 hover:text-white transition-colors"
-                  aria-label="Edit"
-                >
+                <button onClick={() => startEdit(exp)} className="p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
                   <Pencil size={14} />
                 </button>
-                <button
-                  onClick={() => remove(exp.id)}
-                  className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"
-                  aria-label="Delete"
-                >
+                <button onClick={() => remove(exp.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
                   <Trash2 size={14} />
                 </button>
               </div>
             </div>
-            {editing === exp.id && <EntryForm />}
+            {editing === exp.id && entryForm}
           </div>
         ))}
         {experiences.length === 0 && (

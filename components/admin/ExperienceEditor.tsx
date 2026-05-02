@@ -174,7 +174,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                 <p className="text-white text-sm font-medium">{exp.role}</p>
                 <p className="text-purple-400 text-xs">{exp.company}</p>
                 <p className="text-slate-600 text-xs mt-0.5">
-                  {exp.startDate} – {exp.current ? 'Present' : exp.endDate} · {exp.type}
+                  {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''} · {exp.type}
                 </p>
               </div>
               <div className="flex gap-2 flex-shrink-0">

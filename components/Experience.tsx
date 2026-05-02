@@ -43,7 +43,7 @@ export default function Experience({ experiences }: Props) {
                   <div className="flex flex-col items-end gap-1">
                     <span className="flex items-center gap-1 text-xs text-slate-500 whitespace-nowrap">
                       <Calendar size={11} />
-                      {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
+                      {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
                     </span>
                     {exp.description?.includes(' — ') && (
                       <span className="flex items-center gap-1 text-xs text-slate-600 whitespace-nowrap">

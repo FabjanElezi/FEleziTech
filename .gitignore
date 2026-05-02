@@ -3,3 +3,7 @@
 .env.local
 public/uploads/
 *.sql
+.vercel
+.env*.local
+.env.production
+scripts/

@@ -1,12 +1,15 @@
-import { Pool } from 'pg';
+import { neon } from '@neondatabase/serverless';
 
-const pool = new Pool({
-  host: process.env.DB_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT ?? 5432),
-  database: process.env.DB_NAME ?? 'portfolio',
-  user: process.env.DB_USER ?? 'postgres',
-  password: process.env.DB_PASSWORD ?? '',
-});
+let _sql: ReturnType<typeof neon> | null = null;
 
-export default pool;
-export const query = (text: string, params?: unknown[]) => pool.query(text, params);
+function getSql() {
+  if (!_sql) _sql = neon(process.env.DATABASE_URL!);
+  return _sql;
+}
+
+export async function query(text: string, params?: unknown[]) {
+  const sql = getSql();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result = await sql.query(text, params as any[]) as any;
+  return { rows: (result.rows ?? result) as Record<string, unknown>[] };
+}

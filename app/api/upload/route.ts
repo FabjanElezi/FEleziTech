@@ -1,5 +1,4 @@
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
 import { getAuthEmail } from '@/lib/auth-server';
 
 const ALLOWED_IMAGES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -29,12 +28,8 @@ export async function POST(req: Request) {
   }
 
   const ext = file.name.split('.').pop() ?? 'bin';
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder);
+  const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-  await mkdir(uploadDir, { recursive: true });
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadDir, filename), buffer);
-
-  return Response.json({ url: `/uploads/${folder}/${filename}` });
+  const blob = await put(filename, file, { access: 'public' });
+  return Response.json({ url: blob.url });
 }

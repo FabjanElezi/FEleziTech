@@ -7,7 +7,7 @@ interface Props { skills: Skill[] }
 const categoryLabels: Record<string, string> = {
   technical: 'Technical Skills',
   language: 'Languages',
-  tool: 'Tools & Software',
+  tool: 'Tools & Soft Skills',
 };
 
 const categoryColors: Record<string, string> = {

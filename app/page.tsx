@@ -6,6 +6,7 @@ import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import SectionDivider from '@/components/SectionDivider';
 import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
@@ -30,10 +31,15 @@ export default async function HomePage() {
       <div className="relative z-10">
         <Navbar />
         <Hero portfolio={portfolio} />
+        <SectionDivider />
         <About portfolio={portfolio} />
+        <SectionDivider flip />
         <Skills skills={skills} />
+        <SectionDivider />
         <Experience experiences={experiences} />
+        <SectionDivider flip />
         <Projects projects={projects} />
+        <SectionDivider />
         <Contact portfolio={portfolio} />
         <Footer />
       </div>

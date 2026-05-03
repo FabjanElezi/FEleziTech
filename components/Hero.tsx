@@ -35,24 +35,37 @@ export default function Hero({ portfolio }: Props) {
         }}
       />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
         {portfolio?.availableForWork !== false && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="mb-6"
           >
             <span
-              className="inline-block text-xs font-semibold tracking-widest uppercase mb-6 px-4 py-1.5 rounded-full"
-              style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#c4b5fd' }}
+              className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
+              style={{
+                background: 'rgba(124,58,237,0.12)',
+                border: '1px solid rgba(124,58,237,0.35)',
+                color: '#c4b5fd',
+                boxShadow: '0 0 20px rgba(124,58,237,0.12)',
+              }}
             >
+              <span className="relative flex h-2 w-2">
+                <span
+                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                  style={{ background: '#a78bfa' }}
+                />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#7c3aed' }} />
+              </span>
               Available for opportunities
             </span>
           </motion.div>
         )}
 
         <motion.h1
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-tight"
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}

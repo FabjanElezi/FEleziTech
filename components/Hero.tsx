@@ -155,8 +155,8 @@ export default function Hero({ portfolio }: Props) {
 
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-14 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 6, 0] }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
         >
           <ArrowDown size={18} className="text-slate-600" />

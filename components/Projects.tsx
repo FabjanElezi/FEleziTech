@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { ExternalLink, GitBranch, FileText, Star } from 'lucide-react';
 import { Project } from '@/types';
+import CornerAccents from '@/components/CornerAccents';
 
 interface Props { projects: Project[] }
 
@@ -47,12 +48,13 @@ export default function Projects({ projects }: Props) {
           {projects.map((project, i) => (
             <motion.article
               key={project.id}
-              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col"
+              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
             >
+              <CornerAccents />
               {/* Image */}
               {project.images?.[0] ? (
                 <div className="h-44 overflow-hidden">

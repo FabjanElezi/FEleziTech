@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Briefcase, GraduationCap, Calendar, MapPin } from 'lucide-react';
 import { Experience as Exp } from '@/types';
+import CornerAccents from '@/components/CornerAccents';
 
 interface Props { experiences: Exp[] }
 
@@ -34,7 +35,8 @@ export default function Experience({ experiences }: Props) {
                 className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 border-purple-500"
                 style={{ background: '#040712', transform: 'translateX(-50%)' }}
               />
-              <div className="glass rounded-xl p-4 sm:p-5 glass-hover">
+              <div className="glass rounded-xl p-4 sm:p-5 glass-hover relative">
+                <CornerAccents size={9} inset={7} />
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
                   <div className="min-w-0">
                     <p className="font-semibold text-white text-sm leading-snug">{exp.role}</p>

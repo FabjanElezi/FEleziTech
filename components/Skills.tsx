@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Skill } from '@/types';
+import CornerAccents from '@/components/CornerAccents';
 
 interface Props { skills: Skill[] }
 
@@ -26,6 +27,12 @@ const categoryText: Record<string, string> = {
   technical: '#c4b5fd',
   language: '#67e8f9',
   tool: '#6ee7b7',
+};
+
+const categoryCorner: Record<string, string> = {
+  technical: 'rgba(124,58,237,0.38)',
+  language: 'rgba(6,182,212,0.35)',
+  tool: 'rgba(16,185,129,0.35)',
 };
 
 export default function Skills({ skills }: Props) {
@@ -67,12 +74,13 @@ export default function Skills({ skills }: Props) {
             return (
               <motion.div
                 key={cat}
-                className="glass rounded-2xl p-6"
+                className="glass rounded-2xl p-6 relative"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4 }}
               >
+                <CornerAccents color={categoryCorner[cat]} />
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">
                   {categoryLabels[cat]}
                 </h3>

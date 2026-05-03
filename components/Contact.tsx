@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, Link, Send, MapPin } from 'lucide-react';
 import { Portfolio } from '@/types';
+import CornerAccents from '@/components/CornerAccents';
 
 interface Props { portfolio: Portfolio | null }
 
@@ -117,7 +118,7 @@ export default function Contact({ portfolio }: Props) {
 
           {/* CTA card */}
           <motion.div
-            className="glass rounded-2xl p-8 flex flex-col justify-center"
+            className="glass rounded-2xl p-8 flex flex-col justify-center relative"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -125,6 +126,7 @@ export default function Contact({ portfolio }: Props) {
               background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.04))',
             }}
           >
+            <CornerAccents />
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
               style={{ background: 'rgba(124,58,237,0.2)' }}

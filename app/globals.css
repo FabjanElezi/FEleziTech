@@ -61,6 +61,8 @@ html {
 
 body {
   background-color: var(--bg-primary);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.048) 1px, transparent 1px);
+  background-size: 28px 28px;
   color: #e2e8f0;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: hidden;

@@ -34,19 +34,19 @@ export default function Experience({ experiences }: Props) {
                 className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 border-purple-500"
                 style={{ background: '#040712', transform: 'translateX(-50%)' }}
               />
-              <div className="glass rounded-xl p-5 glass-hover">
-                <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
-                  <div>
-                    <p className="font-semibold text-white text-sm">{exp.role}</p>
+              <div className="glass rounded-xl p-4 sm:p-5 glass-hover">
+                <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-white text-sm leading-snug">{exp.role}</p>
                     <p className="text-purple-400 text-sm">{exp.company}</p>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="flex items-center gap-1 text-xs text-slate-500 whitespace-nowrap">
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <span className="flex items-center gap-1 text-xs text-slate-500">
                       <Calendar size={11} />
                       {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
                     </span>
                     {exp.description?.includes(' — ') && (
-                      <span className="flex items-center gap-1 text-xs text-slate-600 whitespace-nowrap">
+                      <span className="flex items-center gap-1 text-xs text-slate-600">
                         <MapPin size={11} />
                         {exp.description.split(' — ')[0]}
                       </span>
@@ -54,7 +54,7 @@ export default function Experience({ experiences }: Props) {
                   </div>
                 </div>
                 {exp.description && (
-                  <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+                  <p className="text-slate-500 text-xs sm:text-sm mt-2 leading-relaxed">
                     {exp.description.includes(' — ') ? exp.description.split(' — ').slice(1).join(' — ') : exp.description}
                   </p>
                 )}

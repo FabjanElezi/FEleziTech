@@ -42,7 +42,7 @@ export default function Navbar() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
+                className="nav-link text-sm text-slate-400 hover:text-white"
               >
                 {l.label}
               </a>

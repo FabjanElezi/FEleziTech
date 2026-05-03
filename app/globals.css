@@ -41,9 +41,12 @@ body {
 }
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(124, 58, 237, 0.4);
+  border-color: rgba(124, 58, 237, 0.45);
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124, 58, 237, 0.15);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(124, 58, 237, 0.15),
+    0 0 24px rgba(124, 58, 237, 0.1);
 }
 
 .gradient-text {
@@ -75,9 +78,12 @@ body {
   text-decoration: none;
 }
 .btn-primary:hover {
-  opacity: 0.9;
+  opacity: 0.92;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+  box-shadow:
+    0 8px 24px rgba(124, 58, 237, 0.45),
+    0 0 0 1px rgba(124, 58, 237, 0.3),
+    0 0 40px rgba(124, 58, 237, 0.15);
 }
 
 .btn-ghost {
@@ -98,6 +104,7 @@ body {
 .btn-ghost:hover {
   background: rgba(167, 139, 250, 0.1);
   border-color: #a78bfa;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
 }
 
 .tech-tag {
@@ -109,6 +116,32 @@ body {
   font-weight: 500;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+.tech-tag:hover {
+  background: rgba(124, 58, 237, 0.25);
+  border-color: rgba(124, 58, 237, 0.6);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+}
+
+/* Nav link glow on hover */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.6);
+}
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .input-dark {

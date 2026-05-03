@@ -114,8 +114,23 @@ export default function Hero({ portfolio }: Props) {
           )}
         </motion.div>
 
+        {/* Arrow pointing to social links */}
         <motion.div
-          className="flex items-center justify-center gap-5 mt-10"
+          className="flex justify-center mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+        >
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+          >
+            <ArrowDown size={16} className="text-slate-600" />
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="flex items-center justify-center gap-5 mt-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -153,14 +168,6 @@ export default function Hero({ portfolio }: Props) {
           )}
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <ArrowDown size={18} className="text-slate-600" />
-        </motion.div>
       </div>
     </section>
   );

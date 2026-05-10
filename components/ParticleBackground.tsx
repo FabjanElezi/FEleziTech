@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const COUNT = 38;
+const COUNT = 28;
 const COLORS = ['#22d3ee', '#22d3ee', '#22d3ee', '#7c3aed', '#a78bfa', '#ffffff'];
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
@@ -11,10 +11,10 @@ interface P { x: number; y: number; r: number; vx: number; vy: number; o: number
 function spawn(w: number, h: number): P {
   return {
     x: rand(0, w), y: rand(0, h),
-    r: rand(0.9, 2.4),
-    vx: rand(-0.1, 0.1),
-    vy: rand(-0.22, -0.06),
-    o: rand(0.12, 0.38),
+    r: rand(0.6, 1.4),
+    vx: rand(-0.04, 0.04),
+    vy: rand(-0.09, -0.03),
+    o: rand(0.06, 0.18),
     c: COLORS[Math.floor(Math.random() * COLORS.length)],
   };
 }

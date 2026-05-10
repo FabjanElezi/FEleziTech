@@ -79,21 +79,25 @@ export default function Experience({ experiences }: Props) {
                     onClick={() => openCertificate(exp.certificateUrl!)}
                     className="mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
                     style={{
-                      color: '#d4af37',
-                      background: 'rgba(212,175,55,0.12)',
-                      border: '1px solid rgba(212,175,55,0.4)',
+                      color: '#f0c040',
+                      background: 'rgba(212,175,55,0.15)',
+                      border: '1px solid rgba(212,175,55,0.55)',
                       borderRadius: '6px',
                       padding: '4px 10px',
+                      boxShadow: '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)',
+                      textShadow: '0 0 8px rgba(212,175,55,0.5)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(212,175,55,0.22)';
-                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.7)';
-                      e.currentTarget.style.boxShadow = '0 0 12px rgba(212,175,55,0.2)';
+                      e.currentTarget.style.background = 'rgba(212,175,55,0.25)';
+                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.85)';
+                      e.currentTarget.style.boxShadow = '0 0 18px rgba(212,175,55,0.45), 0 0 36px rgba(212,175,55,0.18)';
+                      e.currentTarget.style.textShadow = '0 0 12px rgba(212,175,55,0.8)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(212,175,55,0.12)';
-                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.background = 'rgba(212,175,55,0.15)';
+                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.55)';
+                      e.currentTarget.style.boxShadow = '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)';
+                      e.currentTarget.style.textShadow = '0 0 8px rgba(212,175,55,0.5)';
                     }}
                   >
                     <Award size={12} /> View Certificate

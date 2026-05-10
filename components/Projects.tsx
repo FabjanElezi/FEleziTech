@@ -1,15 +1,19 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ExternalLink, GitBranch, FileText, Star } from 'lucide-react';
+import { ExternalLink, GitBranch, FileText, Star, Database } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+
+const DbDesignLightbox = dynamic(() => import('@/components/DbDesignLightbox'), { ssr: false });
 
 interface Props { projects: Project[] }
 
 export default function Projects({ projects }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
+  const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
 
   useEffect(() => {
     setIsTouch(window.matchMedia('(hover: none)').matches);
@@ -157,6 +161,31 @@ export default function Projects({ projects }: Props) {
                       <GitBranch size={13} /> Code
                     </a>
                   )}
+                  {project.dbDesignImages && project.dbDesignImages.length > 0 && (
+                    <button
+                      onClick={() => setDbLightbox(project.dbDesignImages!)}
+                      className="flex items-center gap-1.5 text-xs font-semibold transition-all min-h-[36px]"
+                      style={{
+                        color: '#22d3ee',
+                        background: 'rgba(6,182,212,0.1)',
+                        border: '1px solid rgba(6,182,212,0.3)',
+                        borderRadius: '6px',
+                        padding: '4px 10px',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(6,182,212,0.2)';
+                        e.currentTarget.style.borderColor = 'rgba(6,182,212,0.6)';
+                        e.currentTarget.style.boxShadow = '0 0 12px rgba(6,182,212,0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(6,182,212,0.1)';
+                        e.currentTarget.style.borderColor = 'rgba(6,182,212,0.3)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      <Database size={12} /> DB Design
+                    </button>
+                  )}
                   {/* On touch devices show View Project here since hover overlay won't trigger */}
                   {isTouch && project.liveDemoLink && (
                     <a
@@ -194,6 +223,9 @@ export default function Projects({ projects }: Props) {
           ))}
         </div>
       </div>
+      {dbLightbox && (
+        <DbDesignLightbox images={dbLightbox} onClose={() => setDbLightbox(null)} />
+      )}
     </section>
   );
 }

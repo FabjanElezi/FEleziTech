@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
@@ -137,6 +138,38 @@ const CMT = ({ children }: { children: React.ReactNode }) => (
 const STR = ({ children }: { children: React.ReactNode }) => (
   <span style={{ color: '#a5d6ff' }}>{children}</span>
 );
+
+function SqlBlock() {
+  const lines: React.ReactNode[] = [
+    <><CMT>-- Core tables and constraints</CMT>{'\n'}</>,
+    <><KW>CREATE TABLE </KW><TBL>game</TBL>{' ('}{'\n'}</>,
+    <>{'    '}<COL>game_id</COL>{'     '}<STR>INT</STR><KW> AUTO_INCREMENT PRIMARY KEY</KW>{','}{'\n'}</>,
+    <>{'    '}<COL>title</COL>{'       '}<STR>VARCHAR(150)</STR><KW> NOT NULL</KW>{','}{'\n'}</>,
+    <>{'    '}<COL>release_year</COL>{'  '}<STR>YEAR</STR>{','}{'\n'}</>,
+    <>{'    '}<COL>developer_id</COL>{'  '}<STR>INT</STR>{'  '}<KW>REFERENCES </KW><TBL>developer</TBL>{'('}<COL>developer_id</COL>{')'},{'\n'}</>,
+    <>{'    '}<COL>publisher_id</COL>{'   '}<STR>INT</STR>{'  '}<KW>REFERENCES </KW><TBL>publisher</TBL>{'('}<COL>publisher_id</COL>{')'}{'\n'}</>,
+    <>{');\n\n'}</>,
+    <><CMT>-- M:N junction: a game can span many genres</CMT>{'\n'}</>,
+    <><KW>CREATE TABLE </KW><TBL>game_genre</TBL>{' ('}{'\n'}</>,
+    <>{'    '}<COL>game_id</COL>{'   '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),'}{'\n'}</>,
+    <>{'    '}<COL>genre_id</COL>{'  '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>genre</TBL>{'('}<COL>genre_id</COL>{'),'}{'\n'}</>,
+    <>{'    '}<KW>PRIMARY KEY</KW>{'('}<COL>game_id</COL>{', '}<COL>genre_id</COL>{')'}{'\n'}</>,
+    <>{');\n\n'}</>,
+    <><CMT>-- Borrow log: tracks who borrowed what and when</CMT>{'\n'}</>,
+    <><KW>CREATE TABLE </KW><TBL>borrowing</TBL>{' ('}{'\n'}</>,
+    <>{'    '}<COL>borrowing_id</COL>{'  '}<STR>INT</STR><KW>  AUTO_INCREMENT PRIMARY KEY</KW>{','}{'\n'}</>,
+    <>{'    '}<COL>user_id</COL>{'      '}<STR>INT</STR><KW>  NOT NULL REFERENCES </KW><TBL>user</TBL>{'('}<COL>user_id</COL>{'),'}{'\n'}</>,
+    <>{'    '}<COL>game_id</COL>{'      '}<STR>INT</STR><KW>  NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),'}{'\n'}</>,
+    <>{'    '}<COL>borrow_date</COL>{'  '}<STR>DATE</STR><KW>  NOT NULL</KW>{','}{'\n'}</>,
+    <>{'    '}<COL>return_date</COL>{'  '}<STR>DATE</STR>{'\n'}</>,
+    <>{');\n\n'}</>,
+    <><CMT>-- Performance indexes</CMT>{'\n'}</>,
+    <><KW>CREATE INDEX </KW><COL>idx_game_title</COL><KW>    ON </KW><TBL>game</TBL>{'('}<COL>title</COL>{');'}{'\n'}</>,
+    <><KW>CREATE INDEX </KW><COL>idx_borrowing_user</COL><KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>user_id</COL>{');'}{'\n'}</>,
+    <><KW>CREATE INDEX </KW><COL>idx_borrowing_game</COL><KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>game_id</COL>{');'}</>,
+  ];
+  return <>{lines.map((l, i) => <React.Fragment key={i}>{l}</React.Fragment>)}</>;
+}
 
 export default function VideoGameLibraryPage() {
   return (
@@ -286,33 +319,7 @@ export default function VideoGameLibraryPage() {
             <span style={{ fontSize: 12, color: '#8b949e', marginLeft: 8 }}>schema.sql</span>
           </div>
           <pre style={{ margin: 0, padding: '20px 24px', fontSize: 12, lineHeight: 1.8, overflowX: 'auto', color: '#e6edf3' }}>
-{/* line numbers + syntax-highlighted SQL */}
-<CMT>{'-- Core tables and constraints\n'}</CMT>
-<KW>CREATE TABLE </KW><TBL>game</TBL>{' (\n'}
-{'    '}<COL>game_id</COL>      {'      '}<STR>INT</STR>         <KW> AUTO_INCREMENT PRIMARY KEY</KW>{',\n'}
-{'    '}<COL>title</COL>        {'        '}<STR>VARCHAR(150)</STR><KW> NOT NULL</KW>{',\n'}
-{'    '}<COL>release_year</COL> {'  '}<STR>YEAR</STR>{',\n'}
-{'    '}<COL>developer_id</COL> {'  '}<STR>INT</STR>{'   '}<KW>REFERENCES </KW><TBL>developer</TBL>{'('}<COL>developer_id</COL>{'),\n'}
-{'    '}<COL>publisher_id</COL>  {'  '}<STR>INT</STR>{'   '}<KW>REFERENCES </KW><TBL>publisher</TBL>{'('}<COL>publisher_id</COL>{')\n'}
-{');\n\n'}
-<CMT>{'-- M:N junction: a game can span many genres\n'}</CMT>
-<KW>CREATE TABLE </KW><TBL>game_genre</TBL>{' (\n'}
-{'    '}<COL>game_id</COL>  {'  '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),\n'}
-{'    '}<COL>genre_id</COL> {'  '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>genre</TBL>{'('}<COL>genre_id</COL>{'),\n'}
-{'    '}<KW>PRIMARY KEY </KW>{'('}<COL>game_id</COL>{', '}<COL>genre_id</COL>{')\n'}
-{');\n\n'}
-<CMT>{'-- Borrow log: tracks who borrowed what and when\n'}</CMT>
-<KW>CREATE TABLE </KW><TBL>borrowing</TBL>{' (\n'}
-{'    '}<COL>borrowing_id</COL> {'  '}<STR>INT</STR>  <KW>  AUTO_INCREMENT PRIMARY KEY</KW>{',\n'}
-{'    '}<COL>user_id</COL>      {'      '}<STR>INT</STR>  <KW>  NOT NULL REFERENCES </KW><TBL>user</TBL>{'('}<COL>user_id</COL>{'),\n'}
-{'    '}<COL>game_id</COL>      {'      '}<STR>INT</STR>  <KW>  NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),\n'}
-{'    '}<COL>borrow_date</COL>  {'    '}<STR>DATE</STR> <KW>  NOT NULL</KW>{',\n'}
-{'    '}<COL>return_date</COL>  {'    '}<STR>DATE\n'}</STR>
-{');\n\n'}
-<CMT>{'-- Performance indexes\n'}</CMT>
-<KW>CREATE INDEX </KW><COL>idx_game_title</COL>    <KW> ON </KW><TBL>game</TBL>{'('}<COL>title</COL>{');\n'}
-<KW>CREATE INDEX </KW><COL>idx_borrowing_user</COL> <KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>user_id</COL>{');\n'}
-<KW>CREATE INDEX </KW><COL>idx_borrowing_game</COL> <KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>game_id</COL>{');'}
+            <SqlBlock />
           </pre>
         </div>
 

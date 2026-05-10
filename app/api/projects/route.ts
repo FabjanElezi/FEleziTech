@@ -29,8 +29,9 @@ export async function POST(req: Request) {
   const d = await req.json();
   const { rows } = await query(
     `INSERT INTO projects (title,description,tech_stack,images,github_link,live_demo_link,document_url,db_design_images,featured,"order")
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
-    [d.title,d.description,d.techStack,d.images,d.githubLink,d.liveDemoLink,d.documentUrl,d.dbDesignImages??[],d.featured,d.order]
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10) RETURNING id`,
+    [d.title,d.description,d.techStack,d.images,d.githubLink,d.liveDemoLink,d.documentUrl,
+     JSON.stringify(d.dbDesignImages??[]),d.featured,d.order]
   );
   return Response.json({ id: rows[0].id });
 }

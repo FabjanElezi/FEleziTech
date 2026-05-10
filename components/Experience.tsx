@@ -1,22 +1,24 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { Briefcase, GraduationCap, Calendar, MapPin, Award } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
-import CertificateLightbox from '@/components/CertificateLightbox';
+
+const CertificateLightbox = dynamic(() => import('@/components/CertificateLightbox'), { ssr: false });
 
 interface Props { experiences: Exp[] }
 
 export default function Experience({ experiences }: Props) {
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
-  function openCertificate(url: string) {
+  const openCertificate = useCallback((url: string) => {
     const isImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
       url.includes('blob.vercel-storage.com');
     if (isImage) setLightboxUrl(url);
     else window.open(url, '_blank', 'noopener,noreferrer');
-  }
+  }, []);
   const work = experiences.filter((e) => e.type === 'work');
   const education = experiences.filter((e) => e.type === 'education');
 

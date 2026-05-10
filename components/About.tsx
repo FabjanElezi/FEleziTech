@@ -36,12 +36,12 @@ export default function About({ portfolio }: Props) {
               <img
                 src={portfolio.profileImage}
                 alt={portfolio.name}
-                className="w-48 h-48 rounded-2xl object-cover object-top"
+                className="w-48 h-64 rounded-2xl object-cover object-top"
                 style={{ border: '2px solid rgba(124,58,237,0.3)', boxShadow: '0 0 32px rgba(124,58,237,0.12)' }}
               />
             ) : (
               <div
-                className="w-48 h-48 rounded-2xl flex items-center justify-center text-6xl font-bold"
+                className="w-48 h-64 rounded-2xl flex items-center justify-center text-6xl font-bold"
                 style={{
                   background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.1))',
                   border: '2px solid rgba(124,58,237,0.3)',

@@ -362,7 +362,23 @@ body {
     border-color: rgba(124,58,237,0.45);
     color: #a78bfa;
   }
+  .theme-toggle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
 }
+
+/* ── Mobile menu links ──────────────────────────────────────────────────── */
+
+.mobile-menu-link {
+  min-height: 44px;
+  font-size: 0.9375rem;
+  color: inherit;
+}
+.mobile-menu-link:active { color: #e2e8f0; }
+[data-theme="light"] .mobile-menu-link { color: #2e257a; }
+[data-theme="light"] .mobile-menu-link:active { color: #1a1040; }
 
 /* ── Mobile-friendly overrides ───────────────────────────────────────────── */
 
@@ -533,13 +549,17 @@ html.theme-transitioning *::after {
 [data-theme="light"] .nav-link.active   { color: #1a1040; }
 
 /* Text utility overrides */
-[data-theme="light"] .text-white         { color: #1a1040; }
-[data-theme="light"] .text-slate-300     { color: #2e257a; }
-[data-theme="light"] .text-slate-400     { color: #4338ca; }
-[data-theme="light"] .text-slate-500     { color: #6366f1; }
-[data-theme="light"] .text-slate-600     { color: #818cf8; }
-[data-theme="light"] .text-purple-400    { color: #7c3aed; }
-[data-theme="light"] .text-purple-400.text-sm.font-semibold { color: #7c3aed; }
+[data-theme="light"] .text-white                  { color: #1a1040; }
+[data-theme="light"] .text-slate-300              { color: #2e257a; }
+[data-theme="light"] .text-slate-400              { color: #4338ca; }
+[data-theme="light"] .text-slate-500              { color: #6366f1; }
+[data-theme="light"] .text-slate-600              { color: #818cf8; }
+[data-theme="light"] .text-purple-400             { color: #7c3aed; }
+/* Fix hover:text-white going invisible in light mode */
+[data-theme="light"] .hover\:text-white:hover     { color: #1a1040; }
+[data-theme="light"] .hover\:text-slate-300:hover { color: #2e257a; }
+/* Mobile menu border visible in light mode */
+[data-theme="light"] .border-white\/5             { border-color: rgba(99,102,241,0.18); }
 
 /* Section decorator lines */
 [data-theme="light"] .bg-purple-500 { background-color: #7c3aed; }

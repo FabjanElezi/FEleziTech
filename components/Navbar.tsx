@@ -87,10 +87,11 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="md:hidden flex items-center gap-2">
+        <div className="md:hidden flex items-center gap-1">
           <ThemeToggle />
           <button
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors flex items-center justify-center"
+            style={{ minWidth: 44, minHeight: 44 }}
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
@@ -101,12 +102,12 @@ export default function Navbar() {
 
       {open && (
         <div className="md:hidden glass border-t border-white/5">
-          <ul className="flex flex-col px-6 py-4 gap-4">
+          <ul className="flex flex-col px-6 py-2 gap-1">
             {links.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="text-slate-300 hover:text-white transition-colors"
+                  className="mobile-menu-link text-slate-300 transition-colors flex items-center"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
@@ -114,7 +115,12 @@ export default function Navbar() {
               </li>
             ))}
             <li>
-              <Link href="/admin" className="text-purple-400 text-sm" onClick={() => setOpen(false)}>
+              <Link
+                href="/admin"
+                className="text-purple-400 text-sm flex items-center"
+                style={{ minHeight: 44 }}
+                onClick={() => setOpen(false)}
+              >
                 Admin Panel →
               </Link>
             </li>

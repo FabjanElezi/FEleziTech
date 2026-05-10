@@ -14,8 +14,10 @@ export default function ThemeToggle() {
     const next = !dark;
     setDark(next);
     const theme = next ? 'dark' : 'light';
+    document.documentElement.classList.add('theme-transitioning');
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
+    setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 500);
   };
 
   return (

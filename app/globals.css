@@ -65,113 +65,211 @@ body {
   background-size: 28px 28px;
   color: #e2e8f0;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.65;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: #7c3aed55; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.6); }
+
+/* ── Glass ──────────────────────────────────────────────────────────────── */
 
 .glass {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 8px 32px rgba(0,0,0,0.2);
 }
 
 .glass-hover {
-  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 .glass-hover:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(124, 58, 237, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(124, 58, 237, 0.35);
+  transform: translateY(-4px);
   box-shadow:
-    0 0 0 1px rgba(124, 58, 237, 0.12),
-    0 0 18px rgba(124, 58, 237, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.25);
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 0 0 1px rgba(124,58,237,0.1),
+    0 0 24px rgba(124,58,237,0.08),
+    0 12px 36px rgba(0,0,0,0.35);
 }
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
 
 .gradient-text {
   background: linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(124,58,237,0.25));
 }
 
 .section-title {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
   color: white;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 0.65rem 1.6rem;
+  border-radius: 0.625rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.25s ease;
+  font-size: 0.875rem;
+  transition: box-shadow 0.25s ease, transform 0.2s cubic-bezier(0.22,1,0.36,1);
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.14) inset,
+    0 4px 14px rgba(124,58,237,0.32);
 }
 .btn-primary:hover {
-  opacity: 0.9;
+  transform: translateY(-2px) scale(1.018);
   box-shadow:
-    0 0 0 1px rgba(124, 58, 237, 0.35),
-    0 0 16px rgba(124, 58, 237, 0.3),
-    0 4px 16px rgba(124, 58, 237, 0.2);
+    0 1px 0 rgba(255,255,255,0.2) inset,
+    0 0 0 1px rgba(139,92,246,0.55),
+    0 0 22px rgba(124,58,237,0.55),
+    0 0 48px rgba(124,58,237,0.22),
+    0 8px 24px rgba(0,0,0,0.28);
 }
 
 .btn-ghost {
   background: transparent;
   color: #a78bfa;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 0.65rem 1.6rem;
+  border-radius: 0.625rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.25s ease;
-  border: 1px solid rgba(167, 139, 250, 0.3);
+  font-size: 0.875rem;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border: 1px solid rgba(167, 139, 250, 0.28);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
+  letter-spacing: 0.01em;
 }
 .btn-ghost:hover {
-  background: rgba(167, 139, 250, 0.08);
-  border-color: rgba(167, 139, 250, 0.6);
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(167, 139, 250, 0.65);
+  transform: translateY(-2px) scale(1.018);
   box-shadow:
-    0 0 0 1px rgba(167, 139, 250, 0.1),
-    0 0 14px rgba(167, 139, 250, 0.12);
+    0 0 0 1px rgba(167,139,250,0.18),
+    0 0 20px rgba(167,139,250,0.3),
+    0 0 40px rgba(167,139,250,0.1),
+    0 6px 20px rgba(0,0,0,0.18);
 }
+
+/* ── Tech tags ──────────────────────────────────────────────────────────── */
 
 .tech-tag {
   display: inline-block;
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
   color: #c4b5fd;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 500;
-  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.65rem;
   border-radius: 9999px;
-  transition: all 0.2s ease;
+  transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, transform 0.2s cubic-bezier(0.22,1,0.36,1);
 }
 .tech-tag:hover {
-  background: rgba(124, 58, 237, 0.25);
-  border-color: rgba(124, 58, 237, 0.6);
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+  background: rgba(124, 58, 237, 0.26);
+  border-color: rgba(124, 58, 237, 0.65);
+  box-shadow: 0 0 12px rgba(124,58,237,0.4), 0 0 26px rgba(124,58,237,0.14);
+  transform: translateY(-1px);
 }
 
-/* Nav link glow on hover */
+/* ── Skill chips ─────────────────────────────────────────────────────────── */
+
+.skill-chip {
+  display: inline-block;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, transform 0.2s cubic-bezier(0.22,1,0.36,1);
+  cursor: default;
+}
+.skill-chip:hover { transform: translateY(-1px); }
+
+.skill-chip-purple {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  color: #c4b5fd;
+}
+.skill-chip-purple:hover {
+  background: rgba(124, 58, 237, 0.28);
+  border-color: rgba(124, 58, 237, 0.65);
+  box-shadow: 0 0 14px rgba(124,58,237,0.42), 0 0 30px rgba(124,58,237,0.14);
+}
+
+.skill-chip-cyan {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #67e8f9;
+}
+.skill-chip-cyan:hover {
+  background: rgba(6, 182, 212, 0.28);
+  border-color: rgba(6, 182, 212, 0.65);
+  box-shadow: 0 0 14px rgba(6,182,212,0.42), 0 0 30px rgba(6,182,212,0.14);
+}
+
+.skill-chip-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+.skill-chip-emerald:hover {
+  background: rgba(16, 185, 129, 0.28);
+  border-color: rgba(16, 185, 129, 0.65);
+  box-shadow: 0 0 14px rgba(16,185,129,0.42), 0 0 30px rgba(16,185,129,0.14);
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+
+.navbar {
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+.navbar.scrolled {
+  background: rgba(4,7,18,0.88) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.05),
+    0 4px 32px rgba(0,0,0,0.35);
+}
+
 .nav-link {
   position: relative;
-  transition: color 0.2s ease;
+  transition: color 0.25s ease;
+  padding-bottom: 2px;
 }
 .nav-link::after {
   content: '';
@@ -181,31 +279,97 @@ body {
   width: 0;
   height: 1px;
   background: linear-gradient(90deg, #7c3aed, #06b6d4);
-  transition: width 0.3s ease;
-  box-shadow: 0 0 6px rgba(124, 58, 237, 0.6);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.5);
 }
-.nav-link:hover::after {
-  width: 100%;
-}
+.nav-link:hover { color: #e2e8f0; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.active { color: #e2e8f0; }
+.nav-link.active::after { width: 100%; }
+
+/* ── Inputs ─────────────────────────────────────────────────────────────── */
 
 .input-dark {
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.09);
   color: #e2e8f0;
   border-radius: 0.5rem;
-  padding: 0.6rem 0.9rem;
+  padding: 0.625rem 0.9rem;
   width: 100%;
-  font-size: 0.9rem;
-  transition: border-color 0.2s;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
 }
 .input-dark:focus {
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: rgba(124,58,237,0.6);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
 }
-.input-dark::placeholder { color: #4b5563; }
+.input-dark::placeholder { color: #374151; }
 
-/* Subtle section glow border */
+/* ── Social icon buttons (Hero) ─────────────────────────────────────────── */
+
+.social-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  color: #64748b;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease, transform 0.22s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+}
+.social-icon-btn:hover {
+  background: rgba(124,58,237,0.14);
+  border-color: rgba(124,58,237,0.45);
+  color: #a78bfa;
+  box-shadow: 0 0 18px rgba(124,58,237,0.18);
+  transform: translateY(-3px);
+}
+/* Touch: larger tap area, no hover animation */
+@media (hover: none) {
+  .social-icon-btn {
+    width: 52px;
+    height: 52px;
+  }
+  .social-icon-btn:active {
+    background: rgba(124,58,237,0.14);
+    border-color: rgba(124,58,237,0.45);
+    color: #a78bfa;
+  }
+}
+
+/* ── Mobile-friendly overrides ───────────────────────────────────────────── */
+
+/* Cards don't lift on touch — avoids sticky hover states */
+@media (hover: none) {
+  .glass-hover:hover {
+    transform: none;
+  }
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none;
+  }
+}
+
+/* Ensure tap targets are at least 44px */
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-ghost {
+    min-height: 44px;
+  }
+  .nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* ── Section glow border ────────────────────────────────────────────────── */
+
 .section-glow {
   position: relative;
 }

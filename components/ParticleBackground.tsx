@@ -1,21 +1,65 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const COUNT = 28;
-const COLORS = ['#22d3ee', '#22d3ee', '#22d3ee', '#7c3aed', '#a78bfa', '#ffffff'];
+// ── dots ────────────────────────────────────────────────────
+const DOT_COUNT  = 22;
+const DOT_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa','#ffffff'];
+
+// ── glyphs ──────────────────────────────────────────────────
+const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
+const GLYPH_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa'];
+const MAX_GLYPHS  = 6;
+const SPAWN_EVERY = 90; // frames between spawn attempts
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
+function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
 
-interface P { x: number; y: number; r: number; vx: number; vy: number; o: number; c: string; }
+interface Dot {
+  x: number; y: number; r: number;
+  vx: number; vy: number; o: number; c: string;
+}
 
-function spawn(w: number, h: number): P {
+type Phase = 'in' | 'hold' | 'out';
+interface Glyph {
+  sym: string; x: number; y: number;
+  vx: number; vy: number;
+  o: number; maxO: number;
+  phase: Phase; phaseT: number;
+  size: number; c: string;
+}
+
+function spawnDot(w: number, h: number): Dot {
   return {
     x: rand(0, w), y: rand(0, h),
-    r: rand(0.6, 1.4),
+    r: rand(0.6, 1.5),
     vx: rand(-0.04, 0.04),
     vy: rand(-0.09, -0.03),
     o: rand(0.06, 0.18),
-    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    c: pick(DOT_COLORS),
+  };
+}
+
+function spawnGlyph(w: number, h: number): Glyph {
+  // pick an edge: 0=top, 1=left, 2=right
+  const edge = Math.floor(Math.random() * 3);
+  let x: number, y: number, vx: number, vy: number;
+  if (edge === 0) {
+    x = rand(w * 0.1, w * 0.9); y = rand(-20, -5);
+    vx = rand(-0.12, 0.12); vy = rand(0.08, 0.18);
+  } else if (edge === 1) {
+    x = rand(-30, -8); y = rand(h * 0.05, h * 0.85);
+    vx = rand(0.06, 0.16); vy = rand(-0.08, 0.08);
+  } else {
+    x = rand(w + 8, w + 30); y = rand(h * 0.05, h * 0.85);
+    vx = rand(-0.16, -0.06); vy = rand(-0.08, 0.08);
+  }
+  return {
+    sym: pick(SYMS),
+    x, y, vx, vy,
+    o: 0, maxO: rand(0.12, 0.28),
+    phase: 'in', phaseT: 0,
+    size: Math.floor(rand(10, 15)),
+    c: pick(GLYPH_COLORS),
   };
 }
 
@@ -30,31 +74,64 @@ export default function ParticleBackground() {
 
     let raf: number;
     let W = 0, H = 0;
-    let particles: P[] = [];
+    let frame = 0;
+    let dots: Dot[] = [];
+    let glyphs: Glyph[] = [];
 
     function resize() {
       W = canvas!.width  = window.innerWidth;
       H = canvas!.height = window.innerHeight;
     }
-
     resize();
-    particles = Array.from({ length: COUNT }, () => spawn(W, H));
+    dots = Array.from({ length: DOT_COUNT }, () => spawnDot(W, H));
     window.addEventListener('resize', resize);
 
     function tick() {
       ctx!.clearRect(0, 0, W, H);
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.y < -4)    { p.y = H + 4; p.x = rand(0, W); }
-        if (p.x < -4)    { p.x = W + 4; }
-        if (p.x > W + 4) { p.x = -4;   }
+      frame++;
+
+      // ── dots ──
+      ctx!.font = '';
+      for (const d of dots) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.y < -4) { d.y = H + 4; d.x = rand(0, W); }
+        if (d.x < -4)    d.x = W + 4;
+        if (d.x > W + 4) d.x = -4;
         ctx!.beginPath();
-        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = p.c;
-        ctx!.globalAlpha = p.o;
+        ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx!.fillStyle = d.c;
+        ctx!.globalAlpha = d.o;
         ctx!.fill();
       }
+
+      // ── maybe spawn glyph ──
+      if (frame % SPAWN_EVERY === 0 && glyphs.length < MAX_GLYPHS) {
+        glyphs.push(spawnGlyph(W, H));
+      }
+
+      // ── glyphs ──
+      for (let i = glyphs.length - 1; i >= 0; i--) {
+        const g = glyphs[i];
+        g.x += g.vx; g.y += g.vy;
+        g.phaseT++;
+
+        if (g.phase === 'in') {
+          g.o = Math.min(g.o + g.maxO / 40, g.maxO);
+          if (g.phaseT >= 40) { g.phase = 'hold'; g.phaseT = 0; }
+        } else if (g.phase === 'hold') {
+          const holdFrames = 160 + Math.floor(rand(0, 120));
+          if (g.phaseT >= holdFrames) { g.phase = 'out'; g.phaseT = 0; }
+        } else {
+          g.o = Math.max(g.o - g.maxO / 50, 0);
+          if (g.o <= 0) { glyphs.splice(i, 1); continue; }
+        }
+
+        ctx!.globalAlpha = g.o;
+        ctx!.fillStyle = g.c;
+        ctx!.font = `${g.size}px ui-monospace, monospace`;
+        ctx!.fillText(g.sym, g.x, g.y);
+      }
+
       ctx!.globalAlpha = 1;
       raf = requestAnimationFrame(tick);
     }

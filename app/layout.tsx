@@ -14,14 +14,100 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+const BASE_URL = 'https://felezitech.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'Fabjan Elezi – Developer Portfolio',
-  description: 'Computer Science & Engineering Student. Building secure, scalable digital experiences.',
-  keywords: ['developer', 'portfolio', 'cybersecurity', 'computer science', 'Albania'],
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
+    template: '%s | FeleziTech',
+  },
+  description:
+    'Fabjan Elezi (FeleziTech) – Computer Science & Engineering student from Tirana, Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and Business Intelligence.',
+  keywords: [
+    'FeleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
+    'developer portfolio', 'computer science student', 'Albania developer',
+    'web developer', 'full stack developer', 'junior developer',
+    'cybersecurity', 'data analytics', 'business intelligence',
+    'React developer', 'Next.js developer', 'TypeScript',
+    'Tirana developer', 'felezitech.vercel.app',
+  ],
+  authors: [{ name: 'Fabjan Elezi', url: BASE_URL }],
+  creator: 'Fabjan Elezi',
+  publisher: 'Fabjan Elezi',
+  category: 'technology',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: BASE_URL,
+    siteName: 'FeleziTech',
+    title: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
+    description:
+      'Computer Science & Engineering student from Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and BI.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
+    description:
+      'Computer Science & Engineering student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
   },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${BASE_URL}/#person`,
+      name: 'Fabjan Elezi',
+      alternateName: 'FeleziTech',
+      url: BASE_URL,
+      jobTitle: 'Computer Science & Engineering Student',
+      description:
+        'Developer and CS student from Tirana, Albania. Focused on web development, cybersecurity, data analytics and business intelligence.',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Tirana',
+        addressCountry: 'AL',
+      },
+      knowsAbout: [
+        'Web Development', 'React', 'Next.js', 'TypeScript',
+        'Cybersecurity', 'Data Analytics', 'Business Intelligence',
+        'MySQL', 'Relational Databases',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: 'FeleziTech',
+      description: 'Developer portfolio of Fabjan Elezi',
+      publisher: { '@id': `${BASE_URL}/#person` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/?q={search_term_string}` },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -30,6 +116,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Set theme before paint to avoid flash */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();` }} />
+        {/* JSON-LD structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <CursorGlow />

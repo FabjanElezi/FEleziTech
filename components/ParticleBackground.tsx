@@ -8,8 +8,8 @@ const DOT_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa','#ffffff'];
 // ── glyphs ──────────────────────────────────────────────────
 const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
 const GLYPH_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa'];
-const MAX_GLYPHS  = 6;
-const SPAWN_EVERY = 90; // frames between spawn attempts
+const MAX_GLYPHS  = 12;
+const SPAWN_EVERY = 45; // frames between spawn attempts
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
 function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -40,18 +40,21 @@ function spawnDot(w: number, h: number): Dot {
 }
 
 function spawnGlyph(w: number, h: number): Glyph {
-  // pick an edge: 0=top, 1=left, 2=right
-  const edge = Math.floor(Math.random() * 3);
+  // pick an edge: 0=top, 1=left, 2=right, 3=bottom
+  const edge = Math.floor(Math.random() * 4);
   let x: number, y: number, vx: number, vy: number;
   if (edge === 0) {
-    x = rand(w * 0.1, w * 0.9); y = rand(-20, -5);
+    x = rand(w * 0.05, w * 0.95); y = rand(-20, -5);
     vx = rand(-0.12, 0.12); vy = rand(0.08, 0.18);
   } else if (edge === 1) {
-    x = rand(-30, -8); y = rand(h * 0.05, h * 0.85);
+    x = rand(-30, -8); y = rand(h * 0.05, h * 0.95);
     vx = rand(0.06, 0.16); vy = rand(-0.08, 0.08);
-  } else {
-    x = rand(w + 8, w + 30); y = rand(h * 0.05, h * 0.85);
+  } else if (edge === 2) {
+    x = rand(w + 8, w + 30); y = rand(h * 0.05, h * 0.95);
     vx = rand(-0.16, -0.06); vy = rand(-0.08, 0.08);
+  } else {
+    x = rand(w * 0.05, w * 0.95); y = rand(h + 5, h + 20);
+    vx = rand(-0.12, 0.12); vy = rand(-0.18, -0.08);
   }
   return {
     sym: pick(SYMS),

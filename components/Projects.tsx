@@ -1,5 +1,6 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { ExternalLink, GitBranch, FileText, Star } from 'lucide-react';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -7,6 +8,9 @@ import CornerAccents from '@/components/CornerAccents';
 interface Props { projects: Project[] }
 
 export default function Projects({ projects }: Props) {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [hovering, setHovering] = useState(false);
+
   if (projects.length === 0) {
     return (
       <section id="projects" className="py-24 px-6">
@@ -26,7 +30,34 @@ export default function Projects({ projects }: Props) {
   }
 
   return (
-    <section id="projects" className="py-24 px-6">
+    <section
+      id="projects"
+      className="py-24 px-6"
+      onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
+    >
+      <AnimatePresence>
+        {hovering && (
+          <motion.div
+            className="fixed pointer-events-none z-[9998]"
+            style={{ left: mouse.x, top: mouse.y, transform: 'translate(-50%, calc(-100% - 14px))' }}
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.75 }}
+            transition={{ duration: 0.15 }}
+          >
+            <span
+              className="text-xs font-semibold text-white px-3 py-1.5 rounded-full whitespace-nowrap block"
+              style={{
+                background: 'rgba(124,58,237,0.92)',
+                border: '1px solid rgba(167,139,250,0.4)',
+                boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
+              }}
+            >
+              View Project →
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -53,6 +84,8 @@ export default function Projects({ projects }: Props) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
+              onMouseEnter={() => setHovering(true)}
+              onMouseLeave={() => setHovering(false)}
             >
               <CornerAccents />
               {/* Image */}

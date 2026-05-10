@@ -7,6 +7,7 @@ function rowToExp(d: Record<string, unknown>) {
     startDate: d.start_date, endDate: d.end_date,
     current: d.current, description: d.description,
     order: d.order, type: d.type,
+    certificateUrl: d.certificate_url,
   };
 }
 
@@ -20,9 +21,9 @@ export async function POST(req: Request) {
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const d = await req.json();
   const { rows } = await query(
-    `INSERT INTO experience (company,role,start_date,end_date,current,description,"order",type)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id`,
-    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type]
+    `INSERT INTO experience (company,role,start_date,end_date,current,description,"order",type,certificate_url)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
+    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null]
   );
   return Response.json({ id: rows[0].id });
 }

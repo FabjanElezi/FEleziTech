@@ -59,6 +59,7 @@ export async function getExperiences(): Promise<Experience[]> {
       description: (d.description ?? '') as string,
       order: (d.order ?? 0) as number,
       type: d.type as 'work' | 'education',
+      certificateUrl: d.certificate_url as string | undefined,
     }));
   } catch { return []; }
 }

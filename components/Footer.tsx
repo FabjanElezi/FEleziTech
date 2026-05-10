@@ -5,7 +5,7 @@ export default function Footer() {
       style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
     >
       <p className="text-slate-600 text-sm">
-        © {new Date().getFullYear()} Fabjan Elezi. Built with Next.js &amp; Firebase.
+        © {new Date().getFullYear()} Fabjan Elezi. All rights reserved.
       </p>
     </footer>
   );

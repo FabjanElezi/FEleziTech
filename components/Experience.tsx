@@ -1,12 +1,15 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Briefcase, GraduationCap, Calendar, MapPin } from 'lucide-react';
+import { useState } from 'react';
+import { Briefcase, GraduationCap, Calendar, MapPin, Award } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import CertificateLightbox from '@/components/CertificateLightbox';
 
 interface Props { experiences: Exp[] }
 
 export default function Experience({ experiences }: Props) {
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const work = experiences.filter((e) => e.type === 'work');
   const education = experiences.filter((e) => e.type === 'education');
 
@@ -60,6 +63,14 @@ export default function Experience({ experiences }: Props) {
                     {exp.description.includes(' — ') ? exp.description.split(' — ').slice(1).join(' — ') : exp.description}
                   </p>
                 )}
+                {exp.certificateUrl && (
+                  <button
+                    onClick={() => setLightboxUrl(exp.certificateUrl!)}
+                    className="mt-3 flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <Award size={12} /> View Certificate
+                  </button>
+                )}
               </div>
             </motion.div>
           ))}
@@ -95,6 +106,9 @@ export default function Experience({ experiences }: Props) {
           {education.length > 0 && <Timeline items={education} label="Education" />}
         </div>
       </div>
+      {lightboxUrl && (
+        <CertificateLightbox url={lightboxUrl} onClose={() => setLightboxUrl(null)} />
+      )}
     </section>
   );
 }

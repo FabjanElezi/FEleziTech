@@ -1,6 +1,6 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ExternalLink, GitBranch, FileText, Star } from 'lucide-react';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -8,8 +8,12 @@ import CornerAccents from '@/components/CornerAccents';
 interface Props { projects: Project[] }
 
 export default function Projects({ projects }: Props) {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [hovering, setHovering] = useState(false);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches);
+  }, []);
 
   if (projects.length === 0) {
     return (
@@ -18,7 +22,7 @@ export default function Projects({ projects }: Props) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
             <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
-            <span className="w-8 h-px bg-purple-500" />
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-4">
             My <span className="gradient-text">Work</span>
@@ -30,34 +34,7 @@ export default function Projects({ projects }: Props) {
   }
 
   return (
-    <section
-      id="projects"
-      className="py-24 px-6"
-      onMouseMove={(e) => setMouse({ x: e.clientX, y: e.clientY })}
-    >
-      <AnimatePresence>
-        {hovering && (
-          <motion.div
-            className="fixed pointer-events-none z-[9998]"
-            style={{ left: mouse.x, top: mouse.y, transform: 'translate(-50%, calc(-100% - 14px))' }}
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.75 }}
-            transition={{ duration: 0.15 }}
-          >
-            <span
-              className="text-xs font-semibold text-white px-3 py-1.5 rounded-full whitespace-nowrap block"
-              style={{
-                background: 'rgba(124,58,237,0.92)',
-                border: '1px solid rgba(167,139,250,0.4)',
-                boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
-              }}
-            >
-              View Project →
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <section id="projects" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,7 +45,7 @@ export default function Projects({ projects }: Props) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
             <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
-            <span className="w-8 h-px bg-purple-500" />
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
             My <span className="gradient-text">Work</span>
@@ -84,29 +61,68 @@ export default function Projects({ projects }: Props) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              onMouseEnter={() => setHovering(true)}
-              onMouseLeave={() => setHovering(false)}
+              onMouseEnter={() => setHoveredId(project.id)}
+              onMouseLeave={() => setHoveredId(null)}
             >
               <CornerAccents />
-              {/* Image */}
-              {project.images?.[0] ? (
-                <div className="h-44 overflow-hidden">
+
+              {/* Image with hover overlay */}
+              <div className="h-44 relative overflow-hidden">
+                {project.images?.[0] ? (
                   <img
                     src={project.images[0]}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500"
+                    style={{ transform: hoveredId === project.id ? 'scale(1.07)' : 'scale(1)' }}
                   />
-                </div>
-              ) : (
-                <div
-                  className="h-44 flex items-center justify-center text-4xl"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.08))',
-                  }}
-                >
-                  {'</> '}
-                </div>
-              )}
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center text-4xl"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.08))',
+                    }}
+                  >
+                    {'</> '}
+                  </div>
+                )}
+
+                {/* Overlay — only over the image */}
+                <AnimatePresence>
+                  {hoveredId === project.id && project.liveDemoLink && (
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        background: 'rgba(4,7,18,0.6)',
+                        backdropFilter: 'blur(5px)',
+                        WebkitBackdropFilter: 'blur(5px)',
+                      }}
+                    >
+                      <motion.a
+                        href={project.liveDemoLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ scale: 0.82, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.82, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="flex items-center gap-2 font-bold text-white text-sm px-5 py-2.5 rounded-xl"
+                        style={{
+                          background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
+                          boxShadow: '0 0 24px rgba(124,58,237,0.55)',
+                          textDecoration: 'none',
+                        }}
+                        whileHover={{ scale: 1.07 }}
+                      >
+                        <ExternalLink size={15} /> View Project
+                      </motion.a>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-2 mb-2">
@@ -130,23 +146,34 @@ export default function Projects({ projects }: Props) {
                   </div>
                 )}
 
-                <div className="flex items-center gap-3 pt-3 border-t border-white/5">
+                <div className="flex items-center gap-3 pt-3 border-t border-white/5 flex-wrap">
                   {project.githubLink && (
                     <a
                       href={project.githubLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[36px]"
                     >
                       <GitBranch size={13} /> Code
                     </a>
                   )}
-                  {project.liveDemoLink && (
+                  {/* On touch devices show View Project here since hover overlay won't trigger */}
+                  {isTouch && project.liveDemoLink && (
                     <a
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors min-h-[36px]"
+                    >
+                      <ExternalLink size={13} /> View Project
+                    </a>
+                  )}
+                  {!isTouch && project.liveDemoLink && (
+                    <a
+                      href={project.liveDemoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 transition-colors min-h-[36px]"
                     >
                       <ExternalLink size={13} /> Live Demo
                     </a>
@@ -156,7 +183,7 @@ export default function Projects({ projects }: Props) {
                       href={project.documentUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto"
+                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[36px]"
                     >
                       <FileText size={13} /> Docs
                     </a>

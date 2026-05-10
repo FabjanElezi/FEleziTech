@@ -30,7 +30,7 @@ export default function Contact({ portfolio }: Props) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
             <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Contact</span>
-            <span className="w-8 h-px bg-purple-500" />
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-3">
             Let&apos;s <span className="gradient-text">Connect</span>
@@ -42,15 +42,14 @@ export default function Contact({ portfolio }: Props) {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Contact cards */}
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <a
+          <div className="space-y-4">
+            <motion.a
               href={`mailto:${email}`}
               className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
+              initial={{ opacity: 0, x: -18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0 }}
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -62,12 +61,16 @@ export default function Contact({ portfolio }: Props) {
                 <p className="text-xs text-slate-500 mb-0.5">Email</p>
                 <p className="text-white text-sm font-medium">{email}</p>
               </div>
-            </a>
+            </motion.a>
 
             {phone && (
-              <a
+              <motion.a
                 href={`tel:${phone}`}
                 className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
+                initial={{ opacity: 0, x: -18 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.08 }}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -79,15 +82,19 @@ export default function Contact({ portfolio }: Props) {
                   <p className="text-xs text-slate-500 mb-0.5">Phone</p>
                   <p className="text-white text-sm font-medium">{phone}</p>
                 </div>
-              </a>
+              </motion.a>
             )}
 
             {linkedin && (
-              <a
+              <motion.a
                 href={linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
+                initial={{ opacity: 0, x: -18 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.16 }}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -99,10 +106,16 @@ export default function Contact({ portfolio }: Props) {
                   <p className="text-xs text-slate-500 mb-0.5">LinkedIn</p>
                   <p className="text-white text-sm font-medium">Connect on LinkedIn</p>
                 </div>
-              </a>
+              </motion.a>
             )}
 
-            <div className="glass rounded-xl p-5 flex items-center gap-4">
+            <motion.div
+              className="glass rounded-xl p-5 flex items-center gap-4"
+              initial={{ opacity: 0, x: -18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.24 }}
+            >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{ background: 'rgba(16,185,129,0.15)' }}
@@ -113,8 +126,8 @@ export default function Contact({ portfolio }: Props) {
                 <p className="text-xs text-slate-500 mb-0.5">Location</p>
                 <p className="text-white text-sm font-medium">{location}</p>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* CTA card */}
           <motion.div
@@ -122,6 +135,7 @@ export default function Contact({ portfolio }: Props) {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22,1,0.36,1], delay: 0.1 }}
             style={{
               background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.04))',
             }}

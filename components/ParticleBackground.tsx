@@ -56,7 +56,7 @@ function spawnGlyph(w: number, h: number): Glyph {
   return {
     sym: pick(SYMS),
     x, y, vx, vy,
-    o: 0, maxO: rand(0.28, 0.52),
+    o: 0, maxO: rand(0.45, 0.68),
     phase: 'in', phaseT: 0,
     size: Math.floor(rand(12, 17)),
     c: pick(GLYPH_COLORS),

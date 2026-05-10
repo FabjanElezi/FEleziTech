@@ -17,7 +17,7 @@ export default function Projects({ projects }: Props) {
 
   if (projects.length === 0) {
     return (
-      <section id="projects" className="py-24 px-6">
+      <section id="projects" className="py-32 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
@@ -34,13 +34,13 @@ export default function Projects({ projects }: Props) {
   }
 
   return (
-    <section id="projects" className="py-24 px-6">
+    <section id="projects" className="py-32 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
@@ -52,7 +52,7 @@ export default function Projects({ projects }: Props) {
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, i) => (
             <motion.article
               key={project.id}
@@ -111,8 +111,8 @@ export default function Projects({ projects }: Props) {
                         transition={{ duration: 0.18 }}
                         className="flex items-center gap-2 font-bold text-white text-sm px-5 py-2.5 rounded-xl"
                         style={{
-                          background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-                          boxShadow: '0 0 24px rgba(124,58,237,0.55)',
+                          background: 'linear-gradient(135deg, #7c3aed, #0891b2)',
+                          boxShadow: '0 0 24px rgba(6,182,212,0.45)',
                           textDecoration: 'none',
                         }}
                         whileHover={{ scale: 1.07 }}

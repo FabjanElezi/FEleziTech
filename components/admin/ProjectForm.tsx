@@ -19,6 +19,7 @@ const empty = {
   githubLink: '',
   liveDemoLink: '',
   documentUrl: '',
+  dbDesignImages: [] as string[],
   featured: false,
   order: 0,
 };
@@ -53,6 +54,23 @@ export default function ProjectForm({ project, onDone }: Props) {
       const urls = await Promise.all(files.map((f) => uploadFile(f, 'projects')));
       set('images', [...form.images, ...urls]);
       toast.success('Images uploaded');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  }
+
+  async function handleDbDesignUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setUploading(true);
+    try {
+      for (const f of files) validateFile(f, 'image');
+      const urls = await Promise.all(files.map((f) => uploadFile(f, 'projects')));
+      set('dbDesignImages', [...(form.dbDesignImages ?? []), ...urls]);
+      toast.success('DB design images uploaded');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -209,6 +227,45 @@ export default function ProjectForm({ project, onDone }: Props) {
                 <button
                   type="button"
                   onClick={() => set('images', form.images.filter((_, j) => j !== i))}
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600"
+                >
+                  <X size={10} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* DB Design Images */}
+      <div>
+        <label className="block text-sm text-slate-400 mb-1">DB Design Images <span className="text-slate-600">(optional — shows SQL button on card)</span></label>
+        <label
+          className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl cursor-pointer transition-colors"
+          style={{ border: '1px dashed rgba(6,182,212,0.25)', background: 'rgba(6,182,212,0.03)' }}
+        >
+          {uploading ? (
+            <Loader2 size={20} className="text-cyan-400 animate-spin" />
+          ) : (
+            <Upload size={20} className="text-slate-500" />
+          )}
+          <span className="text-xs text-slate-500">Upload DB schema screenshots (JPG, PNG, WebP)</span>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleDbDesignUpload}
+            className="hidden"
+          />
+        </label>
+        {(form.dbDesignImages ?? []).length > 0 && (
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {(form.dbDesignImages ?? []).map((url, i) => (
+              <div key={i} className="relative">
+                <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg" style={{ border: '1px solid rgba(6,182,212,0.3)' }} />
+                <button
+                  type="button"
+                  onClick={() => set('dbDesignImages', (form.dbDesignImages ?? []).filter((_, j) => j !== i))}
                   className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600"
                 >
                   <X size={10} />

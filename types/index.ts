@@ -24,6 +24,7 @@ export interface Project {
   githubLink?: string;
   liveDemoLink?: string;
   documentUrl?: string;
+  dbDesignImages?: string[];
   featured: boolean;
   order: number;
   createdAt: string;

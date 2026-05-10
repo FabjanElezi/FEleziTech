@@ -10,6 +10,13 @@ interface Props { experiences: Exp[] }
 
 export default function Experience({ experiences }: Props) {
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+
+  function openCertificate(url: string) {
+    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
+      url.includes('blob.vercel-storage.com');
+    if (isImage) setLightboxUrl(url);
+    else window.open(url, '_blank', 'noopener,noreferrer');
+  }
   const work = experiences.filter((e) => e.type === 'work');
   const education = experiences.filter((e) => e.type === 'education');
 
@@ -22,7 +29,9 @@ export default function Experience({ experiences }: Props) {
       <div className="relative">
         <div
           className="absolute left-0 top-0 bottom-0 w-px"
-          style={{ background: 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
+          style={{ background: label === 'Education'
+            ? 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)'
+            : 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
         />
         <div className="space-y-8 pl-6">
           {items.map((exp, i) => (
@@ -35,7 +44,7 @@ export default function Experience({ experiences }: Props) {
               className="relative"
             >
               <div
-                className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 border-purple-500"
+                className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 ${label === 'Education' ? 'border-cyan-400' : 'border-purple-500'}`}
                 style={{ background: '#040712', transform: 'translateX(-50%)' }}
               />
               <div className="glass rounded-xl p-4 sm:p-5 glass-hover relative">
@@ -65,8 +74,25 @@ export default function Experience({ experiences }: Props) {
                 )}
                 {exp.certificateUrl && (
                   <button
-                    onClick={() => setLightboxUrl(exp.certificateUrl!)}
-                    className="mt-3 flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                    onClick={() => openCertificate(exp.certificateUrl!)}
+                    className="mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
+                    style={{
+                      color: '#d4af37',
+                      background: 'rgba(212,175,55,0.12)',
+                      border: '1px solid rgba(212,175,55,0.4)',
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(212,175,55,0.22)';
+                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.7)';
+                      e.currentTarget.style.boxShadow = '0 0 12px rgba(212,175,55,0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(212,175,55,0.12)';
+                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.4)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                   >
                     <Award size={12} /> View Certificate
                   </button>
@@ -91,7 +117,7 @@ export default function Experience({ experiences }: Props) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
             <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Timeline</span>
-            <span className="w-8 h-px bg-purple-500" />
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
             Experience &amp; <span className="gradient-text">Education</span>
@@ -101,7 +127,7 @@ export default function Experience({ experiences }: Props) {
         <div className="space-y-12 max-w-3xl mx-auto">
           {work.length > 0 && <Timeline items={work} label="Work" />}
           {work.length > 0 && education.length > 0 && (
-            <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.3), transparent)' }} />
+            <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
           {education.length > 0 && <Timeline items={education} label="Education" />}
         </div>

@@ -60,7 +60,7 @@ export default function Skills({ skills }: Props) {
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
             <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Skills</span>
-            <span className="w-8 h-px bg-purple-500" />
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
             What I <span className="gradient-text">Work With</span>
@@ -68,17 +68,17 @@ export default function Skills({ skills }: Props) {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(['technical', 'language', 'tool'] as const).map((cat) => {
+          {(['technical', 'language', 'tool'] as const).map((cat, i) => {
             const items = grouped[cat] || [];
             if (items.length === 0) return null;
             return (
               <motion.div
                 key={cat}
-                className="glass rounded-2xl p-6 relative"
-                initial={{ opacity: 0, y: 20 }}
+                className="glass rounded-2xl p-6 relative glass-hover"
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
               >
                 <CornerAccents color={categoryCorner[cat]} />
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">

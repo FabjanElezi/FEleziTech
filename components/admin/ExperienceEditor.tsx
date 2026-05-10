@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { addExperience, updateExperience, deleteExperience } from '@/lib/firestore';
 import { Experience } from '@/types';
-import { Plus, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Check, X, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Props {
@@ -24,6 +24,7 @@ const blank = (): FormState => ({
   location: '',
   type: 'education',
   order: 0,
+  certificateUrl: '',
 });
 
 // Parse "Location — Description" or plain "Description"
@@ -54,6 +55,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(blank());
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   function setField(key: string, val: unknown) {
     setForm((f) => ({ ...f, [key]: val }));
@@ -69,6 +71,24 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
     setForm(expToForm(exp));
     setEditing(exp.id);
     setAdding(false);
+  }
+
+  async function uploadCertificate(file: File) {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('folder', 'certificates');
+      const r = await fetch('/api/upload', { method: 'POST', body: fd });
+      if (!r.ok) throw new Error('Upload failed');
+      const { url } = await r.json();
+      setField('certificateUrl', url);
+      toast.success('Certificate uploaded');
+    } catch {
+      toast.error('Upload failed');
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function save() {
@@ -146,6 +166,29 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
       <div>
         <label className="block text-xs text-slate-400 mb-1">Description</label>
         <textarea className="input-dark min-h-[70px] resize-y" value={form.description} onChange={(e) => setField('description', e.target.value)} />
+      </div>
+      <div>
+        <label className="block text-xs text-slate-400 mb-1">Certificate (URL or upload image)</label>
+        <div className="flex gap-2">
+          <input
+            className="input-dark flex-1"
+            value={form.certificateUrl || ''}
+            onChange={(e) => setField('certificateUrl', e.target.value)}
+            placeholder="https://... or upload below"
+          />
+          <label className="btn-ghost text-xs py-1.5 px-3 cursor-pointer flex items-center gap-1.5 shrink-0">
+            {uploading
+              ? <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              : <><Upload size={13} /> Upload</>
+            }
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCertificate(f); }}
+            />
+          </label>
+        </div>
       </div>
       <div className="flex gap-2">
         <button type="button" onClick={save} disabled={saving} className="btn-primary text-sm py-1.5">

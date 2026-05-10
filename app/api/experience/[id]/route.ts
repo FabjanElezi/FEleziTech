@@ -8,8 +8,8 @@ export async function PUT(req: Request, ctx: { params: Promise<{ id: string }> }
   const d = await req.json();
   await query(
     `UPDATE experience SET company=$1,role=$2,start_date=$3,end_date=$4,current=$5,
-     description=$6,"order"=$7,type=$8 WHERE id=$9`,
-    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,id]
+     description=$6,"order"=$7,type=$8,certificate_url=$9 WHERE id=$10`,
+    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null,id]
   );
   return Response.json({ ok: true });
 }

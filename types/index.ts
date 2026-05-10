@@ -39,6 +39,7 @@ export interface Experience {
   description: string;
   order: number;
   type: 'work' | 'education';
+  certificateUrl?: string;
 }
 
 export interface Skill {

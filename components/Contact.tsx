@@ -36,7 +36,7 @@ export default function Contact({ portfolio }: Props) {
             Let&apos;s <span className="gradient-text">Connect</span>
           </h2>
           <p className="text-slate-500 text-base max-w-md mx-auto">
-            Open to internship and junior developer opportunities. Don&apos;t hesitate to reach out.
+            Open to internships and junior opportunities in IT, Data Analytics and Business Intelligence. Feel free to reach out.
           </p>
         </motion.div>
 

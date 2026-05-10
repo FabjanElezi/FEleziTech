@@ -1,7 +1,7 @@
 'use client';
-import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { ArrowLeft, Database, GitBranch } from 'lucide-react';
 
 const MermaidDiagram = dynamic(() => import('@/components/MermaidDiagram'), { ssr: false });
 
@@ -61,265 +61,169 @@ const ER_DIAGRAM = `erDiagram
 `;
 
 const TABLES = [
-  {
-    name: 'game',
-    cols: [
-      { name: 'game_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'title', type: 'VARCHAR(150)', note: 'NOT NULL' },
-      { name: 'release_year', type: 'YEAR', note: '' },
-      { name: 'developer_id', type: 'INT', note: 'FK → developer' },
-      { name: 'publisher_id', type: 'INT', note: 'FK → publisher' },
-    ],
-  },
-  {
-    name: 'user',
-    cols: [
-      { name: 'user_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'username', type: 'VARCHAR(50)', note: 'UNIQUE, NOT NULL' },
-      { name: 'email', type: 'VARCHAR(100)', note: 'UNIQUE, NOT NULL' },
-    ],
-  },
-  {
-    name: 'borrowing',
-    cols: [
-      { name: 'borrowing_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'user_id', type: 'INT', note: 'FK → user, NOT NULL' },
-      { name: 'game_id', type: 'INT', note: 'FK → game, NOT NULL' },
-      { name: 'borrow_date', type: 'DATE', note: 'NOT NULL' },
-      { name: 'return_date', type: 'DATE', note: 'nullable' },
-    ],
-  },
-  {
-    name: 'developer',
-    cols: [
-      { name: 'developer_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'name', type: 'VARCHAR(100)', note: 'NOT NULL' },
-      { name: 'country', type: 'VARCHAR(50)', note: '' },
-    ],
-  },
-  {
-    name: 'publisher',
-    cols: [
-      { name: 'publisher_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'name', type: 'VARCHAR(100)', note: 'NOT NULL' },
-      { name: 'country', type: 'VARCHAR(50)', note: '' },
-    ],
-  },
-  {
-    name: 'genre',
-    cols: [
-      { name: 'genre_id', type: 'INT', note: 'PK, AUTO_INCREMENT' },
-      { name: 'name', type: 'VARCHAR(50)', note: 'UNIQUE, NOT NULL' },
-    ],
-  },
+  { name: 'developer', color: 'purple', desc: 'Game studio info' },
+  { name: 'publisher', color: 'cyan', desc: 'Publishing company info' },
+  { name: 'genre', color: 'emerald', desc: 'Game categories' },
+  { name: 'platform', color: 'amber', desc: 'Gaming platforms' },
+  { name: 'game', color: 'purple', desc: 'Core game records' },
+  { name: 'user', color: 'cyan', desc: 'Library members' },
+  { name: 'game_genre', color: 'slate', desc: 'M:N game ↔ genre' },
+  { name: 'game_platform', color: 'slate', desc: 'M:N game ↔ platform' },
+  { name: 'borrowing', color: 'emerald', desc: 'Borrow & return log' },
 ];
 
-const RELATIONS = [
-  { from: 'game', to: 'developer', type: 'MANY → ONE', via: 'developer_id', label: 'A game has one developer' },
-  { from: 'game', to: 'publisher', type: 'MANY → ONE', via: 'publisher_id', label: 'A game has one publisher' },
-  { from: 'game', to: 'genre', type: 'MANY ↔ MANY', via: 'game_genre', label: 'Junction table, composite PK' },
-  { from: 'game', to: 'platform', type: 'MANY ↔ MANY', via: 'game_platform', label: 'Junction table, composite PK' },
-  { from: 'user', to: 'borrowing', type: 'ONE → MANY', via: 'user_id', label: 'A user can borrow many games' },
-  { from: 'game', to: 'borrowing', type: 'ONE → MANY', via: 'game_id', label: 'A game can be borrowed many times' },
-];
-
-const KW = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ color: '#ff7b72' }}>{children}</span>
-);
-const TBL = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ color: '#ffa657' }}>{children}</span>
-);
-const COL = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ color: '#79c0ff' }}>{children}</span>
-);
-const CMT = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ color: '#8b949e' }}>{children}</span>
-);
-const STR = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ color: '#a5d6ff' }}>{children}</span>
-);
-
-function SqlBlock() {
-  const lines: React.ReactNode[] = [
-    <><CMT>-- Core tables and constraints</CMT>{'\n'}</>,
-    <><KW>CREATE TABLE </KW><TBL>game</TBL>{' ('}{'\n'}</>,
-    <>{'    '}<COL>game_id</COL>{'     '}<STR>INT</STR><KW> AUTO_INCREMENT PRIMARY KEY</KW>{','}{'\n'}</>,
-    <>{'    '}<COL>title</COL>{'       '}<STR>VARCHAR(150)</STR><KW> NOT NULL</KW>{','}{'\n'}</>,
-    <>{'    '}<COL>release_year</COL>{'  '}<STR>YEAR</STR>{','}{'\n'}</>,
-    <>{'    '}<COL>developer_id</COL>{'  '}<STR>INT</STR>{'  '}<KW>REFERENCES </KW><TBL>developer</TBL>{'('}<COL>developer_id</COL>{')'},{'\n'}</>,
-    <>{'    '}<COL>publisher_id</COL>{'   '}<STR>INT</STR>{'  '}<KW>REFERENCES </KW><TBL>publisher</TBL>{'('}<COL>publisher_id</COL>{')'}{'\n'}</>,
-    <>{');\n\n'}</>,
-    <><CMT>-- M:N junction: a game can span many genres</CMT>{'\n'}</>,
-    <><KW>CREATE TABLE </KW><TBL>game_genre</TBL>{' ('}{'\n'}</>,
-    <>{'    '}<COL>game_id</COL>{'   '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),'}{'\n'}</>,
-    <>{'    '}<COL>genre_id</COL>{'  '}<STR>INT</STR><KW> NOT NULL REFERENCES </KW><TBL>genre</TBL>{'('}<COL>genre_id</COL>{'),'}{'\n'}</>,
-    <>{'    '}<KW>PRIMARY KEY</KW>{'('}<COL>game_id</COL>{', '}<COL>genre_id</COL>{')'}{'\n'}</>,
-    <>{');\n\n'}</>,
-    <><CMT>-- Borrow log: tracks who borrowed what and when</CMT>{'\n'}</>,
-    <><KW>CREATE TABLE </KW><TBL>borrowing</TBL>{' ('}{'\n'}</>,
-    <>{'    '}<COL>borrowing_id</COL>{'  '}<STR>INT</STR><KW>  AUTO_INCREMENT PRIMARY KEY</KW>{','}{'\n'}</>,
-    <>{'    '}<COL>user_id</COL>{'      '}<STR>INT</STR><KW>  NOT NULL REFERENCES </KW><TBL>user</TBL>{'('}<COL>user_id</COL>{'),'}{'\n'}</>,
-    <>{'    '}<COL>game_id</COL>{'      '}<STR>INT</STR><KW>  NOT NULL REFERENCES </KW><TBL>game</TBL>{'('}<COL>game_id</COL>{'),'}{'\n'}</>,
-    <>{'    '}<COL>borrow_date</COL>{'  '}<STR>DATE</STR><KW>  NOT NULL</KW>{','}{'\n'}</>,
-    <>{'    '}<COL>return_date</COL>{'  '}<STR>DATE</STR>{'\n'}</>,
-    <>{');\n\n'}</>,
-    <><CMT>-- Performance indexes</CMT>{'\n'}</>,
-    <><KW>CREATE INDEX </KW><COL>idx_game_title</COL><KW>    ON </KW><TBL>game</TBL>{'('}<COL>title</COL>{');'}{'\n'}</>,
-    <><KW>CREATE INDEX </KW><COL>idx_borrowing_user</COL><KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>user_id</COL>{');'}{'\n'}</>,
-    <><KW>CREATE INDEX </KW><COL>idx_borrowing_game</COL><KW> ON </KW><TBL>borrowing</TBL>{'('}<COL>game_id</COL>{');'}</>,
-  ];
-  return <>{lines.map((l, i) => <React.Fragment key={i}>{l}</React.Fragment>)}</>;
-}
+const colorMap: Record<string, string> = {
+  purple:  'rgba(124,58,237,0.15)',
+  cyan:    'rgba(6,182,212,0.12)',
+  emerald: 'rgba(16,185,129,0.12)',
+  amber:   'rgba(245,158,11,0.12)',
+  slate:   'rgba(100,116,139,0.12)',
+};
+const borderMap: Record<string, string> = {
+  purple:  'rgba(124,58,237,0.35)',
+  cyan:    'rgba(6,182,212,0.35)',
+  emerald: 'rgba(16,185,129,0.35)',
+  amber:   'rgba(245,158,11,0.35)',
+  slate:   'rgba(100,116,139,0.3)',
+};
+const textMap: Record<string, string> = {
+  purple:  '#c4b5fd',
+  cyan:    '#67e8f9',
+  emerald: '#6ee7b7',
+  amber:   '#fcd34d',
+  slate:   '#94a3b8',
+};
 
 export default function VideoGameLibraryPage() {
   return (
-    <div style={{ background: '#0d1117', minHeight: '100vh', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', color: '#e6edf3' }}>
+    <div className="min-h-screen px-6 py-16" style={{ background: '#040712' }}>
+      <div className="max-w-5xl mx-auto">
 
-      {/* Top bar */}
-      <div style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-          <span style={{ color: '#8b949e' }}>◈</span>
-          <span style={{ color: '#8b949e' }}>videogame_library</span>
-          <span style={{ color: '#30363d' }}>/</span>
-          <span style={{ color: '#e6edf3' }}>schema.sql</span>
-        </div>
+        {/* Back link */}
         <Link
           href="/#projects"
-          style={{ fontSize: 12, color: '#58a6ff', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-sm mb-10"
         >
-          ← portfolio
+          <ArrowLeft size={15} /> Back to Portfolio
         </Link>
-      </div>
 
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: '40px 24px 80px' }}>
-
-        {/* Title */}
-        <div style={{ marginBottom: 36 }}>
-          <div style={{ fontSize: 12, color: '#8b949e', marginBottom: 8 }}>
-            <CMT>-- MySQL · Relational Database Design · InnoDB</CMT>
+        {/* Header */}
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-8 h-px bg-purple-500" />
+            <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Database Project</span>
+            <span className="w-8 h-px bg-cyan-400" />
           </div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#e6edf3', margin: 0, letterSpacing: -0.5 }}>
-            Video Game Library <span style={{ color: '#3fb950' }}>Database</span>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            Video Game <span style={{ background: 'linear-gradient(135deg,#a78bfa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Library</span>
           </h1>
-          <p style={{ color: '#8b949e', fontSize: 14, marginTop: 10, lineHeight: 1.6, maxWidth: 600 }}>
-            A normalised relational schema for managing a video game lending library.
-            Tracks games, studios, genres, platforms, members, and borrow history.
+          <p className="text-slate-400 text-base max-w-2xl leading-relaxed">
+            A relational MySQL database for managing a video game lending library. Tracks games, developers, publishers, genres, platforms, users, and borrow history — with proper normalisation and foreign key constraints.
           </p>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
-            {['MySQL', 'InnoDB', 'Foreign Keys', 'M:N Relations', 'Normalised'].map(t => (
-              <span key={t} style={{ fontSize: 11, padding: '2px 10px', borderRadius: 20, background: '#21262d', border: '1px solid #30363d', color: '#8b949e' }}>{t}</span>
+          <div className="flex flex-wrap gap-3 mt-5">
+            {['MySQL', 'SQL', 'Relational DB', 'ER Design', 'Normalisation'].map((t) => (
+              <span
+                key={t}
+                className="text-xs px-3 py-1 rounded-full"
+                style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)', color: '#c4b5fd' }}
+              >
+                {t}
+              </span>
             ))}
           </div>
         </div>
 
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 36 }}>
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-4 mb-12">
           {[
-            { label: 'Tables', value: '9', color: '#3fb950' },
-            { label: 'Relations', value: '6', color: '#58a6ff' },
-            { label: 'M:N Junctions', value: '2', color: '#ffa657' },
-            { label: 'Indexes', value: '3', color: '#f78166' },
-          ].map(s => (
-            <div key={s.label} style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 8, padding: '16px 20px', textAlign: 'center' }}>
-              <div style={{ fontSize: 26, fontWeight: 700, color: s.color }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: '#8b949e', marginTop: 4 }}>{s.label}</div>
+            { label: 'Tables', value: '9' },
+            { label: 'Relationships', value: '6' },
+            { label: 'M:N Junctions', value: '2' },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="rounded-xl p-4 text-center"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <p className="text-2xl font-bold" style={{ background: 'linear-gradient(135deg,#a78bfa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.value}</p>
+              <p className="text-slate-500 text-xs mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* ER Diagram */}
-        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 8, marginBottom: 28, overflow: 'hidden' }}>
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid #30363d', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#f78166', display: 'inline-block' }} />
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#ffa657', display: 'inline-block' }} />
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#3fb950', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, color: '#8b949e', marginLeft: 8 }}>ER Diagram — videogame_library</span>
+        <div
+          className="rounded-2xl p-6 mb-12"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <Database size={16} className="text-cyan-400" />
+            <h2 className="text-white font-semibold">Entity Relationship Diagram</h2>
           </div>
-          <div style={{ padding: 24 }}>
-            <MermaidDiagram chart={ER_DIAGRAM} id="er-diagram" />
-          </div>
+          <MermaidDiagram chart={ER_DIAGRAM} id="er-diagram" />
         </div>
 
-        {/* Table definitions */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 12, color: '#8b949e', marginBottom: 16 }}>
-            <CMT>-- Table Definitions (core tables)</CMT>
+        {/* Table overview */}
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-5">
+            <GitBranch size={16} className="text-purple-400" />
+            <h2 className="text-white font-semibold">Table Overview</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
-            {TABLES.map(t => (
-              <div key={t.name} style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 8, overflow: 'hidden' }}>
-                {/* Table header */}
-                <div style={{ padding: '8px 14px', borderBottom: '1px solid #30363d', background: '#21262d' }}>
-                  <span style={{ fontSize: 12 }}>
-                    <KW>TABLE</KW> <TBL>{t.name}</TBL>
-                  </span>
-                </div>
-                {/* Columns */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
-                  <tbody>
-                    {t.cols.map(col => (
-                      <tr key={col.name} style={{ borderBottom: '1px solid #21262d' }}>
-                        <td style={{ padding: '5px 14px', color: '#79c0ff' }}>{col.name}</td>
-                        <td style={{ padding: '5px 6px', color: '#ffa657', whiteSpace: 'nowrap' }}>{col.type}</td>
-                        <td style={{ padding: '5px 14px 5px 0', color: '#8b949e', fontSize: 10 }}>{col.note}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {TABLES.map((t) => (
+              <div
+                key={t.name}
+                className="rounded-xl px-4 py-3 flex items-center gap-3"
+                style={{ background: colorMap[t.color], border: `1px solid ${borderMap[t.color]}` }}
+              >
+                <span className="font-mono text-sm font-semibold" style={{ color: textMap[t.color] }}>{t.name}</span>
+                <span className="text-slate-500 text-xs">{t.desc}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Relations */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 12, color: '#8b949e', marginBottom: 16 }}>
-            <CMT>-- Foreign Key Relationships</CMT>
-          </div>
-          <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 8, overflow: 'hidden' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #30363d', background: '#21262d' }}>
-                  <th style={{ padding: '8px 14px', color: '#8b949e', fontWeight: 500, textAlign: 'left' }}>From</th>
-                  <th style={{ padding: '8px 14px', color: '#8b949e', fontWeight: 500, textAlign: 'left' }}>To</th>
-                  <th style={{ padding: '8px 14px', color: '#8b949e', fontWeight: 500, textAlign: 'left' }}>Type</th>
-                  <th style={{ padding: '8px 14px', color: '#8b949e', fontWeight: 500, textAlign: 'left' }}>Via</th>
-                  <th style={{ padding: '8px 14px', color: '#8b949e', fontWeight: 500, textAlign: 'left' }}>Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                {RELATIONS.map((r, i) => (
-                  <tr key={i} style={{ borderBottom: '1px solid #21262d' }}>
-                    <td style={{ padding: '7px 14px' }}><TBL>{r.from}</TBL></td>
-                    <td style={{ padding: '7px 14px' }}><TBL>{r.to}</TBL></td>
-                    <td style={{ padding: '7px 14px' }}>
-                      <span style={{
-                        fontSize: 10, padding: '2px 8px', borderRadius: 4,
-                        background: r.type.includes('↔') ? 'rgba(255,164,87,0.12)' : 'rgba(63,185,80,0.1)',
-                        color: r.type.includes('↔') ? '#ffa657' : '#3fb950',
-                        border: `1px solid ${r.type.includes('↔') ? 'rgba(255,164,87,0.3)' : 'rgba(63,185,80,0.25)'}`,
-                      }}>{r.type}</span>
-                    </td>
-                    <td style={{ padding: '7px 14px' }}><COL>{r.via}</COL></td>
-                    <td style={{ padding: '7px 14px', color: '#8b949e', fontSize: 11 }}>{r.label}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* SQL snippet */}
-        <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 8, overflow: 'hidden' }}>
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid #30363d', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#f78166', display: 'inline-block' }} />
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#ffa657', display: 'inline-block' }} />
-            <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#3fb950', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, color: '#8b949e', marginLeft: 8 }}>schema.sql</span>
-          </div>
-          <pre style={{ margin: 0, padding: '20px 24px', fontSize: 12, lineHeight: 1.8, overflowX: 'auto', color: '#e6edf3' }}>
-            <SqlBlock />
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          <h2 className="text-white font-semibold mb-4">Schema Snippet — Core Relations</h2>
+          <pre
+            className="text-xs leading-relaxed overflow-x-auto"
+            style={{ color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}
+          >
+{`-- game references developer & publisher
+CREATE TABLE game (
+    game_id      INT AUTO_INCREMENT PRIMARY KEY,
+    title        VARCHAR(150) NOT NULL,
+    release_year YEAR,
+    developer_id INT,
+    publisher_id INT,
+    FOREIGN KEY (developer_id) REFERENCES developer(developer_id),
+    FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id)
+);
+
+-- M:N — a game can belong to many genres
+CREATE TABLE game_genre (
+    game_id  INT NOT NULL,
+    genre_id INT NOT NULL,
+    PRIMARY KEY (game_id, genre_id),
+    FOREIGN KEY (game_id)  REFERENCES game(game_id),
+    FOREIGN KEY (genre_id) REFERENCES genre(genre_id)
+);
+
+-- borrowing tracks who borrowed what and when
+CREATE TABLE borrowing (
+    borrowing_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id      INT  NOT NULL,
+    game_id      INT  NOT NULL,
+    borrow_date  DATE NOT NULL,
+    return_date  DATE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (game_id) REFERENCES game(game_id)
+);`}
           </pre>
         </div>
 

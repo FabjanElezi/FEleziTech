@@ -13,7 +13,7 @@ export default function Contact({ portfolio }: Props) {
   const location = portfolio?.location || 'Tirana, Albania';
 
   return (
-    <section id="contact" className="py-24 px-6 relative">
+    <section id="contact" className="py-32 px-6 relative">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -25,7 +25,7 @@ export default function Contact({ portfolio }: Props) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
@@ -40,7 +40,7 @@ export default function Contact({ portfolio }: Props) {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-8">
           {/* Contact cards */}
           <div className="space-y-4">
             <motion.a

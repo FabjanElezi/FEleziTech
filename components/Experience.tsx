@@ -33,7 +33,7 @@ export default function Experience({ experiences }: Props) {
             ? 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)'
             : 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
         />
-        <div className="space-y-8 pl-6">
+        <div className="space-y-10 pl-6">
           {items.map((exp, i) => (
             <motion.div
               key={exp.id}
@@ -106,13 +106,13 @@ export default function Experience({ experiences }: Props) {
   );
 
   return (
-    <section id="experience" className="py-24 px-6">
+    <section id="experience" className="py-32 px-6">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-purple-500" />
@@ -124,7 +124,7 @@ export default function Experience({ experiences }: Props) {
           </h2>
         </motion.div>
 
-        <div className="space-y-12 max-w-3xl mx-auto">
+        <div className="space-y-16 max-w-3xl mx-auto">
           {work.length > 0 && <Timeline items={work} label="Work" />}
           {work.length > 0 && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.3), rgba(6,182,212,0.25), transparent)' }} />

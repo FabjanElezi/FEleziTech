@@ -20,9 +20,9 @@ export default function About({ portfolio }: Props) {
   ];
 
   return (
-    <section id="about" className="py-24 px-6 relative">
+    <section id="about" className="py-32 px-6 relative">
       <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="flex flex-col md:flex-row gap-16 items-center">
 
           {/* Avatar */}
           <motion.div

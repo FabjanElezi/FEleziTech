@@ -39,6 +39,7 @@ export async function getProjects(): Promise<Project[]> {
       githubLink: d.github_link as string | undefined,
       liveDemoLink: d.live_demo_link as string | undefined,
       documentUrl: d.document_url as string | undefined,
+      dbDesignImages: (d.db_design_images ?? []) as string[],
       featured: (d.featured ?? false) as boolean,
       order: (d.order ?? 0) as number,
       createdAt: (d.created_at ?? '') as string,

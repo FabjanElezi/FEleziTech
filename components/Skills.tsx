@@ -11,28 +11,16 @@ const categoryLabels: Record<string, string> = {
   tool: 'Tools & Soft Skills',
 };
 
-const categoryColors: Record<string, string> = {
-  technical: 'rgba(124,58,237,0.15)',
-  language: 'rgba(6,182,212,0.15)',
-  tool: 'rgba(16,185,129,0.15)',
-};
-
-const categoryBorder: Record<string, string> = {
-  technical: 'rgba(124,58,237,0.35)',
-  language: 'rgba(6,182,212,0.35)',
-  tool: 'rgba(16,185,129,0.35)',
-};
-
-const categoryText: Record<string, string> = {
-  technical: '#c4b5fd',
-  language: '#67e8f9',
-  tool: '#6ee7b7',
-};
-
 const categoryCorner: Record<string, string> = {
   technical: 'rgba(124,58,237,0.38)',
   language: 'rgba(6,182,212,0.35)',
   tool: 'rgba(16,185,129,0.35)',
+};
+
+const categoryChipClass: Record<string, string> = {
+  technical: 'skill-chip-purple',
+  language: 'skill-chip-cyan',
+  tool: 'skill-chip-emerald',
 };
 
 export default function Skills({ skills }: Props) {
@@ -88,12 +76,7 @@ export default function Skills({ skills }: Props) {
                   {items.map((skill) => (
                     <span
                       key={skill.id}
-                      className="text-sm px-3 py-1 rounded-full font-medium"
-                      style={{
-                        background: categoryColors[cat],
-                        border: `1px solid ${categoryBorder[cat]}`,
-                        color: categoryText[cat],
-                      }}
+                      className={`skill-chip ${categoryChipClass[cat]}`}
                     >
                       {skill.name}
                       {skill.level && (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import CursorGlow from '@/components/CursorGlow';
+import ParticleBackground from '@/components/ParticleBackground';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <CursorGlow />
+        <ParticleBackground />
         {children}
         <Toaster
           position="bottom-right"

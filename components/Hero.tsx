@@ -46,10 +46,12 @@ export default function Hero({ portfolio }: Props) {
             <span
               className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
               style={{
-                background: 'rgba(124,58,237,0.12)',
-                border: '1px solid rgba(124,58,237,0.35)',
+                background: 'rgba(124,58,237,0.1)',
+                border: '1px solid rgba(167,139,250,0.35)',
                 color: '#c4b5fd',
-                boxShadow: '0 0 20px rgba(124,58,237,0.12)',
+                backdropFilter: 'blur(16px) saturate(160%)',
+                WebkitBackdropFilter: 'blur(16px) saturate(160%)',
+                boxShadow: '0 2px 0 rgba(255,255,255,0.12) inset, 0 0 24px rgba(124,58,237,0.18)',
               }}
             >
               <span className="relative flex h-2 w-2">
@@ -130,7 +132,7 @@ export default function Hero({ portfolio }: Props) {
         </motion.div>
 
         <motion.div
-          className="flex items-center justify-center gap-5 mt-3"
+          className="flex items-center justify-center gap-3 mt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -140,10 +142,10 @@ export default function Hero({ portfolio }: Props) {
               href={portfolio.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 hover:text-purple-400 transition-colors"
               aria-label="LinkedIn"
+              className="social-icon-btn"
             >
-              <Link size={20} />
+              <Link size={22} />
             </a>
           )}
           {portfolio?.github && (
@@ -151,19 +153,19 @@ export default function Hero({ portfolio }: Props) {
               href={portfolio.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 hover:text-purple-400 transition-colors"
               aria-label="GitHub"
+              className="social-icon-btn"
             >
-              <GitBranch size={20} />
+              <GitBranch size={22} />
             </a>
           )}
           {portfolio?.email && (
             <a
               href={`mailto:${portfolio.email}`}
-              className="text-slate-500 hover:text-purple-400 transition-colors"
               aria-label="Email"
+              className="social-icon-btn"
             >
-              <Mail size={20} />
+              <Mail size={22} />
             </a>
           )}
         </motion.div>

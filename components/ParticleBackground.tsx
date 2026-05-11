@@ -32,9 +32,17 @@ interface Glyph {
   size: number; c: string;
 }
 
+function sidedX(w: number): number {
+  // 78% chance to spawn in outer 24% on either side, rest anywhere
+  if (Math.random() < 0.78) {
+    return Math.random() < 0.5 ? rand(0, w * 0.24) : rand(w * 0.76, w);
+  }
+  return rand(0, w);
+}
+
 function spawnDot(w: number, h: number): Dot {
   return {
-    x: rand(0, w), y: rand(0, h),
+    x: sidedX(w), y: rand(0, h),
     r: rand(0.7, 1.6),
     vx: rand(-0.05, 0.05),
     vy: rand(-0.1, -0.03),
@@ -106,7 +114,7 @@ export default function ParticleBackground() {
       // ── move dots ──
       for (const d of dots) {
         d.x += d.vx; d.y += d.vy;
-        if (d.y < -4) { d.y = H + 4; d.x = rand(0, W); }
+        if (d.y < -4) { d.y = H + 4; d.x = sidedX(W); }
         if (d.x < -4)    d.x = W + 4;
         if (d.x > W + 4) d.x = -4;
       }
@@ -119,7 +127,12 @@ export default function ParticleBackground() {
           const dy = dots[i].y - dots[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < LINK_DIST) {
-            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A;
+            const midX = (dots[i].x + dots[j].x) * 0.5;
+            // fade lines toward center: full opacity at edges, ~10% at center
+            const edgeness = Math.abs(midX / W - 0.5) * 2;
+            const sideFactor = 0.1 + edgeness * 0.9;
+            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A * sideFactor;
+            if (alpha < 0.003) continue;
             ctx!.globalAlpha = alpha;
             ctx!.strokeStyle = '#22d3ee';
             ctx!.beginPath();

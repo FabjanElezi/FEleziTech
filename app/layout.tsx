@@ -4,6 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import { Analytics } from '@vercel/analytics/next';
 import CursorGlow from '@/components/CursorGlow';
 import ParticleBackground from '@/components/ParticleBackground';
+import ScrollProgress from '@/components/ScrollProgress';
+import ScrollToTop from '@/components/ScrollToTop';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -127,9 +129,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
+        <ScrollProgress />
         <CursorGlow />
         <ParticleBackground />
         {children}
+        <ScrollToTop />
         <Analytics />
         <Toaster
           position="bottom-right"

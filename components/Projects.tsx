@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ExternalLink, GitBranch, FileText, Star, Database } from 'lucide-react';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -93,10 +94,12 @@ export default function Projects({ projects }: Props) {
               {/* Image with hover overlay */}
               <div className="h-44 relative overflow-hidden">
                 {project.images?.[0] ? (
-                  <img
+                  <Image
                     src={project.images[0]}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500"
                     style={{ transform: hoveredId === project.id ? 'scale(1.07)' : 'scale(1)' }}
                   />
                 ) : (

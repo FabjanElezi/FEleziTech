@@ -2,14 +2,18 @@
 import { useEffect, useRef } from 'react';
 
 // ── dots ────────────────────────────────────────────────────
-const DOT_COUNT  = 22;
+const DOT_COUNT  = 32;
 const DOT_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa','#ffffff'];
+
+// ── plexus ──────────────────────────────────────────────────
+const LINK_DIST  = 155;   // px — max distance to draw a connecting line
+const MAX_LINK_A = 0.09;  // max line opacity (very subtle)
 
 // ── glyphs ──────────────────────────────────────────────────
 const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
 const GLYPH_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa'];
 const MAX_GLYPHS  = 12;
-const SPAWN_EVERY = 45; // frames between spawn attempts
+const SPAWN_EVERY = 45;
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
 function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -31,16 +35,15 @@ interface Glyph {
 function spawnDot(w: number, h: number): Dot {
   return {
     x: rand(0, w), y: rand(0, h),
-    r: rand(0.6, 1.5),
-    vx: rand(-0.04, 0.04),
-    vy: rand(-0.09, -0.03),
-    o: rand(0.06, 0.18),
+    r: rand(0.7, 1.6),
+    vx: rand(-0.05, 0.05),
+    vy: rand(-0.1, -0.03),
+    o: rand(0.1, 0.22),
     c: pick(DOT_COLORS),
   };
 }
 
 function spawnGlyph(w: number, h: number): Glyph {
-  // pick an edge: 0=top, 1=left, 2=right, 3=bottom
   const edge = Math.floor(Math.random() * 4);
   let x: number, y: number, vx: number, vy: number;
   if (edge === 0) {
@@ -57,8 +60,7 @@ function spawnGlyph(w: number, h: number): Glyph {
     vx = rand(-0.12, 0.12); vy = rand(-0.18, -0.08);
   }
   return {
-    sym: pick(SYMS),
-    x, y, vx, vy,
+    sym: pick(SYMS), x, y, vx, vy,
     o: 0, maxO: rand(0.45, 0.68),
     phase: 'in', phaseT: 0,
     size: Math.floor(rand(12, 17)),
@@ -93,13 +95,43 @@ export default function ParticleBackground() {
       ctx!.clearRect(0, 0, W, H);
       frame++;
 
-      // ── dots ──
-      ctx!.font = '';
+      // ── ambient misty glow (bottom-left area, very faint) ──
+      const grd = ctx!.createRadialGradient(W * 0.28, H * 0.72, 0, W * 0.28, H * 0.72, W * 0.42);
+      grd.addColorStop(0, 'rgba(6,182,212,0.028)');
+      grd.addColorStop(1, 'rgba(6,182,212,0)');
+      ctx!.globalAlpha = 1;
+      ctx!.fillStyle = grd;
+      ctx!.fillRect(0, 0, W, H);
+
+      // ── move dots ──
       for (const d of dots) {
         d.x += d.vx; d.y += d.vy;
         if (d.y < -4) { d.y = H + 4; d.x = rand(0, W); }
         if (d.x < -4)    d.x = W + 4;
         if (d.x > W + 4) d.x = -4;
+      }
+
+      // ── plexus lines between nearby dots ──
+      ctx!.lineWidth = 0.55;
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dx = dots[i].x - dots[j].x;
+          const dy = dots[i].y - dots[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < LINK_DIST) {
+            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A;
+            ctx!.globalAlpha = alpha;
+            ctx!.strokeStyle = '#22d3ee';
+            ctx!.beginPath();
+            ctx!.moveTo(dots[i].x, dots[i].y);
+            ctx!.lineTo(dots[j].x, dots[j].y);
+            ctx!.stroke();
+          }
+        }
+      }
+
+      // ── draw dots ──
+      for (const d of dots) {
         ctx!.beginPath();
         ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx!.fillStyle = d.c;
@@ -107,12 +139,11 @@ export default function ParticleBackground() {
         ctx!.fill();
       }
 
-      // ── maybe spawn glyph ──
+      // ── spawn / draw glyphs ──
       if (frame % SPAWN_EVERY === 0 && glyphs.length < MAX_GLYPHS) {
         glyphs.push(spawnGlyph(W, H));
       }
 
-      // ── glyphs ──
       for (let i = glyphs.length - 1; i >= 0; i--) {
         const g = glyphs[i];
         g.x += g.vx; g.y += g.vy;
@@ -122,8 +153,7 @@ export default function ParticleBackground() {
           g.o = Math.min(g.o + g.maxO / 40, g.maxO);
           if (g.phaseT >= 40) { g.phase = 'hold'; g.phaseT = 0; }
         } else if (g.phase === 'hold') {
-          const holdFrames = 160 + Math.floor(rand(0, 120));
-          if (g.phaseT >= holdFrames) { g.phase = 'out'; g.phaseT = 0; }
+          if (g.phaseT >= 160 + Math.floor(rand(0, 120))) { g.phase = 'out'; g.phaseT = 0; }
         } else {
           g.o = Math.max(g.o - g.maxO / 50, 0);
           if (g.o <= 0) { glyphs.splice(i, 1); continue; }

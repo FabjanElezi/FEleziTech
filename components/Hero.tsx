@@ -48,7 +48,12 @@ export default function Hero({ portfolio }: Props) {
   const tagline = portfolio?.heroTagline || 'Building secure, scalable digital experiences.';
   const cvUrl = portfolio?.cvUrl;
 
-  const roles = [title, 'Web Developer', 'Security Researcher', 'Data Analytics Enthusiast'];
+  const roles = [
+    'Building Data-Driven Solutions',
+    'Business Intelligence Enthusiast',
+    'Analytics & Technology',
+    'Security & Networking Enthusiast',
+  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
@@ -118,21 +123,22 @@ export default function Hero({ portfolio }: Props) {
         </motion.h1>
 
         <motion.p
-          className="text-lg sm:text-xl text-slate-400 mb-3 font-medium"
+          className="text-lg sm:text-xl text-slate-400 mb-2 font-medium"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <Typewriter roles={roles} />
+          {title}
         </motion.p>
 
         <motion.p
-          className="text-base text-slate-500 mb-10 max-w-xl mx-auto"
+          className="text-base mb-10 max-w-xl mx-auto font-medium"
+          style={{ color: 'rgba(34,211,238,0.75)' }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          {tagline}
+          <Typewriter roles={roles} />
         </motion.p>
 
         <motion.div

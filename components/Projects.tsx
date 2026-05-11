@@ -10,6 +10,26 @@ const DbDesignLightbox = dynamic(() => import('@/components/DbDesignLightbox'), 
 
 interface Props { projects: Project[] }
 
+const CLAMP_THRESHOLD = 160;
+
+function ProjectDescription({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const long = text.length > CLAMP_THRESHOLD;
+  return (
+    <div className="text-slate-500 text-sm leading-relaxed mb-4 flex-1">
+      <span className={!expanded && long ? 'line-clamp-3' : undefined}>{text}</span>
+      {long && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+          className="mt-1 text-xs text-cyan-400 hover:text-cyan-300 transition-colors block"
+        >
+          {expanded ? 'Show less ↑' : 'Read more ↓'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function Projects({ projects }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
@@ -138,9 +158,7 @@ export default function Projects({ projects }: Props) {
                   )}
                 </div>
 
-                <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
-                  {project.description}
-                </p>
+                <ProjectDescription text={project.description} />
 
                 {project.techStack?.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">

@@ -14,10 +14,21 @@ export default function ThemeToggle() {
     const next = !dark;
     setDark(next);
     const theme = next ? 'dark' : 'light';
-    document.documentElement.classList.add('theme-transitioning');
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 500);
+
+    const apply = () => {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    };
+
+    if ('startViewTransition' in document) {
+      // Compositor-level cross-fade — no per-element transition cost
+      (document as unknown as { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(apply);
+    } else {
+      document.documentElement.classList.add('theme-transitioning');
+      apply();
+      setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 380);
+    }
   };
 
   return (

@@ -478,16 +478,32 @@ body {
 
 /* ── Theme transition (applied briefly on toggle) ───────────────────────── */
 
-html.theme-transitioning,
-html.theme-transitioning *,
-html.theme-transitioning *::before,
-html.theme-transitioning *::after {
+/* View Transitions API — compositor cross-fade, no per-element cost */
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) { animation: 0.28s ease theme-fade-in; }
+@keyframes theme-fade-in { from { opacity: 0; } }
+
+/* Fallback for browsers without View Transitions — targeted list only,
+   NOT `*` which would force transitions on every DOM node and cause jank */
+html.theme-transitioning body,
+html.theme-transitioning .navbar,
+html.theme-transitioning .glass,
+html.theme-transitioning .btn-primary,
+html.theme-transitioning .btn-ghost,
+html.theme-transitioning .theme-toggle-btn,
+html.theme-transitioning .social-icon-btn,
+html.theme-transitioning .tech-tag,
+html.theme-transitioning .skill-chip-purple,
+html.theme-transitioning .skill-chip-cyan,
+html.theme-transitioning .skill-chip-emerald,
+html.theme-transitioning .nav-link,
+html.theme-transitioning .input-dark {
   transition:
-    background-color 0.45s ease,
-    background 0.45s ease,
-    border-color 0.45s ease,
-    color 0.45s ease,
-    box-shadow 0.45s ease !important;
+    background-color 0.32s ease,
+    background 0.32s ease,
+    border-color 0.32s ease,
+    color 0.32s ease,
+    box-shadow 0.32s ease !important;
 }
 
 /* ── Light mode ──────────────────────────────────────────────────────────── */

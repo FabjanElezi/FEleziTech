@@ -1,6 +1,7 @@
 'use client';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Link, Send, MapPin } from 'lucide-react';
+import { Mail, Phone, Link, Send, MapPin, Copy, Check } from 'lucide-react';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
@@ -11,6 +12,17 @@ export default function Contact({ portfolio }: Props) {
   const phone = portfolio?.phone || '';
   const linkedin = portfolio?.linkedin || '';
   const location = portfolio?.location || 'Tirana, Albania';
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
 
   return (
     <section id="contact" className="py-32 px-6 relative">
@@ -57,10 +69,22 @@ export default function Contact({ portfolio }: Props) {
               >
                 <Mail size={18} className="text-purple-400" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs text-slate-500 mb-0.5">Email</p>
-                <p className="text-white text-sm font-medium">{email}</p>
+                <p className="text-white text-sm font-medium truncate">{email}</p>
               </div>
+              <button
+                onClick={copyEmail}
+                aria-label="Copy email"
+                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+                style={{
+                  background: copied ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${copied ? 'rgba(16,185,129,0.35)' : 'rgba(255,255,255,0.1)'}`,
+                  color: copied ? '#6ee7b7' : '#64748b',
+                }}
+              >
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+              </button>
             </motion.a>
 
             {phone && (

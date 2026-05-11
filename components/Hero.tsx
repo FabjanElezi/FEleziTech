@@ -1,15 +1,54 @@
 'use client';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { Download, ArrowDown, Link, GitBranch, Mail } from 'lucide-react';
 import { Portfolio } from '@/types';
 
 interface Props { portfolio: Portfolio | null }
+
+function Typewriter({ roles }: { roles: string[] }) {
+  const [displayed, setDisplayed] = useState('');
+  const [idx, setIdx] = useState(0);
+  const [typing, setTyping] = useState(true);
+
+  useEffect(() => {
+    const current = roles[idx];
+    let t: ReturnType<typeof setTimeout>;
+    if (typing) {
+      if (displayed.length < current.length) {
+        t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 42);
+      } else {
+        t = setTimeout(() => setTyping(false), 1800);
+      }
+    } else {
+      if (displayed.length > 0) {
+        t = setTimeout(() => setDisplayed(d => d.slice(0, -1)), 22);
+      } else {
+        setIdx(i => (i + 1) % roles.length);
+        setTyping(true);
+      }
+    }
+    return () => clearTimeout(t);
+  }, [displayed, typing, idx, roles]);
+
+  return (
+    <span>
+      {displayed}
+      <span
+        className="inline-block w-0.5 h-4 ml-0.5 align-middle animate-pulse"
+        style={{ background: '#22d3ee', borderRadius: 1 }}
+      />
+    </span>
+  );
+}
 
 export default function Hero({ portfolio }: Props) {
   const name = portfolio?.name || 'Fabjan Elezi';
   const title = portfolio?.title || 'Computer Science & Engineering Student';
   const tagline = portfolio?.heroTagline || 'Building secure, scalable digital experiences.';
   const cvUrl = portfolio?.cvUrl;
+
+  const roles = [title, 'Web Developer', 'Security Researcher', 'Data Analytics Enthusiast'];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
@@ -84,7 +123,7 @@ export default function Hero({ portfolio }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {title}
+          <Typewriter roles={roles} />
         </motion.p>
 
         <motion.p

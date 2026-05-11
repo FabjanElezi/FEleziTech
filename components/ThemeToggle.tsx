@@ -20,10 +20,10 @@ export default function ThemeToggle() {
       localStorage.setItem('theme', theme);
     };
 
-    if ('startViewTransition' in document) {
+    const docVT = document as unknown as { startViewTransition?: (cb: () => void) => void };
+    if (docVT.startViewTransition) {
       // Compositor-level cross-fade — no per-element transition cost
-      (document as unknown as { startViewTransition: (cb: () => void) => void })
-        .startViewTransition(apply);
+      docVT.startViewTransition(apply);
     } else {
       document.documentElement.classList.add('theme-transitioning');
       apply();

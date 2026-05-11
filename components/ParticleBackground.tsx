@@ -90,22 +90,40 @@ export default function ParticleBackground() {
     let frame = 0;
     let dots: Dot[] = [];
     let glyphs: Glyph[] = [];
+    let scrollY = 0;
+    let maxScroll = 1;
 
     function resize() {
       W = canvas!.width  = window.innerWidth;
       H = canvas!.height = window.innerHeight;
+      maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
     }
+    const onScroll = () => {
+      scrollY = window.scrollY;
+      maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+    };
     resize();
     dots = Array.from({ length: DOT_COUNT }, () => spawnDot(W, H));
     window.addEventListener('resize', resize);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     function tick() {
       ctx!.clearRect(0, 0, W, H);
       frame++;
 
+      // ── scroll-based visibility: show only at top (hero) and bottom (contact) ──
+      const topFade    = Math.max(0, 1 - scrollY / (H * 1.1));
+      const bottomFade = Math.max(0, Math.min(1, (scrollY - (maxScroll - H * 1.6)) / (H * 0.6)));
+      const pageFactor = Math.max(topFade, bottomFade);
+
+      if (pageFactor < 0.005) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+
       // ── ambient misty glow (bottom-left area, very faint) ──
       const grd = ctx!.createRadialGradient(W * 0.28, H * 0.72, 0, W * 0.28, H * 0.72, W * 0.42);
-      grd.addColorStop(0, 'rgba(6,182,212,0.028)');
+      grd.addColorStop(0, `rgba(6,182,212,${0.028 * pageFactor})`);
       grd.addColorStop(1, 'rgba(6,182,212,0)');
       ctx!.globalAlpha = 1;
       ctx!.fillStyle = grd;
@@ -128,10 +146,9 @@ export default function ParticleBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < LINK_DIST) {
             const midX = (dots[i].x + dots[j].x) * 0.5;
-            // fade lines toward center: full opacity at edges, ~10% at center
             const edgeness = Math.abs(midX / W - 0.5) * 2;
             const sideFactor = 0.1 + edgeness * 0.9;
-            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A * sideFactor;
+            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A * sideFactor * pageFactor;
             if (alpha < 0.003) continue;
             ctx!.globalAlpha = alpha;
             ctx!.strokeStyle = '#22d3ee';
@@ -148,7 +165,7 @@ export default function ParticleBackground() {
         ctx!.beginPath();
         ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx!.fillStyle = d.c;
-        ctx!.globalAlpha = d.o;
+        ctx!.globalAlpha = d.o * pageFactor;
         ctx!.fill();
       }
 
@@ -172,7 +189,7 @@ export default function ParticleBackground() {
           if (g.o <= 0) { glyphs.splice(i, 1); continue; }
         }
 
-        ctx!.globalAlpha = g.o;
+        ctx!.globalAlpha = g.o * pageFactor;
         ctx!.fillStyle = g.c;
         ctx!.font = `${g.size}px ui-monospace, monospace`;
         ctx!.fillText(g.sym, g.x, g.y);
@@ -186,6 +203,7 @@ export default function ParticleBackground() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 

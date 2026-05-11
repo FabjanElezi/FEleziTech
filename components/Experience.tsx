@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { Briefcase, GraduationCap, Calendar, MapPin, Award } from 'lucide-react';
+import { Briefcase, GraduationCap, Calendar, MapPin, Award, Trophy } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
@@ -19,22 +19,33 @@ export default function Experience({ experiences }: Props) {
     if (isImage) setLightboxUrl(url);
     else window.open(url, '_blank', 'noopener,noreferrer');
   }, []);
-  const work = experiences.filter((e) => e.type === 'work');
+  const work      = experiences.filter((e) => e.type === 'work');
   const education = experiences.filter((e) => e.type === 'education');
+  const awards    = experiences.filter((e) => e.type === 'award');
 
-  const Timeline = ({ items, label }: { items: Exp[]; label: string }) => (
+  const Timeline = ({ items, label }: { items: Exp[]; label: string }) => {
+    const isWork    = label === 'Work';
+    const isAward   = label === 'Awards';
+    const lineColor = isAward
+      ? 'linear-gradient(to bottom, rgba(245,158,11,0.5), transparent)'
+      : isWork
+        ? 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)'
+        : 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)';
+    const dotClass  = isAward ? '' : isWork ? 'border-purple-500' : 'border-cyan-400';
+    const dotStyle  = isAward ? { borderColor: '#f59e0b', background: '#040712', transform: 'translateX(-50%)' } : { background: '#040712', transform: 'translateX(-50%)' };
+
+    return (
     <div>
       <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
-        {label === 'Work' ? <Briefcase size={14} className="text-purple-400" /> : <GraduationCap size={14} className="text-cyan-400" />}
+        {isAward
+          ? <Trophy size={14} style={{ color: '#f59e0b' }} />
+          : isWork
+            ? <Briefcase size={14} className="text-purple-400" />
+            : <GraduationCap size={14} className="text-cyan-400" />}
         {label}
       </h3>
       <div className="relative">
-        <div
-          className="absolute left-0 top-0 bottom-0 w-px"
-          style={{ background: label === 'Education'
-            ? 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)'
-            : 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
-        />
+        <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: lineColor }} />
         <div className="space-y-10 pl-6">
           {items.map((exp, i) => (
             <motion.div
@@ -46,8 +57,8 @@ export default function Experience({ experiences }: Props) {
               className="relative"
             >
               <div
-                className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 ${label === 'Education' ? 'border-cyan-400' : 'border-purple-500'}`}
-                style={{ background: '#040712', transform: 'translateX(-50%)' }}
+                className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 ${dotClass}`}
+                style={dotStyle}
               />
               <div className="glass rounded-xl p-4 sm:p-5 glass-hover relative">
                 <CornerAccents size={9} inset={7} />
@@ -109,7 +120,8 @@ export default function Experience({ experiences }: Props) {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <section id="experience" className="py-32 px-6">
@@ -136,6 +148,10 @@ export default function Experience({ experiences }: Props) {
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
           {education.length > 0 && <Timeline items={education} label="Education" />}
+          {awards.length > 0 && education.length > 0 && (
+            <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.3), transparent)' }} />
+          )}
+          {awards.length > 0 && <Timeline items={awards} label="Awards" />}
         </div>
       </div>
       {lightboxUrl && (

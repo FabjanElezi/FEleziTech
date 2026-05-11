@@ -14,6 +14,15 @@ export async function PUT(req: Request, ctx: { params: Promise<{ id: string }> }
   return Response.json({ ok: true });
 }
 
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
+  const auth = await getAuthEmail();
+  if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  const { id } = await ctx.params;
+  const { order } = await req.json();
+  await query(`UPDATE experience SET "order"=$1 WHERE id=$2`, [order, id]);
+  return Response.json({ ok: true });
+}
+
 export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });

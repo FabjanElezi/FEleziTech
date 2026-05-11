@@ -1,6 +1,35 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 
+let migrated = false;
+async function ensureAwardType() {
+  if (migrated) return;
+  try {
+    await query(`
+      DO $$
+      DECLARE con text;
+      BEGIN
+        SELECT cc.constraint_name INTO con
+        FROM information_schema.check_constraints cc
+        JOIN information_schema.constraint_column_usage cu
+          ON cc.constraint_name = cu.constraint_name
+        WHERE cu.table_name = 'experience' AND cu.column_name = 'type'
+          AND cc.constraint_schema = current_schema()
+        LIMIT 1;
+        IF con IS NOT NULL THEN
+          EXECUTE 'ALTER TABLE experience DROP CONSTRAINT ' || quote_ident(con);
+        END IF;
+        BEGIN
+          ALTER TABLE experience ADD CONSTRAINT experience_type_check
+            CHECK (type IN ('work','education','award'));
+        EXCEPTION WHEN duplicate_object THEN NULL;
+        END;
+      END $$;
+    `);
+    migrated = true;
+  } catch { migrated = true; }
+}
+
 function rowToExp(d: Record<string, unknown>) {
   return {
     id: d.id, company: d.company, role: d.role,
@@ -12,6 +41,7 @@ function rowToExp(d: Record<string, unknown>) {
 }
 
 export async function GET() {
+  await ensureAwardType();
   const { rows } = await query('SELECT * FROM experience ORDER BY "order" ASC');
   return Response.json(rows.map(rowToExp));
 }

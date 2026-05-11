@@ -106,7 +106,7 @@ export default function Hero({ portfolio }: Props) {
             View Projects <ArrowDown size={16} />
           </a>
           {cvUrl ? (
-            <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+            <a href="/api/cv" download="Fabjan_Elezi_CV.pdf" className="btn-ghost">
               Download CV <Download size={16} />
             </a>
           ) : (

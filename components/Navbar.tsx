@@ -14,27 +14,44 @@ const links = [
 ];
 
 export default function Navbar() {
-  const headerRef  = useRef<HTMLElement>(null);
-  const linkRefs   = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const headerRef = useRef<HTMLElement>(null);
+  const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const [open, setOpen] = useState(false);
 
-  // Scroll → toggle glass background (no React re-render)
+  // Scroll → glass + cyan glow + hide/show
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
+    let lastY  = window.scrollY;
+    let hidden = false;
+
     const update = () => {
-      if (window.scrollY > 20) header.classList.add('scrolled');
+      const y    = window.scrollY;
+      const diff = y - lastY;
+
+      if (y > 20) header.classList.add('scrolled');
       else header.classList.remove('scrolled');
+
+      if (diff > 8 && y > 80 && !hidden) {
+        header.classList.add('nav-hidden');
+        hidden = true;
+      } else if (diff < -5 && hidden) {
+        header.classList.remove('nav-hidden');
+        hidden = false;
+      }
+
+      lastY = y;
     };
+
     update();
     window.addEventListener('scroll', update, { passive: true });
     return () => window.removeEventListener('scroll', update);
   }, []);
 
-  // Active section → highlight nav link (no React re-render)
+  // Active section highlight
   useEffect(() => {
     const sectionIds = links.map((l) => l.href.slice(1));
-    const setActive = (id: string) => {
+    const setActive  = (id: string) => {
       linkRefs.current.forEach((el, key) => {
         if (key === id) el.classList.add('active');
         else el.classList.remove('active');
@@ -57,13 +74,15 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header ref={headerRef} className="navbar fixed top-0 inset-x-0 z-50">
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center self-center mt-1">
-          <Image src="/logo.png" alt="Fabjan Elezi" width={200} height={66} className="object-contain" priority />
+    <header ref={headerRef} className="navbar fixed z-50">
+      <nav className="h-14 flex items-center justify-between px-5">
+        {/* Logo */}
+        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center mt-1 shrink-0">
+          <Image src="/logo.png" alt="Fabjan Elezi" width={160} height={53} className="object-contain" priority />
         </Link>
 
-        <ul className="hidden md:flex items-center gap-8">
+        {/* Desktop links */}
+        <ul className="hidden md:flex items-center gap-6">
           {links.map((l) => (
             <li key={l.href}>
               <a
@@ -80,13 +99,15 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden md:flex items-center gap-3">
+        {/* Desktop right */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
             Admin
           </Link>
         </div>
 
+        {/* Mobile toggle */}
         <div className="md:hidden flex items-center gap-1">
           <ThemeToggle />
           <button
@@ -95,14 +116,18 @@ export default function Navbar() {
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </nav>
 
+      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden glass border-t border-white/5">
-          <ul className="flex flex-col px-6 py-2 gap-1">
+        <div
+          className="md:hidden border-t"
+          style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(4,7,18,0.6)', backdropFilter: 'blur(24px)', borderRadius: '0 0 1rem 1rem' }}
+        >
+          <ul className="flex flex-col px-5 py-3 gap-1">
             {links.map((l) => (
               <li key={l.href}>
                 <a

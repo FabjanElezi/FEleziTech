@@ -1,13 +1,16 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function CursorGlow() {
+  const pathname = usePathname();
   const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (pathname.startsWith('/admin')) return;
     if (window.matchMedia('(hover: none)').matches) return;
 
     const dot  = dotRef.current;

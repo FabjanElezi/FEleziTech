@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from '@vercel/analytics/next';
 import CursorGlow from '@/components/CursorGlow';
 import ParticleBackground from '@/components/ParticleBackground';
 import './globals.css';
@@ -61,6 +62,9 @@ export const metadata: Metadata = {
     title: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
     description:
       'Computer Science & Engineering student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
+  },
+  verification: {
+    google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
   },
   alternates: {
     canonical: BASE_URL,
@@ -126,6 +130,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CursorGlow />
         <ParticleBackground />
         {children}
+        <Analytics />
         <Toaster
           position="bottom-right"
           toastOptions={{

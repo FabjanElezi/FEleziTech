@@ -7,7 +7,7 @@ const DOT_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa','#ffffff'];
 
 // ── plexus ──────────────────────────────────────────────────
 const LINK_DIST  = 155;   // px — max distance to draw a connecting line
-const MAX_LINK_A = 0.09;  // max line opacity (very subtle)
+const MAX_LINK_A = 0.22;  // max line opacity
 
 // ── glyphs ──────────────────────────────────────────────────
 const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];

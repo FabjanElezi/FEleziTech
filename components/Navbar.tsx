@@ -76,7 +76,7 @@ export default function Navbar() {
       <nav className="h-14 flex items-center justify-between px-5">
         {/* Logo */}
         <Link href="/" className="hover:opacity-80 transition-opacity flex items-center mt-1 shrink-0">
-          <Image src="/logo.png" alt="Fabjan Elezi" width={160} height={53} className="object-contain" priority />
+          <Image src="/logo.svg" alt="Fabjan Elezi Tech" width={160} height={53} className="object-contain" priority />
         </Link>
 
         {/* Desktop links */}

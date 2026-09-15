@@ -79,7 +79,7 @@ export default function About({ portfolio }: Props) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease, delay: 0.14 }}
             >
-              Passionate about <span className="gradient-text">Technology</span>
+              Where business questions <span className="gradient-text">meet data</span>
             </motion.h2>
 
             <motion.p

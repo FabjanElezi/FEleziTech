@@ -48,7 +48,7 @@ export default function Contact({ portfolio }: Props) {
             Let&apos;s <span className="gradient-text">Connect</span>
           </h2>
           <p className="text-slate-500 text-base max-w-md mx-auto">
-            Open to internships and junior opportunities in IT, Data Analytics and Business Intelligence. Feel free to reach out.
+            Open to Werkstudent, internship and junior roles in Data Analytics, BI and IT — in Aachen/NRW or remote.
           </p>
         </motion.div>
 

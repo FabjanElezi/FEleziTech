@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'FeleziTech – Fabjan Elezi Developer Portfolio';
+export const alt = 'F.EleziTech – Fabjan Elezi Data & Information Systems Portfolio';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -58,7 +58,7 @@ export default function Image() {
           color: 'transparent',
           fontWeight: 600,
         }}>
-          Developer Portfolio
+          Data & Information Systems Portfolio
         </div>
 
         {/* Tags */}

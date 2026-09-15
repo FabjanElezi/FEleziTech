@@ -802,3 +802,8 @@ html.theme-transitioning .input-dark {
 @media (prefers-reduced-motion: reduce) {
   .hero-in { animation: none; }
 }
+
+/* ── Admin: plain tool surface, no decorative atmosphere ─────────────────── */
+html[data-admin] body::before,
+html[data-admin] body::after { display: none; }
+html[data-admin] body { background-image: none; }

@@ -54,10 +54,10 @@ export default function Hero({ portfolio }: Props) {
   const cvUrl = portfolio?.cvUrl;
 
   const roles = [
-    'Building Data-Driven Solutions',
-    'Business Intelligence Enthusiast',
-    'Analytics & Technology',
-    'Security & Networking Enthusiast',
+    'Turning business data into decisions',
+    'Building BI dashboards and data pipelines',
+    'SQL · Python · Excel',
+    'IT infrastructure & security background',
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function Hero({ portfolio }: Props) {
                 />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#0891b2' }} />
               </span>
-              Available for opportunities
+              Open to Werkstudent &amp; internship roles · Aachen
             </span>
           </div>
         )}

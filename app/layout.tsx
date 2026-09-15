@@ -24,7 +24,7 @@ const BASE_URL = 'https://felezitech.vercel.app';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
+    default: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     template: '%s | F.EleziTech',
   },
   description:
@@ -57,13 +57,13 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: BASE_URL,
     siteName: 'F.EleziTech',
-    title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
+    title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     description:
       'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data analytics, BI and IT systems. Open to internships in IT, Data Analytics and BI.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
+    title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     description:
       'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to internships in IT, Data Analytics and BI.',
   },

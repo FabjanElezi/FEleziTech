@@ -55,7 +55,7 @@ export default function Hero({ portfolio }: Props) {
 
   const roles = [
     'Turning business data into decisions',
-    'Building BI dashboards and data pipelines',
+    'Building BI dashboards from real data',
     'SQL · Python · Excel',
     'IT infrastructure & security background',
   ];

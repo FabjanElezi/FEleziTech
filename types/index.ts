@@ -39,7 +39,7 @@ export interface Experience {
   current: boolean;
   description: string;
   order: number;
-  type: 'work' | 'education' | 'award';
+  type: 'work' | 'education' | 'award' | 'other';
   certificateUrl?: string;
 }
 

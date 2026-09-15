@@ -8,3 +8,8 @@ public/uploads/
 .env.production
 scripts/
 .env*
+
+# Local AI-assistant config — never commit
+.claude/
+CLAUDE.md
+AGENTS.md

@@ -41,16 +41,6 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center px-4"
       style={{ background: '#090d15' }}
     >
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: '20%', left: '30%',
-          width: '500px', height: '500px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(8,145,178,0.12), transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
 
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">

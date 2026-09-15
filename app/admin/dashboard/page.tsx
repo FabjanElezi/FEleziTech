@@ -110,7 +110,7 @@ export default function Dashboard() {
         style={{ background: 'rgba(9,13,21,0.9)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
       >
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Fabjan Elezi" width={80} height={26} className="object-contain" />
+          <Image src="/logo.svg" alt="Fabjan Elezi Tech" width={96} height={32} className="object-contain h-8 w-auto" />
           <span className="text-slate-500 text-xs">Admin Panel</span>
         </div>
 

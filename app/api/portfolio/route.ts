@@ -2,9 +2,12 @@ import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
+
 export async function GET() {
   const { rows } = await query('SELECT * FROM portfolio WHERE id = $1', ['main']);
-  if (!rows[0]) return Response.json(null);
+  if (!rows[0]) return Response.json(null, NO_STORE);
   const d = rows[0];
   return Response.json({
     name: d.name ?? '',
@@ -21,7 +24,7 @@ export async function GET() {
     availableForWork: d.available_for_work,
     university: d.university,
     openToRemote: d.open_to_remote,
-  });
+  }, NO_STORE);
 }
 
 export async function PUT(req: Request) {

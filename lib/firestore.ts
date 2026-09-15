@@ -3,7 +3,7 @@ import { Portfolio, Project, Experience, Skill } from '@/types';
 // ── Portfolio ──────────────────────────────────────────────
 
 export async function getPortfolio(): Promise<Portfolio | null> {
-  const r = await fetch('/api/portfolio');
+  const r = await fetch('/api/portfolio', { cache: 'no-store' });
   if (!r.ok) return null;
   return r.json();
 }
@@ -20,7 +20,7 @@ export async function savePortfolio(data: Partial<Portfolio>) {
 // ── Projects ───────────────────────────────────────────────
 
 export async function getProjects(): Promise<Project[]> {
-  const r = await fetch('/api/projects');
+  const r = await fetch('/api/projects', { cache: 'no-store' });
   if (!r.ok) throw new Error('Failed to fetch projects');
   return r.json();
 }
@@ -53,7 +53,7 @@ export async function deleteProject(id: string) {
 // ── Experience ─────────────────────────────────────────────
 
 export async function getExperiences(): Promise<Experience[]> {
-  const r = await fetch('/api/experience');
+  const r = await fetch('/api/experience', { cache: 'no-store' });
   if (!r.ok) throw new Error('Failed to fetch experience');
   return r.json();
 }
@@ -86,7 +86,7 @@ export async function deleteExperience(id: string) {
 // ── Skills ─────────────────────────────────────────────────
 
 export async function getSkills(): Promise<Skill[]> {
-  const r = await fetch('/api/skills');
+  const r = await fetch('/api/skills', { cache: 'no-store' });
   if (!r.ok) throw new Error('Failed to fetch skills');
   return r.json();
 }

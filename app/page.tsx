@@ -10,7 +10,8 @@ import SectionDivider from '@/components/SectionDivider';
 import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 import SocialSidebar from '@/components/SocialSidebar';
 
-export const revalidate = 60;
+// Always render from the database so Admin edits show up on the very next visit.
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [portfolio, projects, experiences, skills] = await Promise.all([

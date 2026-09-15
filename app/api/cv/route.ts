@@ -23,7 +23,9 @@ export async function GET() {
   return new NextResponse(buffer, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename="Fabjan_Elezi_CV.pdf"',
+      // inline: opens in the browser's PDF viewer, which has its own download button
+      'Content-Disposition': 'inline; filename="Fabjan_Elezi_CV.pdf"',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
     },
   });
 }

@@ -80,7 +80,7 @@ export default function About({ portfolio }: Props) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease, delay: 0.14 }}
             >
-              Where business questions <span className="gradient-text">meet data</span>
+              Where business meets <span className="gradient-text">data and IT systems</span>
             </motion.h2>
 
             <motion.p

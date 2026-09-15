@@ -47,7 +47,7 @@ function expToForm(exp: Experience): FormState {
 }
 
 const TYPE_STYLE = {
-  work:      { bg: 'rgba(124,58,237,0.15)', border: 'rgba(124,58,237,0.35)', text: '#c4b5fd', label: 'Work',      icon: Briefcase },
+  work:      { bg: 'rgba(8,145,178,0.15)', border: 'rgba(8,145,178,0.35)', text: '#67e8f9', label: 'Work',      icon: Briefcase },
   education: { bg: 'rgba(6,182,212,0.12)',  border: 'rgba(6,182,212,0.35)',  text: '#67e8f9', label: 'Education', icon: GraduationCap },
   award:     { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)', text: '#fcd34d', label: 'Award',     icon: Trophy },
 };
@@ -255,7 +255,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                 onClick={() => setFilter(f.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
                 style={filter === f.id
-                  ? { background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: 'white' }
+                  ? { background: 'linear-gradient(135deg,#0891b2,#0e7490)', color: 'white' }
                   : { color: '#64748b' }}
               >
                 {f.label}
@@ -276,7 +276,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
       </div>
 
       {filter !== 'all' && (
-        <p className="text-slate-600 text-xs mb-4">Reorder is available in the <button onClick={() => setFilter('all')} className="text-purple-400 hover:underline">All</button> view.</p>
+        <p className="text-slate-600 text-xs mb-4">Reorder is available in the <button onClick={() => setFilter('all')} className="text-cyan-400 hover:underline">All</button> view.</p>
       )}
 
       {adding && entryForm}

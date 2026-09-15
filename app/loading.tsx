@@ -5,8 +5,8 @@ export default function Loading() {
         <div
           className="w-11 h-11 rounded-full border-2 animate-spin"
           style={{
-            borderColor: 'rgba(124,58,237,0.15)',
-            borderTopColor: '#7c3aed',
+            borderColor: 'rgba(8,145,178,0.15)',
+            borderTopColor: '#0891b2',
           }}
         />
         <p className="text-slate-600 text-xs tracking-widest uppercase">Loading</p>

@@ -7,7 +7,7 @@ export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
     <main className="min-h-screen flex items-center justify-center px-6 text-center">
       <div>
-        <p className="text-purple-400 text-sm font-semibold uppercase tracking-wider mb-3">Something went wrong</p>
+        <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-3">Something went wrong</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
           This page couldn&apos;t load
         </h1>

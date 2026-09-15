@@ -41,7 +41,7 @@ export default function CertificateLightbox({ url, onClose }: Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ background: 'rgba(4,7,18,0.95)' }}
+        style={{ background: 'rgba(9,13,21,0.95)' }}
         onClick={onClose}
       >
         <div className="min-h-full flex items-center justify-center p-4 sm:p-8">
@@ -77,7 +77,7 @@ export default function CertificateLightbox({ url, onClose }: Props) {
               {!loaded && !failed && (
                 <div
                   className="absolute w-8 h-8 rounded-full border-2 animate-spin"
-                  style={{ borderColor: 'rgba(255,255,255,0.15)', borderTopColor: '#a78bfa' }}
+                  style={{ borderColor: 'rgba(255,255,255,0.15)', borderTopColor: '#22d3ee' }}
                   aria-label="Loading certificate"
                 />
               )}
@@ -103,7 +103,7 @@ export default function CertificateLightbox({ url, onClose }: Props) {
                     opacity: loaded ? 1 : 0,
                     transition: 'opacity 0.2s ease',
                     border: '1px solid rgba(255,255,255,0.1)',
-                    boxShadow: '0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.15)',
+                    boxShadow: '0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(8,145,178,0.15)',
                   }}
                 />
               )}

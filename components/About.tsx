@@ -15,8 +15,8 @@ export default function About({ portfolio }: Props) {
   const openToRemote = portfolio?.openToRemote !== false;
 
   const chips = [
-    { icon: <MapPin size={14} className="text-purple-400" />,      label: location },
-    { icon: <GraduationCap size={14} className="text-purple-400" />, label: university },
+    { icon: <MapPin size={14} className="text-cyan-400" />,      label: location },
+    { icon: <GraduationCap size={14} className="text-cyan-400" />, label: university },
     ...(openToRemote ? [{ icon: <Globe size={14} className="text-cyan-400" />, label: 'Open to Remote' }] : []),
   ];
 
@@ -42,16 +42,16 @@ export default function About({ portfolio }: Props) {
                 sizes="192px"
                 priority
                 className="w-48 h-64 rounded-2xl object-cover object-top"
-                style={{ border: '2px solid rgba(124,58,237,0.3)', boxShadow: '0 0 32px rgba(124,58,237,0.12)' }}
+                style={{ border: '2px solid rgba(8,145,178,0.3)', boxShadow: '0 0 32px rgba(8,145,178,0.12)' }}
               />
             ) : (
               <div
                 className="w-48 h-64 rounded-2xl flex items-center justify-center text-6xl font-bold"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.1))',
-                  border: '2px solid rgba(124,58,237,0.3)',
-                  boxShadow: '0 0 32px rgba(124,58,237,0.12)',
-                  color: '#c4b5fd',
+                  background: 'linear-gradient(135deg, rgba(8,145,178,0.2), rgba(6,182,212,0.1))',
+                  border: '2px solid rgba(8,145,178,0.3)',
+                  boxShadow: '0 0 32px rgba(8,145,178,0.12)',
+                  color: '#67e8f9',
                 }}
               >
                 {portfolio?.name ? portfolio.name.charAt(0) : 'F'}
@@ -68,8 +68,8 @@ export default function About({ portfolio }: Props) {
               viewport={{ once: true }}
               transition={{ duration: 0.45, ease, delay: 0.08 }}
             >
-              <span className="w-8 h-px bg-purple-500" />
-              <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">About Me</span>
+              <span className="w-8 h-px bg-cyan-500" />
+              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">About Me</span>
             </motion.div>
 
             <motion.h2

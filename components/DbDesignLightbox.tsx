@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface Props {
   images: string[];
@@ -11,6 +11,7 @@ interface Props {
 
 export default function DbDesignLightbox({ images, onClose }: Props) {
   const [idx, setIdx] = useState(0);
+  const closeRef = useRef<HTMLButtonElement>(null);
   // Track which src finished loading so each slide shows the spinner until ready
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -28,7 +29,14 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
       if (e.key === 'ArrowRight') next();
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    // Lock page scroll behind the dialog and move focus into it
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
   }, [onClose, prev, next]);
 
   const labels = ['Table Overview', 'ER Diagram'];
@@ -37,6 +45,9 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-[99999] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Database design"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -74,6 +85,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   Open full size ↗
                 </a>
                 <button
+                  ref={closeRef}
                   onClick={onClose}
                   className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
                 >
@@ -134,6 +146,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                 <>
                   <button
                     onClick={prev}
+                    aria-label="Previous diagram"
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                     style={{ background: 'rgba(4,7,18,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
@@ -143,6 +156,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   </button>
                   <button
                     onClick={next}
+                    aria-label="Next diagram"
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                     style={{ background: 'rgba(4,7,18,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
@@ -161,6 +175,8 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   <button
                     key={i}
                     onClick={() => setIdx(i)}
+                    aria-label={`Show ${labels[i] ?? `diagram ${i + 1}`}`}
+                    aria-current={i === idx}
                     className="w-2 h-2 rounded-full transition-all"
                     style={{ background: i === idx ? '#22d3ee' : 'rgba(255,255,255,0.2)' }}
                   />

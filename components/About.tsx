@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Globe } from 'lucide-react';
 import { Portfolio } from '@/types';
@@ -33,9 +34,13 @@ export default function About({ portfolio }: Props) {
             transition={{ duration: 0.55, ease }}
           >
             {portfolio?.profileImage ? (
-              <img
+              <Image
                 src={portfolio.profileImage}
                 alt={portfolio.name}
+                width={192}
+                height={256}
+                sizes="192px"
+                priority
                 className="w-48 h-64 rounded-2xl object-cover object-top"
                 style={{ border: '2px solid rgba(124,58,237,0.3)', boxShadow: '0 0 32px rgba(124,58,237,0.12)' }}
               />

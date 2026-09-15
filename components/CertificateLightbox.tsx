@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   url: string;
@@ -16,16 +16,28 @@ export default function CertificateLightbox({ url, onClose }: Props) {
   const loaded = loadedSrc === url;
   const failed = failedSrc === url;
 
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    // Lock page scroll behind the dialog and move focus into it
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
   }, [onClose]);
 
   return (
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-[99999] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Certificate"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -52,6 +64,7 @@ export default function CertificateLightbox({ url, onClose }: Props) {
                 Open full size ↗
               </a>
               <button
+                ref={closeRef}
                 onClick={onClose}
                 className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
               >

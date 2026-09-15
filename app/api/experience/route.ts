@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
+import { revalidatePath } from 'next/cache';
 
 let migrated = false;
 async function ensureAwardType() {
@@ -55,5 +56,6 @@ export async function POST(req: Request) {
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
     [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null]
   );
+  revalidatePath('/');
   return Response.json({ id: rows[0].id });
 }

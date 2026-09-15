@@ -55,27 +55,28 @@ export default function Contact({ portfolio }: Props) {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact cards */}
           <div className="space-y-4">
-            <motion.a
-              href={`mailto:${email}`}
+            <motion.div
               className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
               initial={{ opacity: 0, x: -18 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0 }}
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'rgba(124,58,237,0.2)' }}
-              >
-                <Mail size={18} className="text-purple-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-slate-500 mb-0.5">Email</p>
-                <p className="text-white text-sm font-medium truncate">{email}</p>
-              </div>
+              <a href={`mailto:${email}`} className="flex items-center gap-4 flex-1 min-w-0">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(124,58,237,0.2)' }}
+                >
+                  <Mail size={18} className="text-purple-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-slate-500 mb-0.5">Email</p>
+                  <p className="text-white text-sm font-medium truncate">{email}</p>
+                </div>
+              </a>
               <button
                 onClick={copyEmail}
-                aria-label="Copy email"
+                aria-label={copied ? 'Email copied' : 'Copy email'}
                 className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all"
                 style={{
                   background: copied ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
@@ -85,7 +86,7 @@ export default function Contact({ portfolio }: Props) {
               >
                 {copied ? <Check size={13} /> : <Copy size={13} />}
               </button>
-            </motion.a>
+            </motion.div>
 
             {phone && (
               <motion.a

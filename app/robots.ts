@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/'],
+        disallow: ['/admin', '/admin/', '/api/'],
       },
     ],
     sitemap: 'https://felezitech.vercel.app/sitemap.xml',

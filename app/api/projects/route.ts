@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
+import { revalidatePath } from 'next/cache';
 
 async function ensureDbDesignColumn() {
   await query(
@@ -33,5 +34,6 @@ export async function POST(req: Request) {
     [d.title,d.description,d.techStack,d.images,d.githubLink,d.liveDemoLink,d.documentUrl,
      JSON.stringify(d.dbDesignImages??[]),d.featured,d.order]
   );
+  revalidatePath('/');
   return Response.json({ id: rows[0].id });
 }

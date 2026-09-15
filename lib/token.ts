@@ -1,10 +1,18 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 
-const SECRET = process.env.JWT_SECRET ?? 'dev-secret-changeme';
+// Resolved lazily so a missing secret fails at login time (clear error) rather
+// than falling back to a guessable default that would let anyone forge a session.
+function secret(): string {
+  const s = process.env.JWT_SECRET;
+  if (!s || s.length < 16) {
+    throw new Error('JWT_SECRET is not set (or is shorter than 16 characters); admin login is disabled.');
+  }
+  return s;
+}
 
 export function createToken(email: string): string {
   const payload = Buffer.from(JSON.stringify({ email, exp: Date.now() + 7 * 86_400_000 })).toString('base64url');
-  const sig = createHmac('sha256', SECRET).update(payload).digest('base64url');
+  const sig = createHmac('sha256', secret()).update(payload).digest('base64url');
   return `${payload}.${sig}`;
 }
 
@@ -13,7 +21,9 @@ export function verifyToken(token: string): string | null {
   if (dot === -1) return null;
   const payload = token.slice(0, dot);
   const sig = token.slice(dot + 1);
-  const expected = createHmac('sha256', SECRET).update(payload).digest('base64url');
+  let expected: string;
+  try { expected = createHmac('sha256', secret()).update(payload).digest('base64url'); }
+  catch { return null; }
   try {
     if (!timingSafeEqual(Buffer.from(sig, 'base64url'), Buffer.from(expected, 'base64url'))) return null;
   } catch { return null; }

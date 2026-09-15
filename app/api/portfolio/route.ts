@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   const { rows } = await query('SELECT * FROM portfolio WHERE id = $1', ['main']);
@@ -37,5 +38,6 @@ export async function PUT(req: Request) {
     [d.name,d.title,d.bio,d.email,d.phone,d.linkedin,d.github,d.location,
      d.profileImage,d.cvUrl,d.heroTagline,d.availableForWork,d.university,d.openToRemote]
   );
+  revalidatePath('/');
   return Response.json({ ok: true });
 }

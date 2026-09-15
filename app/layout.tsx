@@ -7,6 +7,7 @@ import ParticleBackground from '@/components/ParticleBackground';
 import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
 import MobileDock from '@/components/MobileDock';
+import MotionProvider from '@/components/MotionProvider';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -27,11 +28,11 @@ export const metadata: Metadata = {
     template: '%s | F.EleziTech',
   },
   description:
-    'Fabjan Elezi (F.EleziTech) – Computer Science & Engineering student from Tirana, Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and Business Intelligence.',
+    'Fabjan Elezi (F.EleziTech) – Business Informatics student from Tirana, Albania, focused on data analytics, business intelligence and IT systems. Open to internships in IT, Data Analytics and Business Intelligence.',
   keywords: [
     'F.EleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
-    'developer portfolio', 'computer science student', 'Albania developer',
-    'web developer', 'full stack developer', 'junior developer',
+    'developer portfolio', 'business informatics student', 'Albania developer',
+    'web developer', 'data analyst', 'junior developer',
     'cybersecurity', 'data analytics', 'business intelligence',
     'React developer', 'Next.js developer', 'TypeScript',
     'Tirana developer', 'felezitech.vercel.app',
@@ -58,13 +59,13 @@ export const metadata: Metadata = {
     siteName: 'F.EleziTech',
     title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
-      'Computer Science & Engineering student from Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and BI.',
+      'Business Informatics student from Albania focused on data analytics and BI. Open to internships in IT, Data Analytics and BI.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
-      'Computer Science & Engineering student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
+      'Business Informatics student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
   },
   verification: {
     google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
@@ -87,9 +88,9 @@ const jsonLd = {
       name: 'Fabjan Elezi',
       alternateName: 'F.EleziTech',
       url: BASE_URL,
-      jobTitle: 'Computer Science & Engineering Student',
+      jobTitle: 'Business Informatics Student',
       description:
-        'Developer and CS student from Tirana, Albania. Focused on web development, cybersecurity, data analytics and business intelligence.',
+        'Business Informatics student from Tirana, Albania. Focused on data analytics, business intelligence, databases and IT systems.',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Tirana',
@@ -108,11 +109,6 @@ const jsonLd = {
       name: 'F.EleziTech',
       description: 'Developer portfolio of Fabjan Elezi',
       publisher: { '@id': `${BASE_URL}/#person` },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/?q={search_term_string}` },
-        'query-input': 'required name=search_term_string',
-      },
     },
   ],
 };
@@ -130,12 +126,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen antialiased pb-24 md:pb-0" suppressHydrationWarning>
-        <ScrollProgress />
-        <CursorGlow />
-        <ParticleBackground />
-        {children}
-        <MobileDock />
-        <ScrollToTop />
+        <MotionProvider>
+          <ScrollProgress />
+          <CursorGlow />
+          <ParticleBackground />
+          {children}
+          <MobileDock />
+          <ScrollToTop />
+        </MotionProvider>
         <Analytics />
         <Toaster
           position="bottom-right"

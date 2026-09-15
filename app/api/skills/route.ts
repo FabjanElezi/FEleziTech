@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
+import { revalidatePath } from 'next/cache';
 
 function rowToSkill(d: Record<string, unknown>) {
   return { id: d.id, name: d.name, category: d.category, level: d.level, order: d.order };
@@ -18,5 +19,6 @@ export async function POST(req: Request) {
     `INSERT INTO skills (name,category,level,"order") VALUES ($1,$2,$3,$4) RETURNING id`,
     [d.name, d.category, d.level, d.order]
   );
+  revalidatePath('/');
   return Response.json({ id: rows[0].id });
 }

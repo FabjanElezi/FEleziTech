@@ -7,7 +7,9 @@ import { Portfolio } from '@/types';
 interface Props { portfolio: Portfolio | null }
 
 function Typewriter({ roles }: { roles: string[] }) {
-  const [displayed, setDisplayed] = useState('');
+  // Start with the first role fully shown so the text is in the server HTML
+  // and visible before JavaScript loads; the cycle then holds, deletes and continues.
+  const [displayed, setDisplayed] = useState(roles[0]);
   const [idx, setIdx] = useState(0);
   const [typing, setTyping] = useState(true);
 
@@ -42,10 +44,13 @@ function Typewriter({ roles }: { roles: string[] }) {
   );
 }
 
+// Entrance animation is CSS-driven (.hero-in in globals.css) so the hero is
+// visible as soon as the HTML paints, instead of waiting for JS to hydrate.
+const reveal = (delay: number) => ({ '--d': `${delay}s` } as React.CSSProperties);
+
 export default function Hero({ portfolio }: Props) {
   const name = portfolio?.name || 'Fabjan Elezi';
-  const title = portfolio?.title || 'Computer Science & Engineering Student';
-  const tagline = portfolio?.heroTagline || 'Building secure, scalable digital experiences.';
+  const title = portfolio?.title || 'Business Informatics Student';
   const cvUrl = portfolio?.cvUrl;
 
   const roles = [
@@ -81,12 +86,7 @@ export default function Hero({ portfolio }: Props) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
         {portfolio?.availableForWork !== false && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-6"
-          >
+          <div className="mb-6 hero-in" style={reveal(0)}>
             <span
               className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
               style={{
@@ -107,45 +107,36 @@ export default function Hero({ portfolio }: Props) {
               </span>
               Available for opportunities
             </span>
-          </motion.div>
+          </div>
         )}
 
-        <motion.h1
-          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-tight"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+        <h1
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-tight hero-in"
+          style={reveal(0.1)}
         >
           Hi, I&apos;m{' '}
           <span className="gradient-text">{name.split(' ')[0]}</span>
           <br />
           <span className="text-slate-300">{name.split(' ').slice(1).join(' ')}</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          className="text-lg sm:text-xl text-slate-400 mb-2 font-medium"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <p
+          className="text-lg sm:text-xl text-slate-400 mb-2 font-medium hero-in"
+          style={reveal(0.2)}
         >
           {title}
-        </motion.p>
+        </p>
 
-        <motion.p
-          className="text-base mb-10 max-w-xl mx-auto font-medium"
-          style={{ color: 'rgba(34,211,238,0.75)' }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+        <p
+          className="text-base mb-10 max-w-xl mx-auto font-medium hero-in"
+          style={{ color: 'rgba(34,211,238,0.75)', ...reveal(0.3) }}
         >
           <Typewriter roles={roles} />
-        </motion.p>
+        </p>
 
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+        <div
+          className="flex flex-wrap items-center justify-center gap-4 hero-in"
+          style={reveal(0.4)}
         >
           <a href="#projects" className="btn-primary">
             View Projects <ArrowDown size={16} />
@@ -159,29 +150,19 @@ export default function Hero({ portfolio }: Props) {
               Get in Touch <Mail size={16} />
             </a>
           )}
-        </motion.div>
+        </div>
 
         {/* Arrow pointing to social links */}
-        <motion.div
-          className="flex justify-center mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.55 }}
-        >
+        <div className="flex justify-center mt-8 hero-in" style={reveal(0.55)}>
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
           >
             <ArrowDown size={16} className="text-slate-600" />
           </motion.div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="flex items-center justify-center gap-3 mt-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
+        <div className="flex items-center justify-center gap-3 mt-4 hero-in" style={reveal(0.6)}>
           {portfolio?.linkedin && (
             <a
               href={portfolio.linkedin}
@@ -217,7 +198,7 @@ export default function Hero({ portfolio }: Props) {
               <Mail size={22} />
             </a>
           )}
-        </motion.div>
+        </div>
 
       </div>
     </section>

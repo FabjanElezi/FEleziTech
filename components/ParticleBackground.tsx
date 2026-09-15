@@ -74,6 +74,8 @@ export default function ParticleBackground() {
 
   useEffect(() => {
     if (pathname.startsWith('/admin')) return;
+    // Respect the OS "reduce motion" setting: skip the animation entirely.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -83,7 +85,7 @@ export default function ParticleBackground() {
     let W = 0, H = 0;
     let frame = 0;
     let dots: Dot[] = [];
-    let glyphs: Glyph[] = [];
+    const glyphs: Glyph[] = [];
     let scrollY = 0;
     let maxScroll = 1;
     let mountAlpha = 0;                                    // fades in on load to avoid pop-in flash
@@ -102,6 +104,12 @@ export default function ParticleBackground() {
     dots = Array.from({ length: DOT_COUNT }, () => spawnDot(W, H));
     window.addEventListener('resize', resize);
     window.addEventListener('scroll', onScroll, { passive: true });
+    // Pause the render loop while the tab is in the background (saves CPU/battery).
+    const onVisibility = () => {
+      cancelAnimationFrame(raf);
+      if (!document.hidden) raf = requestAnimationFrame(tick);
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     function tick() {
       ctx!.clearRect(0, 0, W, H);
@@ -252,6 +260,7 @@ export default function ParticleBackground() {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [pathname]);
 

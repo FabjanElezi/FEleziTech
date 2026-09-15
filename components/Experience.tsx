@@ -170,7 +170,7 @@ export default function Experience({ experiences }: Props) {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.35, delay: i * 0.06 }}
-                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5 text-sm"
+                      className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline gap-x-6 gap-y-0.5 py-2.5 text-sm"
                       style={{ borderColor: 'rgba(255,255,255,0.06)' }}
                     >
                       <span className="min-w-0">
@@ -179,7 +179,7 @@ export default function Experience({ experiences }: Props) {
                         <span className="text-slate-500">{exp.company}</span>
                         {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
                       </span>
-                      <span className="text-xs text-slate-600 shrink-0">
+                      <span className="text-xs text-slate-600 whitespace-nowrap sm:text-right">
                         {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
                       </span>
                     </motion.li>

@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Download, ArrowDown, Mail } from 'lucide-react';
+import { FileText, ArrowDown, Mail } from 'lucide-react';
 import { Portfolio } from '@/types';
 
 interface Props { portfolio: Portfolio | null }
@@ -142,8 +142,8 @@ export default function Hero({ portfolio }: Props) {
             View Projects <ArrowDown size={16} />
           </a>
           {cvUrl ? (
-            <a href="/api/cv" download="Fabjan_Elezi_CV.pdf" className="btn-ghost">
-              Download CV <Download size={16} />
+            <a href="/api/cv" target="_blank" rel="noopener noreferrer" className="btn-ghost">
+              View CV <FileText size={16} />
             </a>
           ) : (
             <a href="#contact" className="btn-ghost">

@@ -733,9 +733,26 @@ html.theme-transitioning .input-dark {
 [data-theme="light"] .text-white                  { color: #0b1220; }
 [data-theme="light"] .text-slate-300              { color: #164e63; }
 [data-theme="light"] .text-slate-400              { color: #0e7490; }
-[data-theme="light"] .text-slate-500              { color: #06b6d4; }
-[data-theme="light"] .text-slate-600              { color: #22d3ee; }
-[data-theme="light"] .text-cyan-400             { color: #0891b2; }
+[data-theme="light"] .text-slate-500              { color: #475569; }
+[data-theme="light"] .text-slate-600              { color: #64748b; }
+[data-theme="light"] .text-slate-700              { color: #64748b; }
+[data-theme="light"] .text-cyan-400               { color: #0e7490; }
+[data-theme="light"] .text-cyan-300               { color: #0e7490; }
+[data-theme="light"] .skill-chip-cyan             { color: #0e7490; }
+/* Gradient headline: the light cyan stops vanish on a light background */
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #155e75 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: none;
+}
+/* Inline-styled accents that can't see the theme */
+[data-theme="light"] .hero-badge        { color: #0e7490 !important; border-color: rgba(8,145,178,0.45) !important; }
+[data-theme="light"] .hero-tagline      { color: #0e7490 !important; }
+[data-theme="light"] .cert-btn          { color: #92400e !important; background: rgba(245,158,11,0.16) !important; border-color: rgba(180,83,9,0.5) !important; text-shadow: none !important; }
+[data-theme="light"] .db-design-btn,
+[data-theme="light"] .scroll-top-btn,
+[data-theme="light"] [data-light-accent] { color: #0e7490 !important; }
 /* Fix hover:text-white going invisible in light mode */
 [data-theme="light"] .hover\:text-white:hover     { color: #0b1220; }
 [data-theme="light"] .hover\:text-slate-300:hover { color: #164e63; }

@@ -185,7 +185,7 @@ export default function Projects({ projects }: Props) {
                   {project.dbDesignImages && project.dbDesignImages.length > 0 && (
                     <button
                       onClick={() => setDbLightbox(project.dbDesignImages!)}
-                      className="flex items-center gap-1.5 text-xs font-semibold transition-all min-h-[36px]"
+                      className="db-design-btn flex items-center gap-1.5 text-xs font-semibold transition-all min-h-[36px]"
                       style={{
                         color: '#22d3ee',
                         background: 'rgba(6,182,212,0.1)',

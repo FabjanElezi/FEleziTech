@@ -50,7 +50,7 @@ const reveal = (delay: number) => ({ '--d': `${delay}s` } as React.CSSProperties
 
 export default function Hero({ portfolio }: Props) {
   const name = portfolio?.name || 'Fabjan Elezi';
-  const title = portfolio?.title || 'Business Informatics Student';
+  const title = portfolio?.title || 'M.Sc. Information Systems Student';
   const cvUrl = portfolio?.cvUrl;
 
   const roles = [

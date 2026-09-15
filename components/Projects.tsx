@@ -45,8 +45,8 @@ export default function Projects({ projects }: Props) {
       <section id="projects" className="py-32 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-8 h-px bg-purple-500" />
-            <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="w-8 h-px bg-blue-500" />
+            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-4">
@@ -68,8 +68,8 @@ export default function Projects({ projects }: Props) {
           className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-8 h-px bg-purple-500" />
-            <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="w-8 h-px bg-blue-500" />
+            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
@@ -106,7 +106,7 @@ export default function Projects({ projects }: Props) {
                   <div
                     className="w-full h-full flex items-center justify-center text-4xl"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.08))',
+                      background: 'linear-gradient(135deg, rgba(37,99,235,0.15), rgba(6,182,212,0.08))',
                     }}
                   >
                     {'</> '}
@@ -123,7 +123,7 @@ export default function Projects({ projects }: Props) {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                       style={{
-                        background: 'rgba(4,7,18,0.6)',
+                        background: 'rgba(7,8,12,0.6)',
                         backdropFilter: 'blur(5px)',
                         WebkitBackdropFilter: 'blur(5px)',
                       }}
@@ -138,7 +138,7 @@ export default function Projects({ projects }: Props) {
                         transition={{ duration: 0.18 }}
                         className="flex items-center gap-2 font-bold text-white text-sm px-5 py-2.5 rounded-xl"
                         style={{
-                          background: 'linear-gradient(135deg, #7c3aed, #0891b2)',
+                          background: 'linear-gradient(135deg, #2563eb, #0891b2)',
                           boxShadow: '0 0 24px rgba(6,182,212,0.45)',
                           textDecoration: 'none',
                         }}
@@ -213,7 +213,7 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors min-h-[36px]"
                     >
                       <ExternalLink size={13} /> View Project
                     </a>
@@ -223,7 +223,7 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 transition-colors min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors min-h-[36px]"
                     >
                       <ExternalLink size={13} /> Live Demo
                     </a>

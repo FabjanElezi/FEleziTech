@@ -73,21 +73,21 @@ const TABLES = [
 ];
 
 const colorMap: Record<string, string> = {
-  purple:  'rgba(124,58,237,0.15)',
+  purple:  'rgba(37,99,235,0.15)',
   cyan:    'rgba(6,182,212,0.12)',
   emerald: 'rgba(16,185,129,0.12)',
   amber:   'rgba(245,158,11,0.12)',
   slate:   'rgba(100,116,139,0.12)',
 };
 const borderMap: Record<string, string> = {
-  purple:  'rgba(124,58,237,0.35)',
+  purple:  'rgba(37,99,235,0.35)',
   cyan:    'rgba(6,182,212,0.35)',
   emerald: 'rgba(16,185,129,0.35)',
   amber:   'rgba(245,158,11,0.35)',
   slate:   'rgba(100,116,139,0.3)',
 };
 const textMap: Record<string, string> = {
-  purple:  '#c4b5fd',
+  purple:  '#93c5fd',
   cyan:    '#67e8f9',
   emerald: '#6ee7b7',
   amber:   '#fcd34d',
@@ -96,7 +96,7 @@ const textMap: Record<string, string> = {
 
 export default function VideoGameLibraryPage() {
   return (
-    <div className="min-h-screen px-6 py-16" style={{ background: '#040712' }}>
+    <div className="min-h-screen px-6 py-16" style={{ background: '#07080c' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* Back link */}
@@ -110,12 +110,12 @@ export default function VideoGameLibraryPage() {
         {/* Header */}
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-8 h-px bg-purple-500" />
-            <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Database Project</span>
+            <span className="w-8 h-px bg-blue-500" />
+            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Database Project</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Video Game <span style={{ background: 'linear-gradient(135deg,#a78bfa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Library</span>
+            Video Game <span style={{ background: 'linear-gradient(135deg,#60a5fa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Library</span>
           </h1>
           <p className="text-slate-400 text-base max-w-2xl leading-relaxed">
             A relational MySQL database for managing a video game lending library. Tracks games, developers, publishers, genres, platforms, users, and borrow history — with proper normalisation and foreign key constraints.
@@ -126,7 +126,7 @@ export default function VideoGameLibraryPage() {
               <span
                 key={t}
                 className="text-xs px-3 py-1 rounded-full"
-                style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)', color: '#c4b5fd' }}
+                style={{ background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.3)', color: '#93c5fd' }}
               >
                 {t}
               </span>
@@ -146,7 +146,7 @@ export default function VideoGameLibraryPage() {
               className="rounded-xl p-4 text-center"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
             >
-              <p className="text-2xl font-bold" style={{ background: 'linear-gradient(135deg,#a78bfa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.value}</p>
+              <p className="text-2xl font-bold" style={{ background: 'linear-gradient(135deg,#60a5fa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.value}</p>
               <p className="text-slate-500 text-xs mt-1">{s.label}</p>
             </div>
           ))}
@@ -167,7 +167,7 @@ export default function VideoGameLibraryPage() {
         {/* Table overview */}
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-5">
-            <GitBranch size={16} className="text-purple-400" />
+            <GitBranch size={16} className="text-blue-400" />
             <h2 className="text-white font-semibold">Table Overview</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">

@@ -206,7 +206,7 @@ export default function ProjectForm({ project, onDone }: Props) {
           style={{ border: '1px dashed rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}
         >
           {uploading ? (
-            <Loader2 size={20} className="text-purple-400 animate-spin" />
+            <Loader2 size={20} className="text-blue-400 animate-spin" />
           ) : (
             <Upload size={20} className="text-slate-500" />
           )}

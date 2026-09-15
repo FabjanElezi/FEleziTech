@@ -11,7 +11,7 @@ const MAX_SPEED  = 0.22;
 
 // ── glyphs ──────────────────────────────────────────────────
 const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
-const GLYPH_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa'];
+const GLYPH_COLORS = ['#22d3ee','#22d3ee','#2563eb','#60a5fa'];
 const MAX_GLYPHS  = 8;
 const SPAWN_EVERY = 55;
 

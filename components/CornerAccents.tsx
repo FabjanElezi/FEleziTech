@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default function CornerAccents({
-  color = 'rgba(124, 58, 237, 0.38)',
+  color = 'rgba(37,99,235, 0.38)',
   size = 10,
   inset = 8,
 }: Props) {

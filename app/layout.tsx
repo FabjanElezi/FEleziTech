@@ -28,12 +28,12 @@ export const metadata: Metadata = {
     template: '%s | F.EleziTech',
   },
   description:
-    'Fabjan Elezi (F.EleziTech) – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Focused on data analytics, business intelligence and IT systems. Open to internships and junior roles in IT, Data Analytics and BI.',
+    'Fabjan Elezi (F.EleziTech) – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
   keywords: [
     'F.EleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
     'developer portfolio', 'information systems student', 'business informatics', 'FH Aachen',
     'web developer', 'data analyst', 'junior developer',
-    'cybersecurity', 'data analytics', 'business intelligence',
+    'cybersecurity', 'data analytics', 'business intelligence', 'IT systems', 'software development', 'werkstudent',
     'React developer', 'Next.js developer', 'TypeScript',
     'Aachen', 'felezitech.vercel.app',
   ],
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
     siteName: 'F.EleziTech',
     title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     description:
-      'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data analytics, BI and IT systems. Open to internships in IT, Data Analytics and BI.',
+      'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data, IT systems and software. Open to Werkstudent and internship roles.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     description:
-      'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to internships in IT, Data Analytics and BI.',
+      'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to Werkstudent and internship roles in IT, data and software.',
   },
   verification: {
     google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
@@ -90,7 +90,7 @@ const jsonLd = {
       url: BASE_URL,
       jobTitle: 'M.Sc. Information Systems Student',
       description:
-        'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Focused on data analytics, business intelligence, databases and IT systems.',
+        'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Working across data, IT systems and software development.',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Aachen',

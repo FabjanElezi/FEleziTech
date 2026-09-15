@@ -128,6 +128,7 @@ export default function Experience({ experiences }: Props) {
   const work      = experiences.filter((e) => e.type === 'work');
   const education = experiences.filter((e) => e.type === 'education');
   const awards    = experiences.filter((e) => e.type === 'award');
+  const other     = experiences.filter((e) => e.type === 'other');
 
   return (
     <section id="experience" className="py-32 px-6">
@@ -150,7 +151,42 @@ export default function Experience({ experiences }: Props) {
 
         <div className="space-y-16 max-w-3xl mx-auto">
           {work.length > 0 && <Timeline items={work} label="Experience" onCertificate={openCertificate} />}
-          {work.length > 0 && education.length > 0 && (
+          {other.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-2">
+                <Briefcase size={14} className="text-slate-500" />
+                Other experience
+              </h3>
+              <ul className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                {other.map((exp, i) => {
+                  const hasLoc = exp.description?.includes(' — ');
+                  const loc = hasLoc ? exp.description.split(' — ')[0] : null;
+                  return (
+                    <motion.li
+                      key={exp.id}
+                      initial={{ opacity: 0, x: -12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.35, delay: i * 0.06 }}
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5 text-sm"
+                      style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+                    >
+                      <span className="min-w-0">
+                        <span className="text-slate-300 font-medium">{exp.role}</span>
+                        <span className="text-slate-600"> · </span>
+                        <span className="text-slate-500">{exp.company}</span>
+                        {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
+                      </span>
+                      <span className="text-xs text-slate-600 shrink-0">
+                        {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
+                      </span>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+          {(work.length > 0 || other.length > 0) && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(8,145,178,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
           {education.length > 0 && <Timeline items={education} label="Education" onCertificate={openCertificate} />}

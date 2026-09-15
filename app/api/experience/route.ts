@@ -22,7 +22,7 @@ async function ensureAwardType() {
         END IF;
         BEGIN
           ALTER TABLE experience ADD CONSTRAINT experience_type_check
-            CHECK (type IN ('work','education','award'));
+            CHECK (type IN ('work','education','award','other'));
         EXCEPTION WHEN duplicate_object THEN NULL;
         END;
       END $$;

@@ -28,14 +28,14 @@ export const metadata: Metadata = {
     template: '%s | F.EleziTech',
   },
   description:
-    'Fabjan Elezi (F.EleziTech) – Business Informatics student from Tirana, Albania, focused on data analytics, business intelligence and IT systems. Open to internships in IT, Data Analytics and Business Intelligence.',
+    'Fabjan Elezi (F.EleziTech) – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Focused on data analytics, business intelligence and IT systems. Open to internships and junior roles in IT, Data Analytics and BI.',
   keywords: [
     'F.EleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
-    'developer portfolio', 'business informatics student', 'Albania developer',
+    'developer portfolio', 'information systems student', 'business informatics', 'FH Aachen',
     'web developer', 'data analyst', 'junior developer',
     'cybersecurity', 'data analytics', 'business intelligence',
     'React developer', 'Next.js developer', 'TypeScript',
-    'Tirana developer', 'felezitech.vercel.app',
+    'Aachen', 'felezitech.vercel.app',
   ],
   authors: [{ name: 'Fabjan Elezi', url: BASE_URL }],
   creator: 'Fabjan Elezi',
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
     siteName: 'F.EleziTech',
     title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
-      'Business Informatics student from Albania focused on data analytics and BI. Open to internships in IT, Data Analytics and BI.',
+      'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data analytics, BI and IT systems. Open to internships in IT, Data Analytics and BI.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
-      'Business Informatics student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
+      'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to internships in IT, Data Analytics and BI.',
   },
   verification: {
     google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
@@ -88,13 +88,13 @@ const jsonLd = {
       name: 'Fabjan Elezi',
       alternateName: 'F.EleziTech',
       url: BASE_URL,
-      jobTitle: 'Business Informatics Student',
+      jobTitle: 'M.Sc. Information Systems Student',
       description:
-        'Business Informatics student from Tirana, Albania. Focused on data analytics, business intelligence, databases and IT systems.',
+        'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Focused on data analytics, business intelligence, databases and IT systems.',
       address: {
         '@type': 'PostalAddress',
-        addressLocality: 'Tirana',
-        addressCountry: 'AL',
+        addressLocality: 'Aachen',
+        addressCountry: 'DE',
       },
       knowsAbout: [
         'Web Development', 'React', 'Next.js', 'TypeScript',
@@ -139,7 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           position="bottom-right"
           toastOptions={{
             style: {
-              background: '#0f172a',
+              background: '#131926',
               color: '#e2e8f0',
               border: '1px solid rgba(255,255,255,0.1)',
             },

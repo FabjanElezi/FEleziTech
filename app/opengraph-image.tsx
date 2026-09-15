@@ -10,7 +10,7 @@ export default function Image() {
     (
       <div
         style={{
-          background: '#040712',
+          background: '#090d15',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -25,7 +25,7 @@ export default function Image() {
         <div style={{
           position: 'absolute', top: -80, left: -80,
           width: 500, height: 500, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.18) 0%, transparent 70%)',
         }} />
         <div style={{
           position: 'absolute', bottom: -80, right: -80,
@@ -37,10 +37,10 @@ export default function Image() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
           <div style={{
             width: 6, height: 48,
-            background: 'linear-gradient(to bottom, #7c3aed, #22d3ee)',
+            background: 'linear-gradient(to bottom, #0891b2, #22d3ee)',
             borderRadius: 4,
           }} />
-          <span style={{ fontSize: 22, color: '#7c3aed', fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 22, color: '#0891b2', fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase' }}>
             FeleziTech
           </span>
         </div>
@@ -53,7 +53,7 @@ export default function Image() {
         {/* Title */}
         <div style={{
           fontSize: 26, marginTop: 20,
-          background: 'linear-gradient(135deg, #a78bfa, #22d3ee)',
+          background: 'linear-gradient(135deg, #22d3ee, #22d3ee)',
           backgroundClip: 'text',
           color: 'transparent',
           fontWeight: 600,
@@ -66,9 +66,9 @@ export default function Image() {
           {['Web Development', 'Data Analytics', 'Cybersecurity'].map((t) => (
             <div key={t} style={{
               fontSize: 14, padding: '6px 18px', borderRadius: 999,
-              border: '1px solid rgba(124,58,237,0.4)',
-              background: 'rgba(124,58,237,0.1)',
-              color: '#c4b5fd',
+              border: '1px solid rgba(8,145,178,0.4)',
+              background: 'rgba(8,145,178,0.1)',
+              color: '#67e8f9',
             }}>
               {t}
             </div>

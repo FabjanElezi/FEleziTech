@@ -90,7 +90,7 @@ export default function Dashboard() {
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#07080c' }}>
-        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -147,7 +147,7 @@ export default function Dashboard() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
               style={
                 tab === t.id
-                  ? { background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: 'white' }
+                  ? { background: 'linear-gradient(135deg, #0891b2, #0e7490)', color: 'white' }
                   : { color: '#64748b' }
               }
             >
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
         {dataLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="glass rounded-2xl p-6 sm:p-8">
@@ -203,7 +203,7 @@ export default function Dashboard() {
                         {p.images?.[0] ? (
                           <img src={p.images[0]} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                         ) : (
-                          <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg" style={{ background: 'rgba(37,99,235,0.2)' }}>
+                          <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg" style={{ background: 'rgba(8,145,178,0.2)' }}>
                             📁
                           </div>
                         )}

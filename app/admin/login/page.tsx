@@ -47,7 +47,7 @@ export default function LoginPage() {
           top: '20%', left: '30%',
           width: '500px', height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.12), transparent 70%)',
           filter: 'blur(60px)',
         }}
       />
@@ -56,9 +56,9 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-            style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.3), rgba(29,78,216,0.3))', border: '1px solid rgba(37,99,235,0.4)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(8,145,178,0.3), rgba(14,116,144,0.3))', border: '1px solid rgba(8,145,178,0.4)' }}
           >
-            <Lock size={24} className="text-blue-400" />
+            <Lock size={24} className="text-cyan-400" />
           </div>
           <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
           <p className="text-slate-500 text-sm mt-1">Sign in to manage your portfolio</p>

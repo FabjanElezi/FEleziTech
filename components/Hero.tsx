@@ -69,7 +69,7 @@ export default function Hero({ portfolio }: Props) {
           top: '-10%', left: '-10%',
           width: '600px', height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.18), transparent 70%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.18), transparent 70%)',
           filter: 'blur(60px)',
         }}
       />
@@ -90,20 +90,20 @@ export default function Hero({ portfolio }: Props) {
             <span
               className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
               style={{
-                background: 'rgba(37,99,235,0.1)',
-                border: '1px solid rgba(96,165,250,0.35)',
-                color: '#93c5fd',
+                background: 'rgba(8,145,178,0.1)',
+                border: '1px solid rgba(34,211,238,0.35)',
+                color: '#67e8f9',
                 backdropFilter: 'blur(16px) saturate(160%)',
                 WebkitBackdropFilter: 'blur(16px) saturate(160%)',
-                boxShadow: '0 2px 0 rgba(255,255,255,0.12) inset, 0 0 24px rgba(37,99,235,0.18)',
+                boxShadow: '0 2px 0 rgba(255,255,255,0.12) inset, 0 0 24px rgba(8,145,178,0.18)',
               }}
             >
               <span className="relative flex h-2 w-2">
                 <span
                   className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: '#60a5fa' }}
+                  style={{ background: '#22d3ee' }}
                 />
-                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#2563eb' }} />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#0891b2' }} />
               </span>
               Available for opportunities
             </span>

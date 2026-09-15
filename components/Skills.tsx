@@ -12,7 +12,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 const categoryCorner: Record<string, string> = {
-  technical: 'rgba(37,99,235,0.38)',
+  technical: 'rgba(8,145,178,0.38)',
   language: 'rgba(6,182,212,0.35)',
   tool: 'rgba(16,185,129,0.35)',
 };
@@ -35,7 +35,7 @@ export default function Skills({ skills }: Props) {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(37,99,235,0.04), transparent)',
+          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(8,145,178,0.04), transparent)',
         }}
       />
       <div className="max-w-5xl mx-auto relative">
@@ -46,8 +46,8 @@ export default function Skills({ skills }: Props) {
           className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-8 h-px bg-blue-500" />
-            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Skills</span>
+            <span className="w-8 h-px bg-cyan-500" />
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Skills</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

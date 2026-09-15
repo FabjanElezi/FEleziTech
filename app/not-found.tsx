@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <main className="min-h-screen flex items-center justify-center px-6 text-center">
       <div>
-        <p className="text-blue-400 text-sm font-semibold uppercase tracking-wider mb-3">404</p>
+        <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-3">404</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
           Page <span className="gradient-text">not found</span>
         </h1>

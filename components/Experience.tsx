@@ -22,9 +22,9 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
     const lineColor = isAward
       ? 'linear-gradient(to bottom, rgba(245,158,11,0.5), transparent)'
       : isWork
-        ? 'linear-gradient(to bottom, rgba(37,99,235,0.5), transparent)'
+        ? 'linear-gradient(to bottom, rgba(8,145,178,0.5), transparent)'
         : 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)';
-    const dotClass  = isAward ? '' : isWork ? 'border-blue-500' : 'border-cyan-400';
+    const dotClass  = isAward ? '' : isWork ? 'border-cyan-500' : 'border-cyan-400';
     const dotStyle  = isAward ? { borderColor: '#f59e0b', background: '#07080c', transform: 'translateX(-50%)' } : { background: '#07080c', transform: 'translateX(-50%)' };
 
     return (
@@ -33,7 +33,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
         {isAward
           ? <Trophy size={14} style={{ color: '#f59e0b' }} />
           : isWork
-            ? <Briefcase size={14} className="text-blue-400" />
+            ? <Briefcase size={14} className="text-cyan-400" />
             : <GraduationCap size={14} className="text-cyan-400" />}
         {label}
       </h3>
@@ -58,7 +58,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
                   <div className="min-w-0">
                     <p className="font-semibold text-white text-sm leading-snug">{exp.role}</p>
-                    <p className="text-blue-400 text-sm">{exp.company}</p>
+                    <p className="text-cyan-400 text-sm">{exp.company}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="flex items-center gap-1 text-xs text-slate-500">
@@ -139,8 +139,8 @@ export default function Experience({ experiences }: Props) {
           className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-8 h-px bg-blue-500" />
-            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Timeline</span>
+            <span className="w-8 h-px bg-cyan-500" />
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Timeline</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
@@ -151,7 +151,7 @@ export default function Experience({ experiences }: Props) {
         <div className="space-y-16 max-w-3xl mx-auto">
           {work.length > 0 && <Timeline items={work} label="Experience" onCertificate={openCertificate} />}
           {work.length > 0 && education.length > 0 && (
-            <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(37,99,235,0.3), rgba(6,182,212,0.25), transparent)' }} />
+            <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(8,145,178,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
           {education.length > 0 && <Timeline items={education} label="Education" onCertificate={openCertificate} />}
           {awards.length > 0 && education.length > 0 && (

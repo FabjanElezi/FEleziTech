@@ -1,26 +1,26 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
-// ── dots ────────────────────────────────────────────────────
-const DOT_COUNT  = 32;
-const DOT_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa','#ffffff'];
-
-// ── plexus ──────────────────────────────────────────────────
-const LINK_DIST  = 155;   // px — max distance to draw a connecting line
-const MAX_LINK_A = 0.22;  // max line opacity
+// ── plexus config ────────────────────────────────────────────
+const DOT_COUNT  = 44;
+const LINK_DIST  = 175;    // max distance to connect two nodes
+const TRI_ALPHA  = 0.055;  // filled triangle face opacity
+const LINE_MAX_A = 0.72;
+const MAX_SPEED  = 0.22;
 
 // ── glyphs ──────────────────────────────────────────────────
 const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
 const GLYPH_COLORS = ['#22d3ee','#22d3ee','#7c3aed','#a78bfa'];
-const MAX_GLYPHS  = 12;
-const SPAWN_EVERY = 45;
+const MAX_GLYPHS  = 8;
+const SPAWN_EVERY = 55;
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
 function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
 
 interface Dot {
   x: number; y: number; r: number;
-  vx: number; vy: number; o: number; c: string;
+  vx: number; vy: number; o: number;
 }
 
 type Phase = 'in' | 'hold' | 'out';
@@ -32,22 +32,14 @@ interface Glyph {
   size: number; c: string;
 }
 
-function sidedX(w: number): number {
-  // 78% chance to spawn in outer 24% on either side, rest anywhere
-  if (Math.random() < 0.78) {
-    return Math.random() < 0.5 ? rand(0, w * 0.24) : rand(w * 0.76, w);
-  }
-  return rand(0, w);
-}
-
 function spawnDot(w: number, h: number): Dot {
   return {
-    x: sidedX(w), y: rand(0, h),
-    r: rand(0.7, 1.6),
-    vx: rand(-0.05, 0.05),
-    vy: rand(-0.1, -0.03),
-    o: rand(0.1, 0.22),
-    c: pick(DOT_COLORS),
+    x: rand(w * 0.04, w * 0.96),
+    y: rand(h * 0.04, h * 0.96),
+    r: rand(1.4, 3.0),
+    vx: rand(-0.12, 0.12),
+    vy: rand(-0.12, 0.12),
+    o: rand(0.55, 0.95),
   };
 }
 
@@ -56,30 +48,32 @@ function spawnGlyph(w: number, h: number): Glyph {
   let x: number, y: number, vx: number, vy: number;
   if (edge === 0) {
     x = rand(w * 0.05, w * 0.95); y = rand(-20, -5);
-    vx = rand(-0.12, 0.12); vy = rand(0.08, 0.18);
+    vx = rand(-0.1, 0.1); vy = rand(0.07, 0.15);
   } else if (edge === 1) {
     x = rand(-30, -8); y = rand(h * 0.05, h * 0.95);
-    vx = rand(0.06, 0.16); vy = rand(-0.08, 0.08);
+    vx = rand(0.06, 0.14); vy = rand(-0.06, 0.06);
   } else if (edge === 2) {
     x = rand(w + 8, w + 30); y = rand(h * 0.05, h * 0.95);
-    vx = rand(-0.16, -0.06); vy = rand(-0.08, 0.08);
+    vx = rand(-0.14, -0.06); vy = rand(-0.06, 0.06);
   } else {
     x = rand(w * 0.05, w * 0.95); y = rand(h + 5, h + 20);
-    vx = rand(-0.12, 0.12); vy = rand(-0.18, -0.08);
+    vx = rand(-0.1, 0.1); vy = rand(-0.15, -0.07);
   }
   return {
     sym: pick(SYMS), x, y, vx, vy,
-    o: 0, maxO: rand(0.45, 0.68),
+    o: 0, maxO: rand(0.4, 0.62),
     phase: 'in', phaseT: 0,
-    size: Math.floor(rand(12, 17)),
+    size: Math.floor(rand(11, 16)),
     c: pick(GLYPH_COLORS),
   };
 }
 
 export default function ParticleBackground() {
   const ref = useRef<HTMLCanvasElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname.startsWith('/admin')) return;
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -92,6 +86,8 @@ export default function ParticleBackground() {
     let glyphs: Glyph[] = [];
     let scrollY = 0;
     let maxScroll = 1;
+    let mountAlpha = 0;                                    // fades in on load to avoid pop-in flash
+    const dist2 = new Float32Array(DOT_COUNT * DOT_COUNT); // reused every frame — no per-frame alloc
 
     function resize() {
       W = canvas!.width  = window.innerWidth;
@@ -111,74 +107,127 @@ export default function ParticleBackground() {
       ctx!.clearRect(0, 0, W, H);
       frame++;
 
-      // ── scroll-based visibility: show only at top (hero) and bottom (contact) ──
+      // scroll-based visibility: hero (top) and contact (bottom)
       const topFade    = Math.max(0, 1 - scrollY / (H * 1.1));
       const bottomFade = Math.max(0, Math.min(1, (scrollY - (maxScroll - H * 1.6)) / (H * 0.6)));
       const pageFactor = Math.max(topFade, bottomFade);
+
+      mountAlpha = Math.min(1, mountAlpha + 0.018); // ~56 frames ≈ 0.9 s fade-in
 
       if (pageFactor < 0.005) {
         raf = requestAnimationFrame(tick);
         return;
       }
 
-      // ── ambient misty glow (bottom-left area, very faint) ──
-      const grd = ctx!.createRadialGradient(W * 0.28, H * 0.72, 0, W * 0.28, H * 0.72, W * 0.42);
-      grd.addColorStop(0, `rgba(6,182,212,${0.028 * pageFactor})`);
-      grd.addColorStop(1, 'rgba(6,182,212,0)');
-      ctx!.globalAlpha = 1;
-      ctx!.fillStyle = grd;
-      ctx!.fillRect(0, 0, W, H);
+      const alpha  = pageFactor * mountAlpha;
+      const mobile = W < 640;
 
-      // ── move dots ──
-      for (const d of dots) {
-        d.x += d.vx; d.y += d.vy;
-        if (d.y < -4) { d.y = H + 4; d.x = sidedX(W); }
-        if (d.x < -4)    d.x = W + 4;
-        if (d.x > W + 4) d.x = -4;
-      }
+      if (!mobile) {
+        // move dots — slow drift with wrap-around
+        for (const d of dots) {
+          d.vx = d.vx * 0.992 + rand(-0.006, 0.006);
+          d.vy = d.vy * 0.992 + rand(-0.006, 0.006);
+          const spd = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+          if (spd > MAX_SPEED) { d.vx *= MAX_SPEED / spd; d.vy *= MAX_SPEED / spd; }
+          d.x += d.vx; d.y += d.vy;
+          if (d.x < -12) d.x = W + 12;
+          if (d.x > W+12) d.x = -12;
+          if (d.y < -12) d.y = H + 12;
+          if (d.y > H+12) d.y = -12;
+        }
 
-      // ── plexus lines between nearby dots ──
-      ctx!.lineWidth = 0.55;
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx = dots[i].x - dots[j].x;
-          const dy = dots[i].y - dots[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < LINK_DIST) {
-            const midX = (dots[i].x + dots[j].x) * 0.5;
-            const edgeness = Math.abs(midX / W - 0.5) * 2;
-            const sideFactor = 0.1 + edgeness * 0.9;
-            const alpha = (1 - dist / LINK_DIST) * MAX_LINK_A * sideFactor * pageFactor;
-            if (alpha < 0.003) continue;
-            ctx!.globalAlpha = alpha;
-            ctx!.strokeStyle = '#22d3ee';
+        // precompute pairwise distances (reuse pre-allocated buffer)
+        for (let i = 0; i < DOT_COUNT; i++) {
+          for (let j = i + 1; j < DOT_COUNT; j++) {
+            const dx = dots[i].x - dots[j].x;
+            const dy = dots[i].y - dots[j].y;
+            const d  = Math.sqrt(dx * dx + dy * dy);
+            dist2[i * DOT_COUNT + j] = d;
+            dist2[j * DOT_COUNT + i] = d;
+          }
+        }
+
+        // ── ambient atmospheric glow ──────────────────────────
+        let cx = 0, cy = 0;
+        for (const d of dots) { cx += d.x; cy += d.y; }
+        cx /= DOT_COUNT; cy /= DOT_COUNT;
+
+        const grd = ctx!.createRadialGradient(cx, cy, 0, cx, cy, W * 0.52);
+        grd.addColorStop(0,   `rgba(6,182,212,${0.10 * alpha})`);
+        grd.addColorStop(0.4, `rgba(6,182,212,${0.04 * alpha})`);
+        grd.addColorStop(1,   'rgba(6,182,212,0)');
+        ctx!.globalAlpha = 1;
+        ctx!.fillStyle = grd;
+        ctx!.fillRect(0, 0, W, H);
+
+        // ── filled triangle faces ─────────────────────────────
+        ctx!.fillStyle = `rgba(34,211,238,${TRI_ALPHA * alpha})`;
+        ctx!.globalAlpha = 1;
+        for (let i = 0; i < DOT_COUNT; i++) {
+          for (let j = i + 1; j < DOT_COUNT; j++) {
+            if (dist2[i * DOT_COUNT + j] >= LINK_DIST) continue;
+            for (let k = j + 1; k < DOT_COUNT; k++) {
+              if (dist2[i * DOT_COUNT + k] >= LINK_DIST) continue;
+              if (dist2[j * DOT_COUNT + k] >= LINK_DIST) continue;
+              ctx!.beginPath();
+              ctx!.moveTo(dots[i].x, dots[i].y);
+              ctx!.lineTo(dots[j].x, dots[j].y);
+              ctx!.lineTo(dots[k].x, dots[k].y);
+              ctx!.closePath();
+              ctx!.fill();
+            }
+          }
+        }
+
+        // ── plexus lines ──────────────────────────────────────
+        ctx!.lineWidth = 1.3;
+        ctx!.strokeStyle = '#22d3ee';
+        for (let i = 0; i < DOT_COUNT; i++) {
+          for (let j = i + 1; j < DOT_COUNT; j++) {
+            const d = dist2[i * DOT_COUNT + j];
+            if (d >= LINK_DIST) continue;
+            const lineA = (1 - d / LINK_DIST) * LINE_MAX_A * alpha;
+            if (lineA < 0.003) continue;
+            ctx!.globalAlpha = lineA;
             ctx!.beginPath();
             ctx!.moveTo(dots[i].x, dots[i].y);
             ctx!.lineTo(dots[j].x, dots[j].y);
             ctx!.stroke();
           }
         }
+
+        // ── glowing nodes ─────────────────────────────────────
+        ctx!.save();
+        ctx!.shadowColor = '#22d3ee';
+        ctx!.shadowBlur  = 10;
+        ctx!.fillStyle   = '#22d3ee';
+        ctx!.globalAlpha = 0.28 * alpha;
+        for (const d of dots) {
+          ctx!.beginPath();
+          ctx!.arc(d.x, d.y, d.r * 2.2, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+        ctx!.restore();
+
+        ctx!.fillStyle = '#22d3ee';
+        for (const d of dots) {
+          ctx!.globalAlpha = d.o * alpha;
+          ctx!.beginPath();
+          ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx!.fill();
+        }
       }
 
-      // ── draw dots ──
-      for (const d of dots) {
-        ctx!.beginPath();
-        ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx!.fillStyle = d.c;
-        ctx!.globalAlpha = d.o * pageFactor;
-        ctx!.fill();
-      }
-
-      // ── spawn / draw glyphs ──
-      if (frame % SPAWN_EVERY === 0 && glyphs.length < MAX_GLYPHS) {
+      // ── glyphs — more dense on mobile ────────────────────────
+      const glyphCap   = mobile ? 24 : MAX_GLYPHS;
+      const spawnEvery = mobile ? 16 : SPAWN_EVERY;
+      if (frame % spawnEvery === 0 && glyphs.length < glyphCap) {
         glyphs.push(spawnGlyph(W, H));
       }
-
       for (let i = glyphs.length - 1; i >= 0; i--) {
         const g = glyphs[i];
         g.x += g.vx; g.y += g.vy;
         g.phaseT++;
-
         if (g.phase === 'in') {
           g.o = Math.min(g.o + g.maxO / 40, g.maxO);
           if (g.phaseT >= 40) { g.phase = 'hold'; g.phaseT = 0; }
@@ -188,8 +237,7 @@ export default function ParticleBackground() {
           g.o = Math.max(g.o - g.maxO / 50, 0);
           if (g.o <= 0) { glyphs.splice(i, 1); continue; }
         }
-
-        ctx!.globalAlpha = g.o * pageFactor;
+        ctx!.globalAlpha = Math.min(1, g.o * alpha * (mobile ? 1.5 : 1));
         ctx!.fillStyle = g.c;
         ctx!.font = `${g.size}px ui-monospace, monospace`;
         ctx!.fillText(g.sym, g.x, g.y);
@@ -205,7 +253,7 @@ export default function ParticleBackground() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <canvas
@@ -215,6 +263,7 @@ export default function ParticleBackground() {
         width: '100%', height: '100%',
         pointerEvents: 'none',
         zIndex: 1,
+        willChange: 'transform',
       }}
     />
   );

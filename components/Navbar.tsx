@@ -1,8 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 
 const links = [
@@ -16,7 +15,6 @@ const links = [
 export default function Navbar() {
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
-  const [open, setOpen] = useState(false);
 
   // Scroll → glass + cyan glow + hide/show
   useEffect(() => {
@@ -107,51 +105,18 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile toggle */}
-        <div className="md:hidden flex items-center gap-1">
+        {/* Mobile right — theme toggle + admin link */}
+        <div className="md:hidden flex items-center gap-2 shrink-0">
           <ThemeToggle />
-          <button
-            className="text-slate-400 hover:text-white transition-colors flex items-center justify-center"
-            style={{ minWidth: 44, minHeight: 44 }}
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
+          <Link
+            href="/admin"
+            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors"
+            style={{ minHeight: 44, display: 'flex', alignItems: 'center', padding: '0 6px' }}
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            Admin
+          </Link>
         </div>
       </nav>
-
-      {/* Mobile menu */}
-      {open && (
-        <div
-          className="md:hidden border-t"
-          style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(4,7,18,0.6)', backdropFilter: 'blur(24px)', borderRadius: '0 0 1rem 1rem' }}
-        >
-          <ul className="flex flex-col px-5 py-3 gap-1">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="mobile-menu-link text-slate-300 transition-colors flex items-center"
-                  onClick={() => setOpen(false)}
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <Link
-                href="/admin"
-                className="text-purple-400 text-sm flex items-center"
-                style={{ minHeight: 44 }}
-                onClick={() => setOpen(false)}
-              >
-                Admin Panel →
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
     </header>
   );
 }

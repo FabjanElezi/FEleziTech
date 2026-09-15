@@ -8,8 +8,9 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import SectionDivider from '@/components/SectionDivider';
 import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
+import SocialSidebar from '@/components/SocialSidebar';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [portfolio, projects, experiences, skills] = await Promise.all([
@@ -24,11 +25,17 @@ export default async function HomePage() {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          background:
-            'radial-gradient(ellipse 80% 60% at 20% 0%, rgba(124,58,237,0.1) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(6,182,212,0.07) 0%, transparent 60%)',
+          background: [
+            'radial-gradient(ellipse 75% 60% at 10% 18%, rgba(139,92,246,0.1) 0%, transparent 65%)',
+            'radial-gradient(ellipse 65% 55% at 92% 12%, rgba(6,182,212,0.14) 0%, transparent 62%)',
+            'radial-gradient(ellipse 72% 58% at 48% 94%, rgba(109,40,217,0.08) 0%, transparent 66%)',
+            'radial-gradient(ellipse 50% 45% at 80% 58%, rgba(236,72,153,0.04) 0%, transparent 58%)',
+            'radial-gradient(ellipse 55% 40% at 22% 75%, rgba(6,182,212,0.1) 0%, transparent 60%)',
+          ].join(', '),
         }}
       />
       <div className="relative z-10">
+        <SocialSidebar linkedin={portfolio?.linkedin} github={portfolio?.github} email={portfolio?.email} />
         <Navbar />
         <Hero portfolio={portfolio} />
         <SectionDivider />

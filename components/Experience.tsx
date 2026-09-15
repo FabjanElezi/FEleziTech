@@ -10,21 +10,14 @@ const CertificateLightbox = dynamic(() => import('@/components/CertificateLightb
 
 interface Props { experiences: Exp[] }
 
-export default function Experience({ experiences }: Props) {
-  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+interface TimelineProps {
+  items: Exp[];
+  label: string;
+  onCertificate: (url: string) => void;
+}
 
-  const openCertificate = useCallback((url: string) => {
-    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
-      url.includes('blob.vercel-storage.com');
-    if (isImage) setLightboxUrl(url);
-    else window.open(url, '_blank', 'noopener,noreferrer');
-  }, []);
-  const work      = experiences.filter((e) => e.type === 'work');
-  const education = experiences.filter((e) => e.type === 'education');
-  const awards    = experiences.filter((e) => e.type === 'award');
-
-  const Timeline = ({ items, label }: { items: Exp[]; label: string }) => {
-    const isWork    = label === 'Work';
+function Timeline({ items, label, onCertificate }: TimelineProps) {
+    const isWork    = label === 'Experience';
     const isAward   = label === 'Awards';
     const lineColor = isAward
       ? 'linear-gradient(to bottom, rgba(245,158,11,0.5), transparent)'
@@ -87,7 +80,7 @@ export default function Experience({ experiences }: Props) {
                 )}
                 {exp.certificateUrl && (
                   <button
-                    onClick={() => openCertificate(exp.certificateUrl!)}
+                    onClick={() => onCertificate(exp.certificateUrl!)}
                     className="mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
                     style={{
                       color: '#f0c040',
@@ -121,7 +114,20 @@ export default function Experience({ experiences }: Props) {
       </div>
     </div>
     );
-  };
+}
+
+export default function Experience({ experiences }: Props) {
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+
+  const openCertificate = useCallback((url: string) => {
+    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
+      url.includes('blob.vercel-storage.com');
+    if (isImage) setLightboxUrl(url);
+    else window.open(url, '_blank', 'noopener,noreferrer');
+  }, []);
+  const work      = experiences.filter((e) => e.type === 'work');
+  const education = experiences.filter((e) => e.type === 'education');
+  const awards    = experiences.filter((e) => e.type === 'award');
 
   return (
     <section id="experience" className="py-32 px-6">
@@ -143,15 +149,15 @@ export default function Experience({ experiences }: Props) {
         </motion.div>
 
         <div className="space-y-16 max-w-3xl mx-auto">
-          {work.length > 0 && <Timeline items={work} label="Work" />}
+          {work.length > 0 && <Timeline items={work} label="Experience" onCertificate={openCertificate} />}
           {work.length > 0 && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,58,237,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
-          {education.length > 0 && <Timeline items={education} label="Education" />}
+          {education.length > 0 && <Timeline items={education} label="Education" onCertificate={openCertificate} />}
           {awards.length > 0 && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.3), transparent)' }} />
           )}
-          {awards.length > 0 && <Timeline items={awards} label="Awards" />}
+          {awards.length > 0 && <Timeline items={awards} label="Awards" onCertificate={openCertificate} />}
         </div>
       </div>
       {lightboxUrl && (

@@ -6,6 +6,7 @@ import CursorGlow from '@/components/CursorGlow';
 import ParticleBackground from '@/components/ParticleBackground';
 import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
+import MobileDock from '@/components/MobileDock';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -22,13 +23,13 @@ const BASE_URL = 'https://felezitech.vercel.app';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
-    template: '%s | FeleziTech',
+    default: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
+    template: '%s | F.EleziTech',
   },
   description:
-    'Fabjan Elezi (FeleziTech) – Computer Science & Engineering student from Tirana, Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and Business Intelligence.',
+    'Fabjan Elezi (F.EleziTech) – Computer Science & Engineering student from Tirana, Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and Business Intelligence.',
   keywords: [
-    'FeleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
+    'F.EleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
     'developer portfolio', 'computer science student', 'Albania developer',
     'web developer', 'full stack developer', 'junior developer',
     'cybersecurity', 'data analytics', 'business intelligence',
@@ -54,14 +55,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: BASE_URL,
-    siteName: 'FeleziTech',
-    title: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
+    siteName: 'F.EleziTech',
+    title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
       'Computer Science & Engineering student from Albania. Building secure, scalable web applications. Open to internships in IT, Data Analytics and BI.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fabjan Elezi – FeleziTech | Developer Portfolio',
+    title: 'Fabjan Elezi – F.EleziTech | Developer Portfolio',
     description:
       'Computer Science & Engineering student from Albania. Open to internships in IT, Data Analytics and Business Intelligence.',
   },
@@ -84,7 +85,7 @@ const jsonLd = {
       '@type': 'Person',
       '@id': `${BASE_URL}/#person`,
       name: 'Fabjan Elezi',
-      alternateName: 'FeleziTech',
+      alternateName: 'F.EleziTech',
       url: BASE_URL,
       jobTitle: 'Computer Science & Engineering Student',
       description:
@@ -104,7 +105,7 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
-      name: 'FeleziTech',
+      name: 'F.EleziTech',
       description: 'Developer portfolio of Fabjan Elezi',
       publisher: { '@id': `${BASE_URL}/#person` },
       potentialAction: {
@@ -128,11 +129,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen antialiased" suppressHydrationWarning>
+      <body className="min-h-screen antialiased pb-24 md:pb-0" suppressHydrationWarning>
         <ScrollProgress />
         <CursorGlow />
         <ParticleBackground />
         {children}
+        <MobileDock />
         <ScrollToTop />
         <Analytics />
         <Toaster

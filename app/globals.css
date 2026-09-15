@@ -807,3 +807,20 @@ html.theme-transitioning .input-dark {
 html[data-admin] body::before,
 html[data-admin] body::after { display: none; }
 html[data-admin] body { background-image: none; }
+
+/* Admin header actions: compact, icon-only on phones */
+.admin-action {
+  height: 34px;
+  min-height: 34px !important;
+  padding: 0 12px;
+  border-radius: 8px;
+}
+@media (max-width: 639px) {
+  .admin-action {
+    width: 40px;
+    height: 40px;
+    min-height: 40px !important;
+    padding: 0;
+    justify-content: center;
+  }
+}

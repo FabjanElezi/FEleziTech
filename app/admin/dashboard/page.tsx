@@ -106,29 +106,29 @@ export default function Dashboard() {
     <div className="min-h-screen" style={{ background: '#090d15' }}>
       {/* Header */}
       <header
-        className="sticky top-0 z-40 px-6 h-14 flex items-center justify-between"
+        className="sticky top-0 z-40 px-4 sm:px-6 h-14 flex items-center justify-between gap-3"
         style={{ background: 'rgba(9,13,21,0.9)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
       >
         <div className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Fabjan Elezi Tech" width={96} height={32} className="object-contain h-8 w-auto" />
-          <span className="text-slate-500 text-xs">Admin Panel</span>
+          <span className="text-slate-500 text-xs hidden sm:inline">Admin Panel</span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-slate-500 text-xs hidden sm:block">{user.email}</span>
-          <a href="/" target="_blank" rel="noopener noreferrer" className="btn-ghost text-xs py-1 px-3 flex items-center gap-1">
-            <ExternalLink size={12} /> View Site
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-slate-500 text-xs hidden md:block">{user.email}</span>
+          <a href="/" target="_blank" rel="noopener noreferrer" className="btn-ghost admin-action text-xs flex items-center gap-1.5" aria-label="View site">
+            <ExternalLink size={13} /> <span className="hidden sm:inline">View Site</span>
           </a>
           <button
             onClick={handleSeed}
             disabled={seeding}
-            className="btn-ghost text-xs py-1 px-3 flex items-center gap-1"
-            title="Seed initial data from CV"
+            className="btn-ghost admin-action text-xs flex items-center gap-1.5"
+            title="Seed initial data from CV" aria-label="Seed data"
           >
-            {seeding ? <RefreshCw size={12} className="animate-spin" /> : <Database size={12} />}
+            {seeding ? <RefreshCw size={13} className="animate-spin" /> : <Database size={13} />}
             <span className="hidden sm:inline">Seed Data</span>
           </button>
-          <button onClick={handleLogout} className="flex items-center gap-1.5 text-slate-500 hover:text-red-400 transition-colors text-sm">
+          <button onClick={handleLogout} aria-label="Log out" className="admin-action flex items-center justify-center text-slate-500 hover:text-red-400 transition-colors text-sm">
             <LogOut size={15} />
           </button>
         </div>

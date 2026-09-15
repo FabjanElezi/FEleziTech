@@ -102,7 +102,7 @@ export default function CursorGlow() {
       document.removeEventListener('mouseenter', onReturn);
       document.getElementById('custom-cursor-css')?.remove();
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <>

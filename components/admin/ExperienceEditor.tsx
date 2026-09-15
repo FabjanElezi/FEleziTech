@@ -215,7 +215,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
       </div>
 
       <div>
-        <label className="block text-xs text-slate-400 mb-1">Certificate (URL or upload image)</label>
+        <label className="block text-xs text-slate-400 mb-1">Certificate (URL or upload PDF / image)</label>
         <div className="flex gap-2">
           <input
             className="input-dark flex-1"
@@ -227,7 +227,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
             {uploading
               ? <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
               : <><Upload size={13} /> Upload</>}
-            <input type="file" accept="image/*" className="sr-only"
+            <input type="file" accept=".pdf,image/*" className="sr-only"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCertificate(f); }} />
           </label>
         </div>

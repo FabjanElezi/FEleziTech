@@ -120,8 +120,10 @@ export default function Experience({ experiences }: Props) {
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const openCertificate = useCallback((url: string) => {
-    const isImage = /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
-      url.includes('blob.vercel-storage.com');
+    const isPdf = /\.pdf(\?|$)/i.test(url);
+    const isImage = !isPdf && (/\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url) ||
+      url.includes('blob.vercel-storage.com'));
+    // PDFs (and external links) open in a new tab in the browser's viewer, like the CV
     if (isImage) setLightboxUrl(url);
     else window.open(url, '_blank', 'noopener,noreferrer');
   }, []);

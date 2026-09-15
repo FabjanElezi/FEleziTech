@@ -78,7 +78,7 @@ export default function MobileDock() {
           gap: '2px',
           padding: '6px 10px',
           borderRadius: '100px',
-          background: 'rgba(4,7,18,0.6)',
+          background: 'rgba(7,8,12,0.6)',
           backdropFilter: 'blur(48px) saturate(210%) brightness(1.12) contrast(0.94)',
           border: '1px solid rgba(255,255,255,0.14)',
           boxShadow:

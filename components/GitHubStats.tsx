@@ -56,7 +56,7 @@ export default function GitHubStats() {
   const topLangs = Object.entries(langCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
 
   const stats = [
-    { icon: <BookOpen size={15} className="text-purple-400" />, label: 'Repositories', value: user?.public_repos ?? '—' },
+    { icon: <BookOpen size={15} className="text-blue-400" />, label: 'Repositories', value: user?.public_repos ?? '—' },
     { icon: <Star size={15} className="text-amber-400" />,      label: 'Total Stars',  value: totalStars || '—' },
     { icon: <Users size={15} className="text-cyan-400" />,      label: 'Followers',    value: user?.followers ?? '—' },
   ];
@@ -72,8 +72,8 @@ export default function GitHubStats() {
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease }}
         >
-          <span className="w-8 h-px bg-purple-500" />
-          <span className="text-purple-400 text-sm font-semibold uppercase tracking-wider">Open Source</span>
+          <span className="w-8 h-px bg-blue-500" />
+          <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Open Source</span>
         </motion.div>
 
         <motion.div
@@ -106,7 +106,7 @@ export default function GitHubStats() {
               <div className="flex justify-center mb-2">{s.icon}</div>
               <p
                 className="text-2xl font-bold mb-1"
-                style={{ background: 'linear-gradient(135deg,#a78bfa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                style={{ background: 'linear-gradient(135deg,#60a5fa,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
               >
                 {loaded ? s.value : '…'}
               </p>

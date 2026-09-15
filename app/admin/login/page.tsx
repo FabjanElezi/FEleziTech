@@ -39,7 +39,7 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: '#07080c' }}
+      style={{ background: '#090d15' }}
     >
       <div
         className="absolute pointer-events-none"

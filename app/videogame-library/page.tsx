@@ -96,7 +96,7 @@ const textMap: Record<string, string> = {
 
 export default function VideoGameLibraryPage() {
   return (
-    <div className="min-h-screen px-6 py-16" style={{ background: '#07080c' }}>
+    <div className="min-h-screen px-6 py-16" style={{ background: '#090d15' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* Back link */}

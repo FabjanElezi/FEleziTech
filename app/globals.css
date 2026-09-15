@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #050507;
-  --bg-secondary: #0b0c10;
+  --bg-primary: #070b12;
+  --bg-secondary: #0d121c;
   --accent-purple: #06b6d4;
   --accent-cyan: #06b6d4;
   --glass-bg: rgba(255, 255, 255, 0.05);

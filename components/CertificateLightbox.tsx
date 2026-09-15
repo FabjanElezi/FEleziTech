@@ -41,7 +41,7 @@ export default function CertificateLightbox({ url, onClose }: Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ background: 'rgba(7,8,12,0.95)' }}
+        style={{ background: 'rgba(9,13,21,0.95)' }}
         onClick={onClose}
       >
         <div className="min-h-full flex items-center justify-center p-4 sm:p-8">

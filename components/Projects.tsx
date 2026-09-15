@@ -123,7 +123,7 @@ export default function Projects({ projects }: Props) {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                       style={{
-                        background: 'rgba(7,8,12,0.6)',
+                        background: 'rgba(9,13,21,0.6)',
                         backdropFilter: 'blur(5px)',
                         WebkitBackdropFilter: 'blur(5px)',
                       }}

@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
+import { revalidatePath } from 'next/cache';
 
 export async function PUT(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const auth = await getAuthEmail();
@@ -11,6 +12,7 @@ export async function PUT(req: Request, ctx: { params: Promise<{ id: string }> }
      description=$6,"order"=$7,type=$8,certificate_url=$9 WHERE id=$10`,
     [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null,id]
   );
+  revalidatePath('/');
   return Response.json({ ok: true });
 }
 
@@ -20,6 +22,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   const { id } = await ctx.params;
   const { order } = await req.json();
   await query(`UPDATE experience SET "order"=$1 WHERE id=$2`, [order, id]);
+  revalidatePath('/');
   return Response.json({ ok: true });
 }
 
@@ -28,5 +31,6 @@ export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string 
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await ctx.params;
   await query('DELETE FROM experience WHERE id=$1', [id]);
+  revalidatePath('/');
   return Response.json({ ok: true });
 }

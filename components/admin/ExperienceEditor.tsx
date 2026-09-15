@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type FilterType = 'all' | 'work' | 'education' | 'award';
+type FilterType = 'all' | 'work' | 'education' | 'award' | 'other';
 
 interface Props {
   experiences: Experience[];
@@ -50,6 +50,7 @@ const TYPE_STYLE = {
   work:      { bg: 'rgba(8,145,178,0.15)', border: 'rgba(8,145,178,0.35)', text: '#67e8f9', label: 'Work',      icon: Briefcase },
   education: { bg: 'rgba(6,182,212,0.12)',  border: 'rgba(6,182,212,0.35)',  text: '#67e8f9', label: 'Education', icon: GraduationCap },
   award:     { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)', text: '#fcd34d', label: 'Award',     icon: Trophy },
+  other:     { bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.35)', text: '#cbd5e1', label: 'Other',     icon: Briefcase },
 };
 
 const FILTERS: { id: FilterType; label: string }[] = [
@@ -57,6 +58,7 @@ const FILTERS: { id: FilterType; label: string }[] = [
   { id: 'work',      label: 'Work' },
   { id: 'education', label: 'Education' },
   { id: 'award',     label: 'Awards' },
+  { id: 'other',     label: 'Other' },
 ];
 
 export default function ExperienceEditor({ experiences, onChanged }: Props) {
@@ -183,6 +185,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
             <option value="work">Work</option>
             <option value="education">Education</option>
             <option value="award">Award</option>
+            <option value="other">Other (shown compact, no card)</option>
           </select>
         </div>
         <div>

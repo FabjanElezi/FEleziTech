@@ -53,6 +53,7 @@ export default function About({ portfolio }: Props) {
                   boxShadow: '0 0 32px rgba(8,145,178,0.12)',
                   color: '#67e8f9',
                 }}
+                data-light-accent
               >
                 {portfolio?.name ? portfolio.name.charAt(0) : 'F'}
               </div>

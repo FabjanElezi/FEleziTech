@@ -88,7 +88,7 @@ export default function Hero({ portfolio }: Props) {
         {portfolio?.availableForWork !== false && (
           <div className="mb-6 hero-in" style={reveal(0)}>
             <span
-              className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
+              className="hero-badge inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
               style={{
                 background: 'rgba(8,145,178,0.1)',
                 border: '1px solid rgba(34,211,238,0.35)',
@@ -128,7 +128,7 @@ export default function Hero({ portfolio }: Props) {
         </p>
 
         <p
-          className="text-base mb-10 max-w-xl mx-auto font-medium hero-in"
+          className="hero-tagline text-base mb-10 max-w-xl mx-auto font-medium hero-in"
           style={{ color: 'rgba(34,211,238,0.75)', ...reveal(0.3) }}
         >
           <Typewriter roles={roles} />

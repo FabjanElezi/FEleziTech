@@ -51,7 +51,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ background: 'rgba(7,8,12,0.95)' }}
+        style={{ background: 'rgba(9,13,21,0.95)' }}
         onClick={onClose}
       >
         <div className="min-h-full flex items-center justify-center p-4 sm:p-8">
@@ -148,9 +148,9 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                     onClick={prev}
                     aria-label="Previous diagram"
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                    style={{ background: 'rgba(7,8,12,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
+                    style={{ background: 'rgba(9,13,21,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(7,8,12,0.7)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(9,13,21,0.7)'; }}
                   >
                     <ChevronLeft size={18} className="text-cyan-400" />
                   </button>
@@ -158,9 +158,9 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                     onClick={next}
                     aria-label="Next diagram"
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                    style={{ background: 'rgba(7,8,12,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
+                    style={{ background: 'rgba(9,13,21,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(7,8,12,0.7)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(9,13,21,0.7)'; }}
                   >
                     <ChevronRight size={18} className="text-cyan-400" />
                   </button>

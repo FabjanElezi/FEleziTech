@@ -25,7 +25,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
         ? 'linear-gradient(to bottom, rgba(8,145,178,0.5), transparent)'
         : 'linear-gradient(to bottom, rgba(6,182,212,0.5), transparent)';
     const dotClass  = isAward ? '' : isWork ? 'border-cyan-500' : 'border-cyan-400';
-    const dotStyle  = isAward ? { borderColor: '#f59e0b', background: '#07080c', transform: 'translateX(-50%)' } : { background: '#07080c', transform: 'translateX(-50%)' };
+    const dotStyle  = isAward ? { borderColor: '#f59e0b', background: '#090d15', transform: 'translateX(-50%)' } : { background: '#090d15', transform: 'translateX(-50%)' };
 
     return (
     <div>

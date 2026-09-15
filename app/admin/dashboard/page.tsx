@@ -89,7 +89,7 @@ export default function Dashboard() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#07080c' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#090d15' }}>
         <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -103,11 +103,11 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: '#07080c' }}>
+    <div className="min-h-screen" style={{ background: '#090d15' }}>
       {/* Header */}
       <header
         className="sticky top-0 z-40 px-6 h-14 flex items-center justify-between"
-        style={{ background: 'rgba(7,8,12,0.9)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
+        style={{ background: 'rgba(9,13,21,0.9)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
       >
         <div className="flex items-center gap-3">
           <Image src="/logo.png" alt="Fabjan Elezi" width={80} height={26} className="object-contain" />

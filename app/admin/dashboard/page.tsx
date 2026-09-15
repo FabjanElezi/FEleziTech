@@ -7,7 +7,6 @@ import {
   getPortfolio, getProjects, getExperiences, getSkills,
   deleteProject,
 } from '@/lib/firestore';
-import { seedInitialData } from '@/lib/seed';
 import { Portfolio, Project, Experience, Skill } from '@/types';
 import BioEditor from '@/components/admin/BioEditor';
 import ProjectForm from '@/components/admin/ProjectForm';
@@ -15,8 +14,7 @@ import ExperienceEditor from '@/components/admin/ExperienceEditor';
 import SkillsEditor from '@/components/admin/SkillsEditor';
 import {
   User, FolderOpen, Briefcase, Code2, LogOut,
-  Plus, Pencil, Trash2, ExternalLink, Database,
-  RefreshCw,
+  Plus, Pencil, Trash2, ExternalLink,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -33,7 +31,6 @@ export default function Dashboard() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null | 'new'>(null);
-  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) router.replace('/admin/login');
@@ -66,19 +63,6 @@ export default function Dashboard() {
     router.push('/admin/login');
   }
 
-  async function handleSeed() {
-    if (!confirm('This will populate initial data from your CV. Continue?')) return;
-    setSeeding(true);
-    try {
-      await seedInitialData();
-      await load();
-      toast.success('Initial data seeded!');
-    } catch {
-      toast.error('Seed failed');
-    } finally {
-      setSeeding(false);
-    }
-  }
 
   async function handleDeleteProject(id: string) {
     if (!confirm('Delete this project?')) return;
@@ -119,15 +103,6 @@ export default function Dashboard() {
           <a href="/" target="_blank" rel="noopener noreferrer" className="btn-ghost admin-action text-xs flex items-center gap-1.5" aria-label="View site">
             <ExternalLink size={13} /> <span className="hidden sm:inline">View Site</span>
           </a>
-          <button
-            onClick={handleSeed}
-            disabled={seeding}
-            className="btn-ghost admin-action text-xs flex items-center gap-1.5"
-            title="Seed initial data from CV" aria-label="Seed data"
-          >
-            {seeding ? <RefreshCw size={13} className="animate-spin" /> : <Database size={13} />}
-            <span className="hidden sm:inline">Seed Data</span>
-          </button>
           <button onClick={handleLogout} aria-label="Log out" className="admin-action flex items-center justify-center text-slate-500 hover:text-red-400 transition-colors text-sm">
             <LogOut size={15} />
           </button>

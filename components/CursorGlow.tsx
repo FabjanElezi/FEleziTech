@@ -55,17 +55,17 @@ export default function CursorGlow() {
       if (hovering) {
         ring.style.width       = '46px';
         ring.style.height      = '46px';
-        ring.style.borderColor = 'rgba(96,165,250,0.75)';
-        ring.style.background  = 'rgba(37,99,235,0.07)';
-        dot.style.background   = '#60a5fa';
-        dot.style.boxShadow    = '0 0 8px rgba(96,165,250,0.8)';
+        ring.style.borderColor = 'rgba(34,211,238,0.75)';
+        ring.style.background  = 'rgba(8,145,178,0.07)';
+        dot.style.background   = '#22d3ee';
+        dot.style.boxShadow    = '0 0 8px rgba(34,211,238,0.8)';
       } else {
         ring.style.width       = '32px';
         ring.style.height      = '32px';
-        ring.style.borderColor = 'rgba(37,99,235,0.45)';
+        ring.style.borderColor = 'rgba(8,145,178,0.45)';
         ring.style.background  = 'transparent';
-        dot.style.background   = '#2563eb';
-        dot.style.boxShadow    = '0 0 6px rgba(37,99,235,0.7)';
+        dot.style.background   = '#0891b2';
+        dot.style.boxShadow    = '0 0 6px rgba(8,145,178,0.7)';
       }
     };
 
@@ -112,8 +112,8 @@ export default function CursorGlow() {
         style={{
           position: 'fixed', top: 0, left: 0,
           width: 6, height: 6, borderRadius: '50%',
-          background: '#2563eb',
-          boxShadow: '0 0 6px rgba(37,99,235,0.7)',
+          background: '#0891b2',
+          boxShadow: '0 0 6px rgba(8,145,178,0.7)',
           zIndex: 99999, pointerEvents: 'none', willChange: 'transform', opacity: 0,
           transition: 'background 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease',
         }}
@@ -124,7 +124,7 @@ export default function CursorGlow() {
         style={{
           position: 'fixed', top: 0, left: 0,
           width: 32, height: 32, borderRadius: '50%',
-          border: '1.5px solid rgba(37,99,235,0.45)',
+          border: '1.5px solid rgba(8,145,178,0.45)',
           background: 'transparent',
           zIndex: 99998, pointerEvents: 'none', willChange: 'transform', opacity: 0,
           transition:
@@ -138,7 +138,7 @@ export default function CursorGlow() {
         style={{
           position: 'fixed', top: 0, left: 0,
           width: 480, height: 480, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.055) 0%, rgba(29,78,216,0.022) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.055) 0%, rgba(14,116,144,0.022) 40%, transparent 70%)',
           zIndex: 0, pointerEvents: 'none', willChange: 'transform', opacity: 0,
           transition: 'opacity 0.4s ease',
         }}

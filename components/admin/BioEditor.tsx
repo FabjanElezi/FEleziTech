@@ -178,7 +178,7 @@ export default function BioEditor({ portfolio, onSaved }: Props) {
                 </div>
               ) : (
                 <div className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.2), rgba(6,182,212,0.1))', border: '2px solid rgba(37,99,235,0.3)', color: '#93c5fd' }}>
+                  style={{ background: 'linear-gradient(135deg, rgba(8,145,178,0.2), rgba(6,182,212,0.1))', border: '2px solid rgba(8,145,178,0.3)', color: '#67e8f9' }}>
                   {form.name ? form.name.charAt(0).toUpperCase() : 'F'}
                 </div>
               )}

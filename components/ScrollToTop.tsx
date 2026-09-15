@@ -32,16 +32,16 @@ export default function ScrollToTop() {
             width: 40,
             height: 40,
             borderRadius: '0.75rem',
-            background: 'rgba(37,99,235,0.18)',
-            border: '1px solid rgba(37,99,235,0.38)',
+            background: 'rgba(8,145,178,0.18)',
+            border: '1px solid rgba(8,145,178,0.38)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            color: '#60a5fa',
+            color: '#22d3ee',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 16px rgba(37,99,235,0.18), 0 4px 12px rgba(0,0,0,0.2)',
+            boxShadow: '0 0 16px rgba(8,145,178,0.18), 0 4px 12px rgba(0,0,0,0.2)',
           }}
         >
           <ArrowUp size={16} />

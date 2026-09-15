@@ -19,14 +19,14 @@ export default function MermaidDiagram({ chart, id = 'mermaid-diagram' }: Props)
         themeVariables: {
           primaryColor: '#1e1033',
           primaryTextColor: '#e2e8f0',
-          primaryBorderColor: 'rgba(37,99,235,0.5)',
-          lineColor: '#2563eb',
+          primaryBorderColor: 'rgba(8,145,178,0.5)',
+          lineColor: '#0891b2',
           secondaryColor: '#0b0c10',
           tertiaryColor: '#0b0c10',
           edgeLabelBackground: '#0b0c10',
           fontFamily: 'ui-monospace, monospace',
           fontSize: '13px',
-          attributeBackgroundColorEven: 'rgba(37,99,235,0.08)',
+          attributeBackgroundColorEven: 'rgba(8,145,178,0.08)',
           attributeBackgroundColorOdd: 'rgba(6,182,212,0.05)',
         },
       });

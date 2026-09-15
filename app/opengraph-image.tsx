@@ -25,7 +25,7 @@ export default function Image() {
         <div style={{
           position: 'absolute', top: -80, left: -80,
           width: 500, height: 500, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.18) 0%, transparent 70%)',
         }} />
         <div style={{
           position: 'absolute', bottom: -80, right: -80,
@@ -37,10 +37,10 @@ export default function Image() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
           <div style={{
             width: 6, height: 48,
-            background: 'linear-gradient(to bottom, #2563eb, #22d3ee)',
+            background: 'linear-gradient(to bottom, #0891b2, #22d3ee)',
             borderRadius: 4,
           }} />
-          <span style={{ fontSize: 22, color: '#2563eb', fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 22, color: '#0891b2', fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase' }}>
             FeleziTech
           </span>
         </div>
@@ -53,7 +53,7 @@ export default function Image() {
         {/* Title */}
         <div style={{
           fontSize: 26, marginTop: 20,
-          background: 'linear-gradient(135deg, #60a5fa, #22d3ee)',
+          background: 'linear-gradient(135deg, #22d3ee, #22d3ee)',
           backgroundClip: 'text',
           color: 'transparent',
           fontWeight: 600,
@@ -66,9 +66,9 @@ export default function Image() {
           {['Web Development', 'Data Analytics', 'Cybersecurity'].map((t) => (
             <div key={t} style={{
               fontSize: 14, padding: '6px 18px', borderRadius: 999,
-              border: '1px solid rgba(37,99,235,0.4)',
-              background: 'rgba(37,99,235,0.1)',
-              color: '#93c5fd',
+              border: '1px solid rgba(8,145,178,0.4)',
+              background: 'rgba(8,145,178,0.1)',
+              color: '#67e8f9',
             }}>
               {t}
             </div>

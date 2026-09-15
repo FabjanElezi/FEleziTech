@@ -29,7 +29,7 @@ export default function Contact({ portfolio }: Props) {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 80% 50% at 50% 80%, rgba(37,99,235,0.05), transparent)',
+          background: 'radial-gradient(ellipse 80% 50% at 50% 80%, rgba(8,145,178,0.05), transparent)',
         }}
       />
       <div className="max-w-4xl mx-auto relative">
@@ -40,8 +40,8 @@ export default function Contact({ portfolio }: Props) {
           className="text-center mb-18"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="w-8 h-px bg-blue-500" />
-            <span className="text-blue-400 text-sm font-semibold uppercase tracking-wider">Contact</span>
+            <span className="w-8 h-px bg-cyan-500" />
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Contact</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-3">
@@ -65,9 +65,9 @@ export default function Contact({ portfolio }: Props) {
               <a href={`mailto:${email}`} className="flex items-center gap-4 flex-1 min-w-0">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(37,99,235,0.2)' }}
+                  style={{ background: 'rgba(8,145,178,0.2)' }}
                 >
-                  <Mail size={18} className="text-blue-400" />
+                  <Mail size={18} className="text-cyan-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-slate-500 mb-0.5">Email</p>
@@ -123,9 +123,9 @@ export default function Contact({ portfolio }: Props) {
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(59,130,246,0.15)' }}
+                  style={{ background: 'rgba(6,182,212,0.15)' }}
                 >
-                  <Link size={18} className="text-blue-400" />
+                  <Link size={18} className="text-cyan-400" />
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 mb-0.5">LinkedIn</p>
@@ -162,15 +162,15 @@ export default function Contact({ portfolio }: Props) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: [0.22,1,0.36,1], delay: 0.1 }}
             style={{
-              background: 'linear-gradient(135deg, rgba(37,99,235,0.08), rgba(6,182,212,0.04))',
+              background: 'linear-gradient(135deg, rgba(8,145,178,0.08), rgba(6,182,212,0.04))',
             }}
           >
             <CornerAccents />
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-              style={{ background: 'rgba(37,99,235,0.2)' }}
+              style={{ background: 'rgba(8,145,178,0.2)' }}
             >
-              <Send size={22} className="text-blue-400" />
+              <Send size={22} className="text-cyan-400" />
             </div>
             <h3 className="text-white font-bold text-xl mb-3">Ready to collaborate?</h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">

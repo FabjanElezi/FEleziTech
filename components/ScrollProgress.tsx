@@ -23,11 +23,11 @@ export default function ScrollProgress() {
         left: 0,
         height: '2px',
         width: `${progress}%`,
-        background: 'linear-gradient(90deg, #2563eb, #38bdf8 50%, #06b6d4)',
+        background: 'linear-gradient(90deg, #0891b2, #22d3ee 50%, #06b6d4)',
         zIndex: 200,
         pointerEvents: 'none',
         transition: 'width 80ms linear',
-        boxShadow: '0 0 8px rgba(37,99,235,0.55)',
+        boxShadow: '0 0 8px rgba(8,145,178,0.55)',
       }}
     />
   );

@@ -2,13 +2,16 @@ import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
+
 function rowToSkill(d: Record<string, unknown>) {
   return { id: d.id, name: d.name, category: d.category, level: d.level, order: d.order };
 }
 
 export async function GET() {
   const { rows } = await query('SELECT * FROM skills ORDER BY "order" ASC');
-  return Response.json(rows.map(rowToSkill));
+  return Response.json(rows.map(rowToSkill), NO_STORE);
 }
 
 export async function POST(req: Request) {

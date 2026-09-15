@@ -2,6 +2,9 @@ import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
+
 async function ensureDbDesignColumn() {
   await query(
     `ALTER TABLE projects ADD COLUMN IF NOT EXISTS db_design_images jsonb DEFAULT '[]'`
@@ -21,7 +24,7 @@ function rowToProject(d: Record<string, unknown>) {
 export async function GET() {
   await ensureDbDesignColumn();
   const { rows } = await query('SELECT * FROM projects ORDER BY "order" ASC');
-  return Response.json(rows.map(rowToProject));
+  return Response.json(rows.map(rowToProject), NO_STORE);
 }
 
 export async function POST(req: Request) {

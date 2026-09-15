@@ -2,6 +2,9 @@ import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
+
 let migrated = false;
 async function ensureAwardType() {
   if (migrated) return;
@@ -44,7 +47,7 @@ function rowToExp(d: Record<string, unknown>) {
 export async function GET() {
   await ensureAwardType();
   const { rows } = await query('SELECT * FROM experience ORDER BY "order" ASC');
-  return Response.json(rows.map(rowToExp));
+  return Response.json(rows.map(rowToExp), NO_STORE);
 }
 
 export async function POST(req: Request) {

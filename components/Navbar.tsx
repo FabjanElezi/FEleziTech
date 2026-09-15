@@ -80,7 +80,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-6">
+        <ul className="hidden md:flex items-center gap-4 lg:gap-6 mx-4">
           {links.map((l) => (
             <li key={l.href}>
               <a
@@ -98,7 +98,7 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop right */}
-        <div className="hidden md:flex items-center gap-3 shrink-0">
+        <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
           <ThemeToggle />
           <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
             Admin

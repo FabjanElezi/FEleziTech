@@ -16,6 +16,7 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
+          className="scroll-top-btn"
           initial={{ opacity: 0, scale: 0.75 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.75 }}

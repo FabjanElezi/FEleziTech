@@ -81,7 +81,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
                 {exp.certificateUrl && (
                   <button
                     onClick={() => onCertificate(exp.certificateUrl!)}
-                    className="mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
+                    className="cert-btn mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
                     style={{
                       color: '#f0c040',
                       background: 'rgba(212,175,55,0.15)',

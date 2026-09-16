@@ -115,7 +115,7 @@ export default function Hero({ portfolio }: Props) {
           style={reveal(0.1)}
         >
           Hi, I&apos;m{' '}
-          <span className="gradient-text">{name.split(' ')[0]}</span>
+          <span className="name-gradient">{name.split(' ')[0]}</span>
           <br />
           <span className="text-slate-300">{name.split(' ').slice(1).join(' ')}</span>
         </h1>

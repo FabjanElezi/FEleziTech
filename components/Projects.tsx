@@ -46,7 +46,7 @@ export default function Projects({ projects }: Props) {
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="text-slate-300 text-sm font-semibold uppercase tracking-wider">Projects</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-4">
@@ -69,7 +69,7 @@ export default function Projects({ projects }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="text-slate-300 text-sm font-semibold uppercase tracking-wider">Projects</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

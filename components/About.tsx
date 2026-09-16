@@ -15,9 +15,9 @@ export default function About({ portfolio }: Props) {
   const openToRemote = portfolio?.openToRemote !== false;
 
   const chips = [
-    { icon: <MapPin size={14} className="text-cyan-400" />,      label: location },
-    { icon: <GraduationCap size={14} className="text-cyan-400" />, label: university },
-    ...(openToRemote ? [{ icon: <Globe size={14} className="text-cyan-400" />, label: 'Open to Remote' }] : []),
+    { icon: <MapPin size={14} className="text-slate-400" />,      label: location },
+    { icon: <GraduationCap size={14} className="text-slate-400" />, label: university },
+    ...(openToRemote ? [{ icon: <Globe size={14} className="text-slate-400" />, label: 'Open to Remote' }] : []),
   ];
 
   return (
@@ -70,7 +70,7 @@ export default function About({ portfolio }: Props) {
               transition={{ duration: 0.45, ease, delay: 0.08 }}
             >
               <span className="w-8 h-px bg-cyan-500" />
-              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">About Me</span>
+              <span className="text-slate-300 text-sm font-semibold uppercase tracking-wider">About Me</span>
             </motion.div>
 
             <motion.h2

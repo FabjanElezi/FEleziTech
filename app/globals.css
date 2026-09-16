@@ -740,7 +740,7 @@ html.theme-transitioning .input-dark {
 [data-theme="light"] .text-cyan-300               { color: #0e7490; }
 [data-theme="light"] .skill-chip-cyan             { color: #0e7490; }
 /* Gradient headline: the light cyan stops vanish on a light background */
-[data-theme="light"] .gradient-text {
+[data-theme="light"] .name-gradient {
   background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #155e75 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -823,4 +823,96 @@ html[data-admin] body { background-image: none; }
     padding: 0;
     justify-content: center;
   }
+}
+
+/* ── Palette roles: black stage, white type, cyan signature ──────────────── */
+
+/* Section titles are white; the cyan gradient is reserved for the hero name */
+.gradient-text {
+  background: none;
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+  filter: none;
+}
+.name-gradient {
+  background: linear-gradient(135deg, #a5f3fc 0%, #22d3ee 50%, #0891b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(6,182,212,0.25));
+}
+
+/* Primary action: solid white on black, cyan only in the hover glow */
+.btn-primary {
+  background: linear-gradient(135deg, #ffffff 0%, #e8edf5 55%, #ffffff 100%);
+  color: #070b12;
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(0,0,0,0.10) inset,
+    0 6px 18px rgba(0,0,0,0.45),
+    0 0 0 0.5px rgba(255,255,255,0.35);
+}
+.btn-primary:hover {
+  box-shadow:
+    0 2px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(0,0,0,0.12) inset,
+    0 0 0 1px rgba(34,211,238,0.55),
+    0 0 26px rgba(6,182,212,0.45),
+    0 0 60px rgba(6,182,212,0.16),
+    0 14px 32px rgba(0,0,0,0.45);
+}
+
+/* Secondary action: white hairline, cyan on hover */
+.btn-ghost {
+  background: rgba(255,255,255,0.04);
+  color: #e2e8f0;
+  border-color: rgba(255,255,255,0.22);
+}
+.btn-ghost:hover {
+  background: rgba(6,182,212,0.08);
+  color: #a5f3fc;
+  border-color: rgba(34,211,238,0.55);
+  box-shadow: 0 0 18px rgba(6,182,212,0.28), 0 0 44px rgba(6,182,212,0.10);
+}
+
+/* Chips and tech tags: white-tinted, cyan glow on hover */
+.tech-tag,
+.skill-chip-purple,
+.skill-chip-cyan,
+.skill-chip-emerald {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.14);
+  color: #dbe3ee;
+}
+.tech-tag:hover,
+.skill-chip-purple:hover,
+.skill-chip-cyan:hover,
+.skill-chip-emerald:hover {
+  background: rgba(6,182,212,0.12);
+  border-color: rgba(34,211,238,0.5);
+  box-shadow: 0 0 14px rgba(6,182,212,0.35), 0 0 30px rgba(6,182,212,0.12);
+}
+
+/* Light mode counterparts */
+[data-theme="light"] .gradient-text { -webkit-text-fill-color: #0b1220; color: #0b1220; }
+[data-theme="light"] .text-slate-200 { color: #0b1220; }
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #0b1220 0%, #16202f 55%, #0b1220 100%);
+  color: #f8fafc;
+  border-color: rgba(0,0,0,0.25);
+  box-shadow: 0 2px 0 rgba(255,255,255,0.14) inset, 0 6px 18px rgba(8,145,178,0.18);
+}
+[data-theme="light"] .btn-primary:hover {
+  box-shadow: 0 2px 0 rgba(255,255,255,0.16) inset, 0 0 0 1px rgba(8,145,178,0.45), 0 0 24px rgba(8,145,178,0.28), 0 12px 28px rgba(8,145,178,0.16);
+}
+[data-theme="light"] .btn-ghost { background: rgba(11,18,32,0.03); color: #0e7490; border-color: rgba(11,18,32,0.18); }
+[data-theme="light"] .btn-ghost:hover { background: rgba(6,182,212,0.08); color: #0e7490; border-color: rgba(8,145,178,0.5); }
+[data-theme="light"] .tech-tag,
+[data-theme="light"] .skill-chip-purple,
+[data-theme="light"] .skill-chip-cyan,
+[data-theme="light"] .skill-chip-emerald {
+  background: rgba(11,18,32,0.04);
+  border-color: rgba(11,18,32,0.14);
+  color: #1e293b;
 }

@@ -47,7 +47,7 @@ export default function Skills({ skills }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Skills</span>
+            <span className="text-slate-300 text-sm font-semibold uppercase tracking-wider">Skills</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

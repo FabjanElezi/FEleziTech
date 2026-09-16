@@ -33,8 +33,8 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
         {isAward
           ? <Trophy size={14} style={{ color: '#f59e0b' }} />
           : isWork
-            ? <Briefcase size={14} className="text-cyan-400" />
-            : <GraduationCap size={14} className="text-cyan-400" />}
+            ? <Briefcase size={14} className="text-slate-400" />
+            : <GraduationCap size={14} className="text-slate-400" />}
         {label}
       </h3>
       <div className="relative">
@@ -58,7 +58,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
                   <div className="min-w-0">
                     <p className="font-semibold text-white text-sm leading-snug">{exp.role}</p>
-                    <p className="text-cyan-400 text-sm">{exp.company}</p>
+                    <p className="text-slate-200 text-sm">{exp.company}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="flex items-center gap-1 text-xs text-slate-500">
@@ -143,7 +143,7 @@ export default function Experience({ experiences }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Timeline</span>
+            <span className="text-slate-300 text-sm font-semibold uppercase tracking-wider">Timeline</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

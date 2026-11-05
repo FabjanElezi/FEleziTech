@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { recordCvOpen, visitorHash, isBot, parseAgent, tagFromReferer } from '@/lib/visits';
+import { getAuthEmail } from '@/lib/auth-server';
 
 export async function GET(req: Request) {
   const { rows } = await query('SELECT cv_url FROM portfolio WHERE id = $1', ['main']);
@@ -25,7 +26,8 @@ export async function GET(req: Request) {
   // opened directly — pasted, bookmarked, forwarded — is counted too.
   try {
     const ua = req.headers.get('user-agent') ?? '';
-    if (!isBot(ua) && req.headers.get('dnt') !== '1') {
+    const owner = await getAuthEmail();   // the owner's own opens don't count
+    if (!owner && !isBot(ua) && req.headers.get('dnt') !== '1') {
       const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
       const { device, browser, os } = parseAgent(ua);
       const city = req.headers.get('x-vercel-ip-city');

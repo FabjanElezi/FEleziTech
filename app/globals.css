@@ -824,3 +824,87 @@ html[data-admin] body { background-image: none; }
     justify-content: center;
   }
 }
+
+/* ── Light on glass ─────────────────────────────────────────────────────── */
+/* A specular highlight that follows the cursor, so the glass catches light
+   instead of wearing a painted-on sheen. SurfaceFX writes --mx / --my. */
+
+.glass { position: relative; }
+
+.glass::after,
+.btn-primary::after,
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.045) 42%,
+    transparent 68%
+  );
+}
+.glass:hover::after,
+.btn-primary:hover::after,
+.btn-ghost:hover::after { opacity: 1; }
+
+[data-theme="light"] .glass::after,
+[data-theme="light"] .btn-ghost::after {
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(8, 145, 178, 0.13),
+    rgba(8, 145, 178, 0.04) 42%,
+    transparent 68%
+  );
+}
+
+/* ── Cards lean towards the cursor ──────────────────────────────────────── */
+/* `rotate` and `translate` rather than `transform`, so framer-motion's own
+   inline transforms keep working untouched. */
+
+.perspective-field { perspective: 1100px; }
+
+.glass-hover {
+  transition:
+    background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease,
+    translate 0.3s cubic-bezier(0.22, 1, 0.36, 1), rotate 0.18s ease-out;
+}
+.glass-hover:hover {
+  translate: 0 -4px;
+  rotate: var(--tx, 0) var(--ty, 0) 0 var(--ta, 0deg);
+}
+
+/* ── Buttons drift towards the cursor ───────────────────────────────────── */
+
+.btn-primary,
+.btn-ghost {
+  translate: var(--magx, 0px) var(--magy, 0px);
+  transition:
+    background 0.24s ease, border-color 0.24s ease, color 0.24s ease,
+    box-shadow 0.28s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Grain ──────────────────────────────────────────────────────────────── */
+/* A trace of film grain over everything: it stops heavy glass from reading
+   as plastic. Invisible on its own, obvious when removed. */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.032;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="light"] .grain { opacity: 0.02; }
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-hover:hover { translate: none; rotate: none; }
+  .btn-primary, .btn-ghost { translate: none; }
+}

@@ -158,9 +158,37 @@ export default function Orb3D({ skills = [] }: Props) {
     let ripple = 0, rippleDir: V3 = [0, 0, 1];
     let shatter = 0;
 
+    // Soft-body bulge towards the cursor, one eased value per node.
+    const bulge = VERTS.map(() => 0);
+
+    // Idle showcase: with nobody touching it, the sphere presents the skills itself.
+    let lastTouch = performance.now();
+    let autoAt = -1, autoShowing = false, holdUntil = 0;
+
     const toLocal = (e: PointerEvent) => {
       const box = canvas.getBoundingClientRect();
       return { x: e.clientX - box.left, y: e.clientY - box.top };
+    };
+
+    /** Where the cursor points, in the sphere's own frame; null if it misses. */
+    const localDir = (sx: number, sy: number, ax: number, ay: number, R: number): V3 | null => {
+      const nx = (sx - w / 2) / R, ny = (sy - h / 2) / R;
+      if (nx * nx + ny * ny > 1) return null;
+      const nz = Math.sqrt(1 - nx * nx - ny * ny);
+      const ca = Math.cos(-ax), sa = Math.sin(-ax);
+      const cb = Math.cos(-ay), sb = Math.sin(-ay);
+      const y1 = ny * ca - nz * sa, z1 = ny * sa + nz * ca;
+      return norm([nx * cb + z1 * sb, y1, -nx * sb + z1 * cb]);
+    };
+
+    /** Anything the visitor does stops the idle showcase. */
+    const interacted = () => {
+      lastTouch = performance.now();
+      if (autoShowing) {
+        autoShowing = false;
+        selectedIdx = -1;
+        setSelected(null);
+      }
     };
 
     /** Turn the sphere so this vertex faces the viewer. */
@@ -177,6 +205,7 @@ export default function Orb3D({ skills = [] }: Props) {
 
     const onDown = (e: PointerEvent) => {
       const p = toLocal(e);
+      interacted();
       dragging = true; downAt = Date.now(); moved = 0;
       px = p.x; py = p.y;
       vax = vay = 0;
@@ -188,6 +217,7 @@ export default function Orb3D({ skills = [] }: Props) {
     const onMove = (e: PointerEvent) => {
       const p = toLocal(e);
       hover = true;
+      interacted();
       if (dragging) {
         const dx = p.x - px, dy = p.y - py;
         moved += Math.abs(dx) + Math.abs(dy);
@@ -209,13 +239,7 @@ export default function Orb3D({ skills = [] }: Props) {
         } else {
           selectedIdx = -1;
           setSelected(null);
-          const r = Math.min(w, h) * 0.33;
-          const nx = (px - w / 2) / r, ny = (py - h / 2) / r;
-          const nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
-          const ca = Math.cos(-ax), sa = Math.sin(-ax);
-          const cb = Math.cos(-ay), sb = Math.sin(-ay);
-          const y1 = ny * ca - nz * sa, z1 = ny * sa + nz * ca;
-          rippleDir = norm([nx * cb + z1 * sb, y1, -nx * sb + z1 * cb]);
+          rippleDir = localDir(px, py, ax, ay, Math.min(w, h) * 0.33) ?? rippleDir;
           ripple = 1;
         }
         setTouched(true);
@@ -224,9 +248,10 @@ export default function Orb3D({ skills = [] }: Props) {
     };
 
     const onLeave = () => { hover = false; dragging = false; hoverIdx = -1; };
-    const onDouble = () => { shatter = 1; setTouched(true); };
+    const onDouble = () => { interacted(); shatter = 1; setTouched(true); };
 
     const onKey = (e: KeyboardEvent) => {
+      interacted();
       const step = 0.22;
       if (e.key === 'ArrowLeft') { ay -= step; targetAx = null; }
       else if (e.key === 'ArrowRight') { ay += step; targetAx = null; }
@@ -313,6 +338,29 @@ export default function Orb3D({ skills = [] }: Props) {
       const R = Math.min(w, h) * 0.33;
       const F = 3.4;
 
+      // Nobody has touched it for a while: walk through the skills on its own.
+      if (!calm && nodeSkill.size > 0 && now - lastTouch > 6000 && now > holdUntil && targetAx === null) {
+        const keys = [...nodeSkill.keys()];
+        autoAt = (autoAt + 1) % keys.length;
+        selectedIdx = keys[autoAt];
+        autoShowing = true;
+        setSelected(nodeSkill.get(selectedIdx) ?? null);
+        faceVertex(selectedIdx);
+        holdUntil = now + 3800;
+      }
+
+      // Soft body: the surface swells towards the cursor and relaxes when it leaves.
+      const pull = hover && !calm ? localDir(px, py, ax, ay, R) : null;
+      for (let i = 0; i < VERTS.length; i++) {
+        let target = 0;
+        if (pull) {
+          const d = VERTS[i][0] * pull[0] + VERTS[i][1] * pull[1] + VERTS[i][2] * pull[2];
+          const t = Math.max(0, (d - 0.3) / 0.7);
+          target = t * t * (3 - 2 * t);          // smoothstep, so there is no hard edge
+        }
+        bulge[i] += (target - bulge[i]) * Math.min(1, dt * 9);
+      }
+
       const cosx = Math.cos(ax), sinx = Math.sin(ax);
       const cosy = Math.cos(ay), siny = Math.sin(ay);
 
@@ -324,6 +372,11 @@ export default function Orb3D({ skills = [] }: Props) {
           const d = x * rippleDir[0] + y * rippleDir[1] + z * rippleDir[2];
           const wave = Math.sin((1 - d) * 5 - (1 - ripple) * 9) * 0.17 * ripple * ripple;
           x += x * wave; y += y * wave; z += z * wave;
+        }
+        // Soft body: push this node out towards the cursor.
+        if (bulge[i] > 0.002) {
+          const b = bulge[i] * 0.28;
+          x += x * b; y += y * b; z += z * b;
         }
         // Shatter: everything flies out, then springs home.
         if (shatter > 0) {

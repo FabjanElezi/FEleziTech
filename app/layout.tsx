@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { Analytics } from '@vercel/analytics/next';
+import VisitTracker from '@/components/VisitTracker';
 import CursorGlow from '@/components/CursorGlow';
 import ParticleBackground from '@/components/ParticleBackground';
 import ScrollProgress from '@/components/ScrollProgress';
@@ -135,6 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ScrollToTop />
         </MotionProvider>
         <Analytics />
+        <VisitTracker />
         <Toaster
           position="bottom-right"
           toastOptions={{

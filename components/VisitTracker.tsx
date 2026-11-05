@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 // Sends two lightweight pings per page view: one when the page has been open a
-// moment, one when the visitor leaves. No cookies, no localStorage, nothing
+// moment, one when the visitor leaves with how long they stayed and how far
+// they read. No cookies, no localStorage, nothing
 // stored in the browser; the server records a pseudonymous row.
 //
 // A link shared as /?ref=company-name (or with utm_source) is reported back so
@@ -21,27 +22,6 @@ const post = (body: string) => {
     keepalive: true,
   }).catch(() => {});
 };
-
-/** A short label for something the visitor clicked, or null for noise. */
-function actionLabel(el: Element): string | null {
-  const a = el.closest('[data-track], a, button');
-  if (!a) return null;
-
-  const explicit = a.getAttribute('data-track');
-  if (explicit) return explicit;
-
-  const href = (a.getAttribute('href') ?? '').toLowerCase();
-  if (href.startsWith('mailto:')) return 'Email link';
-  if (href.startsWith('tel:')) return 'Phone link';
-  if (href.includes('/api/cv') || href.includes('cv')) return 'CV';
-  if (href.includes('linkedin')) return 'LinkedIn';
-  if (href.includes('github')) return 'GitHub';
-  if (href.includes('videogame-library')) return 'Thesis demo';
-  if (href.includes('.pdf')) return 'Document';
-
-  const text = (a.textContent ?? '').trim().replace(/\s+/g, ' ');
-  return text ? text.slice(0, 30) : null;
-}
 
 export default function VisitTracker() {
   const pathname = usePathname();
@@ -96,14 +76,6 @@ export default function VisitTracker() {
       if (pct > scroll) scroll = Math.min(100, pct);
     };
 
-    const actions: string[] = [];
-    const onClick = (e: MouseEvent) => {
-      const target = e.target;
-      if (!(target instanceof Element)) return;
-      const label = actionLabel(target);
-      if (label && !actions.includes(label) && actions.length < 6) actions.push(label);
-    };
-
     let left = false;
     const leave = () => {
       if (left || !sentView) return;
@@ -113,13 +85,11 @@ export default function VisitTracker() {
         vid,
         dwell: Math.round((Date.now() - started) / 1000),
         scroll: Math.round(scroll),
-        actions: actions.join('|'),
       }));
     };
     const onHide = () => { if (document.visibilityState === 'hidden') leave(); };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('click', onClick, true);
     window.addEventListener('pagehide', leave);
     document.addEventListener('visibilitychange', onHide);
 
@@ -127,7 +97,6 @@ export default function VisitTracker() {
       clearTimeout(t);
       leave();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('click', onClick, true);
       window.removeEventListener('pagehide', leave);
       document.removeEventListener('visibilitychange', onHide);
     };

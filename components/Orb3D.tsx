@@ -495,7 +495,7 @@ export default function Orb3D({ skills = [] }: Props) {
   const hasSkills = skills.length > 0;
 
   return (
-    <div className="relative w-full flex flex-col items-center" data-track="3D orb">
+    <div className="relative w-full flex flex-col items-center">
       <canvas
         ref={canvasRef}
         tabIndex={0}

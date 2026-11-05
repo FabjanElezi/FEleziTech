@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, Fragment } from 'react';
 import {
   RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin,
-  Languages, MousePointerClick, ChevronDown, Clock,
+  Languages, Download, ChevronDown, Clock,
 } from 'lucide-react';
 
 type Recent = {
@@ -28,7 +28,13 @@ type Stats = {
   places: { country: string; city: string | null; region: string | null; views: number; visitors: number }[];
   systems: { device: string; os: string; views: number }[];
   languages: { lang: string; views: number }[];
-  clicks: { action: string; views: number }[];
+  cv: {
+    opens: number; people: number; opens7d: number;
+    recent: {
+      at: string; country: string | null; region: string | null; city: string | null;
+      tag: string | null; device: string; browser: string; os: string | null;
+    }[];
+  };
   recent: Recent[];
 };
 
@@ -159,7 +165,7 @@ export default function VisitorsPanel() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         <Tile label="Last 24 hours" value={stats.totals.views24h.toLocaleString()}
               sub={`${stats.totals.visitors24h} ${stats.totals.visitors24h === 1 ? 'visitor' : 'visitors'}`} />
         <Tile label="Last 7 days" value={stats.totals.views7d.toLocaleString()}
@@ -168,6 +174,8 @@ export default function VisitorsPanel() {
               sub={`${stats.totals.visitors} ${stats.totals.visitors === 1 ? 'visitor' : 'visitors'}`} />
         <Tile label="Avg. time" value={secs(stats.totals.avgDwell)} sub="on the page" />
         <Tile label="Avg. scroll" value={stats.totals.avgScroll ? `${stats.totals.avgScroll}%` : '—'} sub="of the page read" />
+        <Tile label="CV opened" value={stats.cv.opens.toLocaleString()}
+              sub={`${stats.cv.people} ${stats.cv.people === 1 ? 'person' : 'people'} · ${stats.cv.opens7d} this week`} />
       </div>
 
       {/* 14-day chart */}
@@ -227,13 +235,50 @@ export default function VisitorsPanel() {
         )}
       </div>
 
+      {/* Who opened the CV */}
+      <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+          <Download size={12} /> Who opened your CV
+        </p>
+        {stats.cv.recent.length === 0 ? (
+          <p className="text-xs text-slate-600">Nobody has opened it yet.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-slate-600 text-left">
+                  <th className="font-medium py-1 pr-4">When</th>
+                  <th className="font-medium py-1 pr-4">Place</th>
+                  <th className="font-medium py-1 pr-4">Shared link</th>
+                  <th className="font-medium py-1">Device</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.cv.recent.map((c, i) => (
+                  <tr key={i} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">{c.at}</td>
+                    <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
+                      {c.country ? `${flag(c.country)} ${place(c) || c.country}` : '—'}
+                    </td>
+                    <td className="py-1.5 pr-4 whitespace-nowrap">
+                      {c.tag ? <span className="text-cyan-400">?ref={c.tag}</span> : <span className="text-slate-600">—</span>}
+                    </td>
+                    <td className="py-1.5 text-slate-500 whitespace-nowrap">
+                      {c.device} · {c.os ?? c.browser}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <List icon={<Link2 size={12} />} title="Where they came from" empty="Nothing yet"
               rows={stats.sources.map((s) => ({ label: s.label, value: s.views, sub: `${s.visitors} visitors` }))} />
         <List icon={<MapPin size={12} />} title="Places" empty="Nothing yet"
               rows={stats.places.map((p) => ({ label: `${flag(p.country)} ${place(p) || p.country}`, value: p.views, sub: `${p.visitors} visitors` }))} />
-        <List icon={<MousePointerClick size={12} />} title="What they clicked" empty="No clicks recorded yet"
-              rows={stats.clicks.map((c) => ({ label: c.action, value: c.views }))} />
         <List icon={<FileText size={12} />} title="Pages" empty="Nothing yet"
               rows={stats.paths.map((p) => ({ label: p.path, value: p.views }))} />
         <List icon={<Monitor size={12} />} title="Devices & systems" empty="Nothing yet"

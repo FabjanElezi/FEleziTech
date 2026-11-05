@@ -51,6 +51,56 @@ export async function ensureVisitsTable() {
   }
 }
 
+let cvReady = false;
+
+export async function ensureCvTable() {
+  if (cvReady) return;
+  try {
+    await query(`
+      CREATE TABLE IF NOT EXISTS cv_opens (
+        id           BIGSERIAL PRIMARY KEY,
+        ts           TIMESTAMPTZ NOT NULL DEFAULT now(),
+        country      TEXT,
+        region       TEXT,
+        city         TEXT,
+        ref_tag      TEXT,
+        device       TEXT,
+        browser      TEXT,
+        os           TEXT,
+        visitor_hash TEXT NOT NULL
+      )
+    `);
+    await query('CREATE INDEX IF NOT EXISTS cv_opens_ts_idx ON cv_opens (ts DESC)');
+    cvReady = true;
+  } catch {
+    cvReady = true;
+  }
+}
+
+/** Someone opened the CV. Recorded server-side, so direct links count too. */
+export async function recordCvOpen(v: {
+  country: string | null; region: string | null; city: string | null;
+  refTag: string | null; device: string; browser: string; os: string; visitorHash: string;
+}) {
+  await ensureCvTable();
+  await query(
+    `INSERT INTO cv_opens (country, region, city, ref_tag, device, browser, os, visitor_hash)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+    [v.country, v.region, v.city, v.refTag, v.device, v.browser, v.os, v.visitorHash]
+  );
+}
+
+/** The ?ref= tag of the page the CV was opened from. */
+export function tagFromReferer(referer: string | null) {
+  if (!referer) return null;
+  try {
+    const q = new URL(referer).searchParams;
+    return cleanTag(q.get('ref') ?? q.get('utm_source') ?? q.get('utm_campaign'));
+  } catch {
+    return null;
+  }
+}
+
 /** Daily-rotating pseudonymous id. Not reversible, not stable across days. */
 export function visitorHash(ip: string, userAgent: string) {
   const day = new Date().toISOString().slice(0, 10);
@@ -231,7 +281,9 @@ export async function getVisitStats() {
   await ensureVisitsTable();
   const n = (v: unknown) => Number(v ?? 0);
 
-  const [totals, daily, paths, refs, tags, places, systems, langs, clicks, recent] = await Promise.all([
+  await ensureCvTable();
+
+  const [totals, daily, paths, refs, tags, places, systems, langs, cv, cvRecent, recent] = await Promise.all([
     query(`
       SELECT
         count(*)                                                          AS views,
@@ -267,10 +319,13 @@ export async function getVisitStats() {
            FROM visits GROUP BY 1,2 ORDER BY views DESC LIMIT 10`),
     query(`SELECT lang, count(*) AS views FROM visits
            WHERE lang IS NOT NULL GROUP BY 1 ORDER BY views DESC LIMIT 8`),
-    query(`SELECT trim(a) AS action, count(*) AS views
-           FROM visits, unnest(string_to_array(actions, '|')) AS a
-           WHERE actions IS NOT NULL AND actions <> ''
-           GROUP BY 1 ORDER BY views DESC LIMIT 10`),
+    query(`SELECT count(*) AS opens,
+                  count(DISTINCT visitor_hash) AS people,
+                  count(*) FILTER (WHERE ts > now() - interval '7 days') AS opens_7d
+           FROM cv_opens`),
+    query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, country, region, city,
+                  ref_tag, device, browser, os
+           FROM cv_opens ORDER BY ts DESC LIMIT 20`),
     query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, path, country, region, city, coords, tz, lang,
                   device, browser, os, screen, viewport, hardware, connection,
                   referrer, referrer_url, ref_tag, dwell_s, scroll_pct, actions
@@ -304,7 +359,13 @@ export async function getVisitStats() {
     })),
     systems: systems.rows.map((r) => ({ device: String(r.device), os: String(r.os), views: n(r.views) })),
     languages: langs.rows.map((r) => ({ lang: String(r.lang), views: n(r.views) })),
-    clicks: clicks.rows.map((r) => ({ action: String(r.action), views: n(r.views) })),
+    cv: {
+      opens: n(cv.rows[0]?.opens), people: n(cv.rows[0]?.people), opens7d: n(cv.rows[0]?.opens_7d),
+      recent: cvRecent.rows.map((r) => ({
+        at: String(r.at), country: str(r.country), region: str(r.region), city: str(r.city),
+        tag: str(r.ref_tag), device: String(r.device ?? ''), browser: String(r.browser ?? ''), os: str(r.os),
+      })),
+    },
     recent: recent.rows.map((r) => ({
       at: String(r.at), path: String(r.path),
       country: str(r.country), region: str(r.region), city: str(r.city),

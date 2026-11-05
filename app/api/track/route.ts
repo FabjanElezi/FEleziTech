@@ -1,4 +1,7 @@
-import { recordVisit, visitorHash, isBot, parseAgent, referrerHost } from '@/lib/visits';
+import {
+  recordVisit, visitorHash, isBot, parseAgent,
+  referrerHost, referrerUrl, cleanTag,
+} from '@/lib/visits';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +14,7 @@ export async function POST(req: Request) {
     const ua = req.headers.get('user-agent') ?? '';
     if (isBot(ua)) return new Response(null, { status: 204 });
 
-    let body: { path?: unknown; referrer?: unknown };
+    let body: { path?: unknown; referrer?: unknown; tag?: unknown };
     try { body = await req.json(); } catch { return new Response(null, { status: 204 }); }
 
     const path = typeof body.path === 'string' && body.path.startsWith('/') ? body.path : '/';
@@ -19,14 +22,17 @@ export async function POST(req: Request) {
 
     const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
     const { device, browser } = parseAgent(ua);
+    const ref = typeof body.referrer === 'string' ? body.referrer : null;
+    const city = req.headers.get('x-vercel-ip-city');
 
     await recordVisit({
       path,
-      referrer: referrerHost(typeof body.referrer === 'string' ? body.referrer : null),
+      referrer: referrerHost(ref),
+      referrerUrl: referrerUrl(ref),
+      refTag: cleanTag(body.tag),
       country: req.headers.get('x-vercel-ip-country'),
-      city: req.headers.get('x-vercel-ip-city')
-        ? decodeURIComponent(req.headers.get('x-vercel-ip-city') as string)
-        : null,
+      region: req.headers.get('x-vercel-ip-country-region'),
+      city: city ? decodeURIComponent(city) : null,
       device,
       browser,
       visitorHash: visitorHash(ip, ua),

@@ -24,7 +24,7 @@ const post = (body: string) => {
 
 /** A short label for something the visitor clicked, or null for noise. */
 function actionLabel(el: Element): string | null {
-  const a = el.closest('a, button');
+  const a = el.closest('[data-track], a, button');
   if (!a) return null;
 
   const explicit = a.getAttribute('data-track');

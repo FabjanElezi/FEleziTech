@@ -1,21 +1,28 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { RefreshCw, Globe, Monitor, Link2, FileText } from 'lucide-react';
+import { RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin } from 'lucide-react';
 
 type Stats = {
   totals: { views: number; visitors: number; views24h: number; visitors24h: number; views7d: number; visitors7d: number };
   daily: { day: string; views: number; visitors: number }[];
   paths: { path: string; views: number }[];
-  referrers: { referrer: string; views: number }[];
-  countries: { country: string; views: number; visitors: number }[];
+  sources: { host: string | null; label: string; views: number; visitors: number }[];
+  tags: { tag: string; views: number; visitors: number; lastSeen: string }[];
+  places: { country: string; city: string | null; region: string | null; views: number; visitors: number }[];
   devices: { device: string; views: number }[];
-  recent: { at: string; path: string; country: string | null; city: string | null; device: string; browser: string; referrer: string }[];
+  recent: {
+    at: string; path: string; country: string | null; region: string | null; city: string | null;
+    device: string; browser: string; source: string; referrerUrl: string | null; tag: string | null;
+  }[];
 };
 
 const flag = (cc: string) =>
   /^[A-Z]{2}$/.test(cc)
     ? String.fromCodePoint(...[...cc].map((c) => 127397 + c.charCodeAt(0)))
     : '🌍';
+
+const place = (p: { country: string | null; city: string | null; region: string | null }) =>
+  [p.city, p.region && p.region !== p.city ? p.region : null, p.country].filter(Boolean).join(', ');
 
 function Tile({ label, views, visitors }: { label: string; views: number; visitors: number }) {
   return (
@@ -39,8 +46,8 @@ function List({ icon, title, rows, empty }: {
         <p className="text-xs text-slate-600">{empty}</p>
       ) : (
         <ul className="space-y-1.5">
-          {rows.map((r) => (
-            <li key={r.label} className="relative">
+          {rows.map((r, i) => (
+            <li key={`${r.label}-${i}`} className="relative">
               <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${(r.value / max) * 100}%`, background: 'rgba(8,145,178,0.16)' }} />
               <div className="relative flex items-center justify-between gap-3 px-2 py-1 text-sm">
                 <span className="text-slate-300 truncate">{r.label}{r.sub && <span className="text-slate-600 text-xs"> · {r.sub}</span>}</span>
@@ -144,28 +151,67 @@ export default function VisitorsPanel() {
         </div>
       </div>
 
+      {/* Shared links — as close to "who" as a website can honestly get */}
+      <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+          <Tag size={12} /> Shared links
+        </p>
+        {stats.tags.length === 0 ? (
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Add <span className="text-cyan-400">?ref=name</span> to the link when you share it, and every opening shows up here.
+            For an application: <span className="text-slate-300">felezitech.vercel.app/?ref=bmw</span>.
+            In your LinkedIn profile: <span className="text-slate-300">?ref=linkedin</span>.
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-slate-600 text-left text-xs">
+                  <th className="font-medium py-1 pr-4">Link</th>
+                  <th className="font-medium py-1 pr-4">Opens</th>
+                  <th className="font-medium py-1 pr-4">People</th>
+                  <th className="font-medium py-1">Last opened</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.tags.map((t) => (
+                  <tr key={t.tag} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td className="py-1.5 pr-4 text-cyan-400">?ref={t.tag}</td>
+                    <td className="py-1.5 pr-4 text-slate-300">{t.views}</td>
+                    <td className="py-1.5 pr-4 text-slate-400">{t.visitors}</td>
+                    <td className="py-1.5 text-slate-500 text-xs whitespace-nowrap">{t.lastSeen}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <List icon={<Link2 size={12} />} title="Where they came from" empty="Nothing yet"
+              rows={stats.sources.map((s) => ({ label: s.label, value: s.views, sub: `${s.visitors} visitors` }))} />
+        <List icon={<MapPin size={12} />} title="Places" empty="Nothing yet"
+              rows={stats.places.map((p) => ({ label: `${flag(p.country)} ${place(p) || p.country}`, value: p.views, sub: `${p.visitors} visitors` }))} />
         <List icon={<FileText size={12} />} title="Pages" empty="Nothing yet"
               rows={stats.paths.map((p) => ({ label: p.path, value: p.views }))} />
-        <List icon={<Link2 size={12} />} title="Where they came from" empty="Nothing yet"
-              rows={stats.referrers.map((r) => ({ label: r.referrer, value: r.views }))} />
-        <List icon={<Globe size={12} />} title="Countries" empty="Nothing yet"
-              rows={stats.countries.map((c) => ({ label: `${flag(c.country)} ${c.country}`, value: c.views, sub: `${c.visitors} visitors` }))} />
         <List icon={<Monitor size={12} />} title="Devices" empty="Nothing yet"
               rows={stats.devices.map((d) => ({ label: d.device, value: d.views }))} />
       </div>
 
       {stats.recent.length > 0 && (
         <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-3">Recent visits</p>
+          <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+            <Globe size={12} /> Recent visits
+          </p>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-600 text-left">
                   <th className="font-medium py-1 pr-4">When</th>
                   <th className="font-medium py-1 pr-4">Page</th>
-                  <th className="font-medium py-1 pr-4">From</th>
-                  <th className="font-medium py-1 pr-4">Where</th>
+                  <th className="font-medium py-1 pr-4">Came from</th>
+                  <th className="font-medium py-1 pr-4">Place</th>
                   <th className="font-medium py-1">Device</th>
                 </tr>
               </thead>
@@ -173,10 +219,13 @@ export default function VisitorsPanel() {
                 {stats.recent.map((v, i) => (
                   <tr key={i} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                     <td className="py-1.5 pr-4 text-slate-500 whitespace-nowrap">{v.at}</td>
-                    <td className="py-1.5 pr-4 text-slate-300 truncate max-w-[170px]">{v.path}</td>
-                    <td className="py-1.5 pr-4 text-slate-500 truncate max-w-[130px]">{v.referrer}</td>
+                    <td className="py-1.5 pr-4 text-slate-300 truncate max-w-[150px]">{v.path}</td>
+                    <td className="py-1.5 pr-4 text-slate-400 truncate max-w-[170px]" title={v.referrerUrl ?? undefined}>
+                      {v.source}
+                      {v.tag && <span className="text-cyan-400"> · ?ref={v.tag}</span>}
+                    </td>
                     <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
-                      {v.country ? `${flag(v.country)} ${v.city ? `${v.city}, ` : ''}${v.country}` : '—'}
+                      {v.country ? `${flag(v.country)} ${place(v) || v.country}` : '—'}
                     </td>
                     <td className="py-1.5 text-slate-500 whitespace-nowrap">{v.device} · {v.browser}</td>
                   </tr>

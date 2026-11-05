@@ -41,7 +41,7 @@ export default async function HomePage() {
         <Navbar />
         <Hero portfolio={portfolio} />
         <section className="relative flex justify-center pb-6 -mt-6 sm:-mt-10">
-          <Orb3D />
+          <Orb3D skills={skills} />
         </section>
         <SectionDivider />
         <About portfolio={portfolio} />

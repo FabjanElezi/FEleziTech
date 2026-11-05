@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {
   Search, CornerDownLeft, FileText, Mail, Copy, Link2, Code2,
-  Sun, Moon, ArrowRight, Gamepad2, Command,
+  Sun, Moon, ArrowRight, ExternalLink, Command,
 } from 'lucide-react';
 
 /**
@@ -22,6 +22,7 @@ type Action = {
 };
 
 type Portfolio = { email?: string; linkedin?: string; github?: string; cvUrl?: string } | null;
+type Demo = { title: string; url: string; tech: string };
 
 const SECTIONS = [
   ['about', 'About'],
@@ -37,6 +38,7 @@ export default function CommandPalette() {
   const [q, setQ] = useState('');
   const [at, setAt] = useState(0);
   const [portfolio, setPortfolio] = useState<Portfolio>(null);
+  const [demos, setDemos] = useState<Demo[]>([]);
   const [dark, setDark] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const restoreTo = useRef<HTMLElement | null>(null);
@@ -116,14 +118,20 @@ export default function CommandPalette() {
       }] : []),
     ];
 
-    const thesis: Action = {
-      id: 'thesis',
-      label: 'Open the thesis demo',
-      hint: 'Dual Vision Analyzer',
-      icon: <Gamepad2 size={15} />,
-      keywords: 'bachelor videogame library demo project',
-      run: () => { close(); window.location.href = '/videogame-library'; },
-    };
+    // Straight from the projects in the database, so a label can never point at
+    // the wrong thing.
+    const projectDemos: Action[] = demos.map((d) => ({
+      id: `demo-${d.url}`,
+      label: `Open ${d.title}`,
+      hint: 'Live demo',
+      icon: <ExternalLink size={15} />,
+      keywords: `${d.title} ${d.tech} demo live project`,
+      run: () => {
+        close();
+        if (d.url.startsWith('/')) window.location.href = d.url;
+        else window.open(d.url, '_blank', 'noopener');
+      },
+    }));
 
     const theme: Action = {
       id: 'theme',
@@ -139,8 +147,8 @@ export default function CommandPalette() {
       },
     };
 
-    return [...sections, cv, ...mail, ...links, thesis, theme];
-  }, [portfolio, dark, go, close]);
+    return [...sections, cv, ...mail, ...links, ...projectDemos, theme];
+  }, [portfolio, demos, dark, go, close]);
 
   const results = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -175,10 +183,29 @@ export default function CommandPalette() {
   useEffect(() => {
     if (!open || portfolio) return;
     let alive = true;
+
     fetch('/api/portfolio', { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (alive && d) setPortfolio(d); })
       .catch(() => {});
+
+    fetch('/api/projects', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: unknown) => {
+        if (!alive || !d) return;
+        const list = Array.isArray(d) ? d : [];
+        setDemos(
+          list
+            .filter((x) => typeof x?.liveDemoLink === 'string' && x.liveDemoLink.trim())
+            .map((x) => ({
+              title: String(x.title ?? 'Project'),
+              url: String(x.liveDemoLink).trim(),
+              tech: Array.isArray(x.techStack) ? x.techStack.join(' ') : '',
+            }))
+        );
+      })
+      .catch(() => {});
+
     return () => { alive = false; };
   }, [open, portfolio]);
 

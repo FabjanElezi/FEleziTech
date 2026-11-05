@@ -29,8 +29,22 @@ export async function ensureVisitsTable() {
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS ref_tag      TEXT`);
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS referrer_url TEXT`);
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS region       TEXT`);
+    // Added later still: the fuller technical profile and the engagement signals.
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS view_id    TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS os         TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS screen     TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS viewport   TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS lang       TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS tz         TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS coords     TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS hardware   TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS connection TEXT`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS dwell_s    INTEGER`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS scroll_pct INTEGER`);
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS actions    TEXT`);
     await query('CREATE INDEX IF NOT EXISTS visits_ts_idx ON visits (ts DESC)');
     await query('CREATE INDEX IF NOT EXISTS visits_visitor_idx ON visits (visitor_hash)');
+    await query('CREATE INDEX IF NOT EXISTS visits_view_idx ON visits (view_id)');
     ready = true;
   } catch {
     ready = true; // never let tracking break a page render
@@ -50,17 +64,37 @@ export function isBot(userAgent: string) {
   return !userAgent || BOT.test(userAgent);
 }
 
+const ver = (re: RegExp, ua: string) => {
+  const m = ua.match(re);
+  return m ? m[1].replace(/_/g, '.') : '';
+};
+
+/** Device, browser (with major version) and operating system, from the user agent. */
 export function parseAgent(ua: string) {
   const device = /iPad|Tablet/i.test(ua) ? 'Tablet'
     : /Mobi|Android|iPhone/i.test(ua) ? 'Phone'
     : 'Desktop';
-  const browser = /Edg\//i.test(ua) ? 'Edge'
+
+  const name = /Edg\//i.test(ua) ? 'Edge'
     : /OPR\/|Opera/i.test(ua) ? 'Opera'
-    : /Chrome\//i.test(ua) ? 'Chrome'
+    : /CriOS|Chrome\//i.test(ua) ? 'Chrome'
+    : /FxiOS|Firefox\//i.test(ua) ? 'Firefox'
     : /Safari\//i.test(ua) ? 'Safari'
-    : /Firefox\//i.test(ua) ? 'Firefox'
     : 'Other';
-  return { device, browser };
+  const major = ver(/(?:Edg|OPR|CriOS|Chrome|FxiOS|Firefox|Version)\/(\d+)/, ua);
+  const browser = major ? `${name} ${major}` : name;
+
+  const os = /Windows NT 10/.test(ua) ? 'Windows 10/11'
+    : /Windows NT 6\.3/.test(ua) ? 'Windows 8.1'
+    : /Windows/.test(ua) ? 'Windows'
+    : /iPhone|iPad|iPod/.test(ua) ? `iOS ${ver(/OS (\d+[_.]\d+)/, ua)}`.trim()
+    : /Mac OS X/.test(ua) ? `macOS ${ver(/Mac OS X (\d+[_.]\d+)/, ua)}`.trim()
+    : /Android/.test(ua) ? `Android ${ver(/Android (\d+)/, ua)}`.trim()
+    : /CrOS/.test(ua) ? 'ChromeOS'
+    : /Linux/.test(ua) ? 'Linux'
+    : 'Unknown';
+
+  return { device, browser, os };
 }
 
 /** Friendly name for a referring host, so the panel reads like a sentence. */
@@ -116,7 +150,29 @@ export function cleanTag(raw: unknown) {
   return t || null;
 }
 
-export async function recordVisit(v: {
+/** Short free-text field from the browser, kept to a sane length. */
+export function clean(raw: unknown, max = 60) {
+  if (typeof raw !== 'string') return null;
+  const t = raw.trim().replace(/[\u0000-\u001f]/g, '').slice(0, max);
+  return t || null;
+}
+
+/** City-level coordinates, rounded so they stay city-level. */
+export function coords(lat: string | null, lon: string | null) {
+  const a = Number(lat), b = Number(lon);
+  if (!lat || !lon || Number.isNaN(a) || Number.isNaN(b)) return null;
+  return `${a.toFixed(2)},${b.toFixed(2)}`;
+}
+
+/** Primary language from an Accept-Language header or navigator.language. */
+export function primaryLang(raw: string | null | undefined) {
+  if (!raw) return null;
+  const first = raw.split(',')[0].split(';')[0].trim();
+  return /^[a-zA-Z-]{2,10}$/.test(first) ? first : null;
+}
+
+export type VisitInput = {
+  viewId: string | null;
   path: string;
   referrer: string | null;
   referrerUrl: string | null;
@@ -124,21 +180,47 @@ export async function recordVisit(v: {
   country: string | null;
   region: string | null;
   city: string | null;
+  coords: string | null;
+  tz: string | null;
+  lang: string | null;
   device: string;
   browser: string;
+  os: string;
+  screen: string | null;
+  viewport: string | null;
+  hardware: string | null;
+  connection: string | null;
   visitorHash: string;
-}) {
+};
+
+export async function recordVisit(v: VisitInput) {
   await ensureVisitsTable();
   await query(
-    `INSERT INTO visits (path, referrer, referrer_url, ref_tag, country, region, city, device, browser, visitor_hash)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-    [v.path.slice(0, 200), v.referrer, v.referrerUrl, v.refTag, v.country, v.region, v.city,
-     v.device, v.browser, v.visitorHash]
+    `INSERT INTO visits
+       (view_id, path, referrer, referrer_url, ref_tag, country, region, city, coords, tz, lang,
+        device, browser, os, screen, viewport, hardware, connection, visitor_hash)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
+    [v.viewId, v.path.slice(0, 200), v.referrer, v.referrerUrl, v.refTag, v.country, v.region, v.city,
+     v.coords, v.tz, v.lang, v.device, v.browser, v.os, v.screen, v.viewport, v.hardware,
+     v.connection, v.visitorHash]
   );
   // Occasional cleanup: keep half a year, no more.
   if (Math.random() < 0.02) {
     try { await query(`DELETE FROM visits WHERE ts < now() - interval '180 days'`); } catch {}
   }
+}
+
+/** Second ping, when the visitor leaves: how long they stayed and what they did. */
+export async function recordEngagement(viewId: string, dwell: number, scroll: number, actions: string | null) {
+  await ensureVisitsTable();
+  await query(
+    `UPDATE visits
+        SET dwell_s    = greatest(coalesce(dwell_s, 0), $2),
+            scroll_pct = greatest(coalesce(scroll_pct, 0), $3),
+            actions    = coalesce(nullif($4, ''), actions)
+      WHERE view_id = $1 AND ts > now() - interval '6 hours'`,
+    [viewId, Math.min(Math.max(0, Math.round(dwell)), 7200), Math.min(Math.max(0, Math.round(scroll)), 100), actions]
+  );
 }
 
 export type VisitStats = Awaited<ReturnType<typeof getVisitStats>>;
@@ -147,7 +229,7 @@ export async function getVisitStats() {
   await ensureVisitsTable();
   const n = (v: unknown) => Number(v ?? 0);
 
-  const [totals, daily, paths, refs, tags, places, devices, recent] = await Promise.all([
+  const [totals, daily, paths, refs, tags, places, systems, langs, clicks, recent] = await Promise.all([
     query(`
       SELECT
         count(*)                                                          AS views,
@@ -155,7 +237,9 @@ export async function getVisitStats() {
         count(*) FILTER (WHERE ts > now() - interval '24 hours')          AS views_24h,
         count(DISTINCT visitor_hash) FILTER (WHERE ts > now() - interval '24 hours') AS visitors_24h,
         count(*) FILTER (WHERE ts > now() - interval '7 days')            AS views_7d,
-        count(DISTINCT visitor_hash) FILTER (WHERE ts > now() - interval '7 days')   AS visitors_7d
+        count(DISTINCT visitor_hash) FILTER (WHERE ts > now() - interval '7 days')   AS visitors_7d,
+        coalesce(round(avg(dwell_s)    FILTER (WHERE dwell_s    > 0)), 0) AS avg_dwell,
+        coalesce(round(avg(scroll_pct) FILTER (WHERE scroll_pct > 0)), 0) AS avg_scroll
       FROM visits
     `),
     query(`
@@ -176,10 +260,18 @@ export async function getVisitStats() {
     query(`SELECT coalesce(country, '??') AS country, city, region,
                   count(*) AS views, count(DISTINCT visitor_hash) AS visitors
            FROM visits GROUP BY 1,2,3 ORDER BY views DESC LIMIT 12`),
-    query(`SELECT coalesce(device, 'Unknown') AS device, count(*) AS views
-           FROM visits GROUP BY 1 ORDER BY views DESC`),
-    query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, path, country, region, city, device, browser,
-                  referrer, referrer_url, ref_tag
+    query(`SELECT coalesce(device, 'Unknown') AS device, coalesce(os, 'Unknown') AS os,
+                  count(*) AS views
+           FROM visits GROUP BY 1,2 ORDER BY views DESC LIMIT 10`),
+    query(`SELECT lang, count(*) AS views FROM visits
+           WHERE lang IS NOT NULL GROUP BY 1 ORDER BY views DESC LIMIT 8`),
+    query(`SELECT trim(a) AS action, count(*) AS views
+           FROM visits, unnest(string_to_array(actions, '|')) AS a
+           WHERE actions IS NOT NULL AND actions <> ''
+           GROUP BY 1 ORDER BY views DESC LIMIT 10`),
+    query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, path, country, region, city, coords, tz, lang,
+                  device, browser, os, screen, viewport, hardware, connection,
+                  referrer, referrer_url, ref_tag, dwell_s, scroll_pct, actions
            FROM visits ORDER BY ts DESC LIMIT 30`),
   ]);
 
@@ -191,6 +283,7 @@ export async function getVisitStats() {
       views: n(t.views), visitors: n(t.visitors),
       views24h: n(t.views_24h), visitors24h: n(t.visitors_24h),
       views7d: n(t.views_7d), visitors7d: n(t.visitors_7d),
+      avgDwell: n(t.avg_dwell), avgScroll: n(t.avg_scroll),
     },
     daily: daily.rows.map((r) => ({ day: String(r.day), views: n(r.views), visitors: n(r.visitors) })),
     paths: paths.rows.map((r) => ({ path: String(r.path), views: n(r.views) })),
@@ -207,14 +300,22 @@ export async function getVisitStats() {
       country: String(r.country), city: str(r.city), region: str(r.region),
       views: n(r.views), visitors: n(r.visitors),
     })),
-    devices: devices.rows.map((r) => ({ device: String(r.device), views: n(r.views) })),
+    systems: systems.rows.map((r) => ({ device: String(r.device), os: String(r.os), views: n(r.views) })),
+    languages: langs.rows.map((r) => ({ lang: String(r.lang), views: n(r.views) })),
+    clicks: clicks.rows.map((r) => ({ action: String(r.action), views: n(r.views) })),
     recent: recent.rows.map((r) => ({
       at: String(r.at), path: String(r.path),
       country: str(r.country), region: str(r.region), city: str(r.city),
-      device: String(r.device ?? ''), browser: String(r.browser ?? ''),
+      coords: str(r.coords), tz: str(r.tz), lang: str(r.lang),
+      device: String(r.device ?? ''), browser: String(r.browser ?? ''), os: str(r.os),
+      screen: str(r.screen), viewport: str(r.viewport),
+      hardware: str(r.hardware), connection: str(r.connection),
       source: friendlySource(str(r.referrer)),
       referrerUrl: str(r.referrer_url),
       tag: str(r.ref_tag),
+      dwell: r.dwell_s == null ? null : n(r.dwell_s),
+      scroll: r.scroll_pct == null ? null : n(r.scroll_pct),
+      actions: str(r.actions),
     })),
   };
 }

@@ -1,19 +1,35 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
-import { RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin } from 'lucide-react';
+import { useEffect, useState, useCallback, Fragment } from 'react';
+import {
+  RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin,
+  Languages, MousePointerClick, ChevronDown, Clock,
+} from 'lucide-react';
+
+type Recent = {
+  at: string; path: string;
+  country: string | null; region: string | null; city: string | null;
+  coords: string | null; tz: string | null; lang: string | null;
+  device: string; browser: string; os: string | null;
+  screen: string | null; viewport: string | null;
+  hardware: string | null; connection: string | null;
+  source: string; referrerUrl: string | null; tag: string | null;
+  dwell: number | null; scroll: number | null; actions: string | null;
+};
 
 type Stats = {
-  totals: { views: number; visitors: number; views24h: number; visitors24h: number; views7d: number; visitors7d: number };
+  totals: {
+    views: number; visitors: number; views24h: number; visitors24h: number;
+    views7d: number; visitors7d: number; avgDwell: number; avgScroll: number;
+  };
   daily: { day: string; views: number; visitors: number }[];
   paths: { path: string; views: number }[];
   sources: { host: string | null; label: string; views: number; visitors: number }[];
   tags: { tag: string; views: number; visitors: number; lastSeen: string }[];
   places: { country: string; city: string | null; region: string | null; views: number; visitors: number }[];
-  devices: { device: string; views: number }[];
-  recent: {
-    at: string; path: string; country: string | null; region: string | null; city: string | null;
-    device: string; browser: string; source: string; referrerUrl: string | null; tag: string | null;
-  }[];
+  systems: { device: string; os: string; views: number }[];
+  languages: { lang: string; views: number }[];
+  clicks: { action: string; views: number }[];
+  recent: Recent[];
 };
 
 const flag = (cc: string) =>
@@ -24,12 +40,18 @@ const flag = (cc: string) =>
 const place = (p: { country: string | null; city: string | null; region: string | null }) =>
   [p.city, p.region && p.region !== p.city ? p.region : null, p.country].filter(Boolean).join(', ');
 
-function Tile({ label, views, visitors }: { label: string; views: number; visitors: number }) {
+const secs = (s: number | null) => {
+  if (s == null || s <= 0) return '—';
+  if (s < 60) return `${s}s`;
+  return `${Math.floor(s / 60)}m ${s % 60}s`;
+};
+
+function Tile({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
       <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">{label}</p>
-      <p className="text-2xl font-bold text-white leading-none">{views.toLocaleString()}</p>
-      <p className="text-xs text-slate-500 mt-1">{visitors.toLocaleString()} {visitors === 1 ? 'visitor' : 'visitors'}</p>
+      <p className="text-2xl font-bold text-white leading-none">{value}</p>
+      <p className="text-xs text-slate-500 mt-1">{sub}</p>
     </div>
   );
 }
@@ -61,10 +83,21 @@ function List({ icon, title, rows, empty }: {
   );
 }
 
+function Detail({ label, value }: { label: string; value: string | null }) {
+  if (!value) return null;
+  return (
+    <div>
+      <span className="text-slate-600">{label}</span>
+      <p className="text-slate-300 break-words">{value}</p>
+    </div>
+  );
+}
+
 export default function VisitorsPanel() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState<number | null>(null);
 
   const fetchStats = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -112,7 +145,8 @@ export default function VisitorsPanel() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-slate-500">
-          Page views on the public site. No cookies, no IP addresses stored.
+          Page views on the public site. No cookies and no IP address stored — only what a
+          browser sends anyway, plus how long the page was open.
         </p>
         <button onClick={load} className="btn-ghost text-xs flex items-center gap-1.5 shrink-0" style={{ padding: '6px 12px' }}>
           <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Refresh
@@ -125,10 +159,15 @@ export default function VisitorsPanel() {
         </p>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Tile label="Last 24 hours" views={stats.totals.views24h} visitors={stats.totals.visitors24h} />
-        <Tile label="Last 7 days"   views={stats.totals.views7d}  visitors={stats.totals.visitors7d} />
-        <Tile label="All time"      views={stats.totals.views}    visitors={stats.totals.visitors} />
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <Tile label="Last 24 hours" value={stats.totals.views24h.toLocaleString()}
+              sub={`${stats.totals.visitors24h} ${stats.totals.visitors24h === 1 ? 'visitor' : 'visitors'}`} />
+        <Tile label="Last 7 days" value={stats.totals.views7d.toLocaleString()}
+              sub={`${stats.totals.visitors7d} ${stats.totals.visitors7d === 1 ? 'visitor' : 'visitors'}`} />
+        <Tile label="All time" value={stats.totals.views.toLocaleString()}
+              sub={`${stats.totals.visitors} ${stats.totals.visitors === 1 ? 'visitor' : 'visitors'}`} />
+        <Tile label="Avg. time" value={secs(stats.totals.avgDwell)} sub="on the page" />
+        <Tile label="Avg. scroll" value={stats.totals.avgScroll ? `${stats.totals.avgScroll}%` : '—'} sub="of the page read" />
       </div>
 
       {/* 14-day chart */}
@@ -193,16 +232,20 @@ export default function VisitorsPanel() {
               rows={stats.sources.map((s) => ({ label: s.label, value: s.views, sub: `${s.visitors} visitors` }))} />
         <List icon={<MapPin size={12} />} title="Places" empty="Nothing yet"
               rows={stats.places.map((p) => ({ label: `${flag(p.country)} ${place(p) || p.country}`, value: p.views, sub: `${p.visitors} visitors` }))} />
+        <List icon={<MousePointerClick size={12} />} title="What they clicked" empty="No clicks recorded yet"
+              rows={stats.clicks.map((c) => ({ label: c.action, value: c.views }))} />
         <List icon={<FileText size={12} />} title="Pages" empty="Nothing yet"
               rows={stats.paths.map((p) => ({ label: p.path, value: p.views }))} />
-        <List icon={<Monitor size={12} />} title="Devices" empty="Nothing yet"
-              rows={stats.devices.map((d) => ({ label: d.device, value: d.views }))} />
+        <List icon={<Monitor size={12} />} title="Devices & systems" empty="Nothing yet"
+              rows={stats.systems.map((s) => ({ label: `${s.device} · ${s.os}`, value: s.views }))} />
+        <List icon={<Languages size={12} />} title="Browser language" empty="Nothing yet"
+              rows={stats.languages.map((l) => ({ label: l.lang, value: l.views }))} />
       </div>
 
       {stats.recent.length > 0 && (
         <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
           <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
-            <Globe size={12} /> Recent visits
+            <Globe size={12} /> Recent visits <span className="text-slate-600 normal-case tracking-normal">— click a row for everything</span>
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
@@ -212,23 +255,59 @@ export default function VisitorsPanel() {
                   <th className="font-medium py-1 pr-4">Page</th>
                   <th className="font-medium py-1 pr-4">Came from</th>
                   <th className="font-medium py-1 pr-4">Place</th>
+                  <th className="font-medium py-1 pr-4">Stayed</th>
                   <th className="font-medium py-1">Device</th>
                 </tr>
               </thead>
               <tbody>
                 {stats.recent.map((v, i) => (
-                  <tr key={i} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td className="py-1.5 pr-4 text-slate-500 whitespace-nowrap">{v.at}</td>
-                    <td className="py-1.5 pr-4 text-slate-300 truncate max-w-[150px]">{v.path}</td>
-                    <td className="py-1.5 pr-4 text-slate-400 truncate max-w-[170px]" title={v.referrerUrl ?? undefined}>
-                      {v.source}
-                      {v.tag && <span className="text-cyan-400"> · ?ref={v.tag}</span>}
-                    </td>
-                    <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
-                      {v.country ? `${flag(v.country)} ${place(v) || v.country}` : '—'}
-                    </td>
-                    <td className="py-1.5 text-slate-500 whitespace-nowrap">{v.device} · {v.browser}</td>
-                  </tr>
+                  <Fragment key={i}>
+                    <tr onClick={() => setOpen(open === i ? null : i)}
+                        className="cursor-pointer hover:bg-white/[0.03]"
+                        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                      <td className="py-1.5 pr-4 text-slate-500 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1">
+                          <ChevronDown size={11} className="transition-transform" style={{ transform: open === i ? 'none' : 'rotate(-90deg)' }} />
+                          {v.at}
+                        </span>
+                      </td>
+                      <td className="py-1.5 pr-4 text-slate-300 truncate max-w-[130px]">{v.path}</td>
+                      <td className="py-1.5 pr-4 text-slate-400 truncate max-w-[160px]" title={v.referrerUrl ?? undefined}>
+                        {v.source}
+                        {v.tag && <span className="text-cyan-400"> · ?ref={v.tag}</span>}
+                      </td>
+                      <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
+                        {v.country ? `${flag(v.country)} ${place(v) || v.country}` : '—'}
+                      </td>
+                      <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
+                        {secs(v.dwell)}{v.scroll ? ` · ${v.scroll}%` : ''}
+                      </td>
+                      <td className="py-1.5 text-slate-500 whitespace-nowrap">{v.device} · {v.browser}</td>
+                    </tr>
+                    {open === i && (
+                      <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                        <td colSpan={6} className="p-3" style={{ background: 'rgba(8,145,178,0.05)' }}>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                            <Detail label="Operating system" value={v.os} />
+                            <Detail label="Browser" value={v.browser} />
+                            <Detail label="Screen" value={v.screen} />
+                            <Detail label="Window" value={v.viewport} />
+                            <Detail label="Hardware" value={v.hardware} />
+                            <Detail label="Connection" value={v.connection} />
+                            <Detail label="Browser language" value={v.lang} />
+                            <Detail label="Time zone" value={v.tz} />
+                            <Detail label="Approx. coordinates" value={v.coords} />
+                            <Detail label="Referring page" value={v.referrerUrl} />
+                            <Detail label="Shared link" value={v.tag ? `?ref=${v.tag}` : null} />
+                            <Detail label="Clicked" value={v.actions ? v.actions.split('|').join(', ') : null} />
+                          </div>
+                          <p className="text-[10px] text-slate-600 mt-3 flex items-center gap-1.5">
+                            <Clock size={10} /> Stayed {secs(v.dwell)}{v.scroll ? `, read about ${v.scroll}% of the page` : ''}.
+                          </p>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>

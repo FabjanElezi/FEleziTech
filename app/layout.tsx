@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import VisitTracker from '@/components/VisitTracker';
 import CursorGlow from '@/components/CursorGlow';
 import SurfaceFX from '@/components/SurfaceFX';
+import CommandPalette from '@/components/CommandPalette';
 import ParticleBackground from '@/components/ParticleBackground';
 import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -132,6 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ScrollProgress />
           <CursorGlow />
         <SurfaceFX />
+        <CommandPalette />
         <div className="grain" aria-hidden />
           <ParticleBackground />
           {children}

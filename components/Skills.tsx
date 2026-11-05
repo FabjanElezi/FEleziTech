@@ -55,7 +55,7 @@ export default function Skills({ skills }: Props) {
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 perspective-field">
           {(['technical', 'language', 'tool'] as const).map((cat, i) => {
             const items = grouped[cat] || [];
             if (items.length === 0) return null;

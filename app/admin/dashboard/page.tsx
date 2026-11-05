@@ -12,13 +12,14 @@ import BioEditor from '@/components/admin/BioEditor';
 import ProjectForm from '@/components/admin/ProjectForm';
 import ExperienceEditor from '@/components/admin/ExperienceEditor';
 import SkillsEditor from '@/components/admin/SkillsEditor';
+import VisitorsPanel from '@/components/admin/VisitorsPanel';
 import {
   User, FolderOpen, Briefcase, Code2, LogOut,
-  Plus, Pencil, Trash2, ExternalLink,
+  Plus, Pencil, Trash2, ExternalLink, Eye,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type Tab = 'bio' | 'projects' | 'experience' | 'skills';
+type Tab = 'bio' | 'projects' | 'experience' | 'skills' | 'visitors';
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -84,7 +85,8 @@ export default function Dashboard() {
     { id: 'projects', label: 'Projects', icon: <FolderOpen size={16} /> },
     { id: 'experience', label: 'Experience', icon: <Briefcase size={16} /> },
     { id: 'skills', label: 'Skills', icon: <Code2 size={16} /> },
-  ];
+    { id: 'visitors', label: 'Visitors', icon: <Eye size={16} /> },
+];
 
   return (
     <div className="min-h-screen" style={{ background: '#090d15' }}>
@@ -217,6 +219,14 @@ export default function Dashboard() {
               <div>
                 <h2 className="text-lg font-bold text-white mb-6">Skills</h2>
                 <SkillsEditor skills={skills} onChanged={setSkills} />
+              </div>
+            )}
+
+            {/* ── Visitors ── */}
+            {tab === 'visitors' && (
+              <div>
+                <h2 className="text-lg font-bold text-white mb-6">Visitors</h2>
+                <VisitorsPanel />
               </div>
             )}
           </div>

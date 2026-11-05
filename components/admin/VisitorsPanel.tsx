@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, Fragment } from 'react';
 import {
   RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin,
-  Languages, Download, ChevronDown, Clock,
+  Languages, Download, ChevronDown, Clock, Trash2,
 } from 'lucide-react';
 
 type Recent = {
@@ -104,6 +104,7 @@ export default function VisitorsPanel() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState<number | null>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const fetchStats = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -120,6 +121,15 @@ export default function VisitorsPanel() {
       if (!signal?.aborted) setLoading(false);
     }
   }, []);
+
+  const reset = useCallback(async () => {
+    setConfirmReset(false);
+    setLoading(true);
+    try {
+      await fetch('/api/visits', { method: 'DELETE' });
+    } catch { /* the refetch below will show whatever survived */ }
+    void fetchStats();
+  }, [fetchStats]);
 
   // Refresh button: show the spinner, then refetch.
   const load = useCallback(() => {
@@ -150,14 +160,43 @@ export default function VisitorsPanel() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm text-slate-500">
-          Page views on the public site. No cookies and no IP address stored — only what a
-          browser sends anyway, plus how long the page was open.
-        </p>
-        <button onClick={load} className="btn-ghost text-xs flex items-center gap-1.5 shrink-0" style={{ padding: '6px 12px' }}>
-          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Refresh
-        </button>
+        <div className="text-sm text-slate-500 space-y-1">
+          <p>
+            Page views on the public site. No cookies and no IP address stored — only what a
+            browser sends anyway, plus how long the page was open.
+          </p>
+          <p className="text-xs text-slate-600">
+            Your own visits are never counted while you are signed in here. On a phone or a
+            browser where you are signed out, open{' '}
+            <span className="text-slate-400">felezitech.vercel.app/?notrack=1</span> once and that
+            browser stops counting for good (<span className="text-slate-400">?notrack=0</span> undoes it).
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {confirmReset ? (
+            <>
+              <button onClick={reset} className="btn-ghost text-xs" style={{ padding: '6px 12px', color: '#fca5a5', borderColor: 'rgba(248,113,113,0.4)' }}>
+                Delete everything
+              </button>
+              <button onClick={() => setConfirmReset(false)} className="btn-ghost text-xs" style={{ padding: '6px 12px' }}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button onClick={() => setConfirmReset(true)} className="btn-ghost text-xs flex items-center gap-1.5" style={{ padding: '6px 12px' }} title="Clear all recorded visits and CV opens">
+              <Trash2 size={13} /> Reset
+            </button>
+          )}
+          <button onClick={load} className="btn-ghost text-xs flex items-center gap-1.5" style={{ padding: '6px 12px' }}>
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Refresh
+          </button>
+        </div>
       </div>
+      {confirmReset && (
+        <p className="text-xs text-slate-400 rounded-xl p-3" style={{ background: 'rgba(248,113,113,0.07)', border: '1px solid rgba(248,113,113,0.25)' }}>
+          This deletes every recorded visit and CV open, for good. The counters start again from zero.
+        </p>
+      )}
 
       {noData && (
         <p className="text-sm text-slate-400 rounded-xl p-4" style={{ background: 'rgba(8,145,178,0.07)', border: '1px solid rgba(8,145,178,0.2)' }}>

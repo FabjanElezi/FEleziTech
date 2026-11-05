@@ -31,6 +31,16 @@ export default function VisitTracker() {
     if (typeof navigator !== 'undefined' && navigator.doNotTrack === '1') return;
 
     const params = new URLSearchParams(window.location.search);
+
+    // felezitech.vercel.app/?notrack=1 marks this browser as the owner's, so
+    // nothing from it is ever counted (?notrack=0 undoes it).
+    try {
+      const flag = params.get('notrack');
+      if (flag === '1') localStorage.setItem('fe-notrack', '1');
+      if (flag === '0') localStorage.removeItem('fe-notrack');
+      if (localStorage.getItem('fe-notrack') === '1') return;
+    } catch { /* private mode: carry on */ }
+
     const tag = params.get('ref') || params.get('utm_source') || params.get('utm_campaign');
 
     const vid = Math.random().toString(36).slice(2) + Date.now().toString(36);

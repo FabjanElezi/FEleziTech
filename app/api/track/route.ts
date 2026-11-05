@@ -2,6 +2,7 @@ import {
   recordVisit, recordEngagement, visitorHash, isBot, parseAgent,
   referrerHost, referrerUrl, cleanTag, clean, coords, primaryLang,
 } from '@/lib/visits';
+import { getAuthEmail } from '@/lib/auth-server';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,9 @@ export async function POST(req: Request) {
 
     const ua = req.headers.get('user-agent') ?? '';
     if (isBot(ua)) return NO();
+
+    // Never count the owner's own visits while signed in to Admin.
+    if (await getAuthEmail()) return NO();
 
     let body: Record<string, unknown>;
     try { body = await req.json(); } catch { return NO(); }

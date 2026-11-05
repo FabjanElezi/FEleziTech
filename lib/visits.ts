@@ -88,7 +88,9 @@ export function parseAgent(ua: string) {
     : /Windows NT 6\.3/.test(ua) ? 'Windows 8.1'
     : /Windows/.test(ua) ? 'Windows'
     : /iPhone|iPad|iPod/.test(ua) ? `iOS ${ver(/OS (\d+[_.]\d+)/, ua)}`.trim()
-    : /Mac OS X/.test(ua) ? `macOS ${ver(/Mac OS X (\d+[_.]\d+)/, ua)}`.trim()
+    // Safari and Chrome freeze the reported macOS version at 10.15, so the
+    // number would be a lie — report the platform only.
+    : /Mac OS X/.test(ua) ? 'macOS'
     : /Android/.test(ua) ? `Android ${ver(/Android (\d+)/, ua)}`.trim()
     : /CrOS/.test(ua) ? 'ChromeOS'
     : /Linux/.test(ua) ? 'Linux'

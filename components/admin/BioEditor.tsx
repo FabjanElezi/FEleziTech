@@ -93,6 +93,41 @@ export default function BioEditor({ portfolio, onSaved }: Props) {
           <label className="block text-sm text-slate-400 mb-1">Bio</label>
           <textarea className="input-dark min-h-[110px] resize-y" value={form.bio} onChange={(e) => set('bio', e.target.value)} placeholder="A short paragraph about yourself..." />
         </div>
+
+        {/* Translations — leave a field empty and the English version is shown. */}
+        <div className="rounded-xl p-4" style={{ background: 'rgba(8,145,178,0.05)', border: '1px solid rgba(8,145,178,0.18)' }}>
+          <p className="text-sm font-semibold text-cyan-300 mb-1">Translations</p>
+          <p className="text-xs text-slate-500 mb-4">
+            Anything left blank falls back to the English text, so the site never shows an empty section.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Title — Deutsch</label>
+              <input className="input-dark" value={form.title_de || ''} onChange={(e) => set('title_de', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Title — Shqip</label>
+              <input className="input-dark" value={form.title_sq || ''} onChange={(e) => set('title_sq', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Hero tagline — Deutsch</label>
+              <input className="input-dark" value={form.heroTagline_de || ''} onChange={(e) => set('heroTagline_de', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Hero tagline — Shqip</label>
+              <input className="input-dark" value={form.heroTagline_sq || ''} onChange={(e) => set('heroTagline_sq', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Bio — Deutsch</label>
+              <textarea className="input-dark min-h-[110px] resize-y" value={form.bio_de || ''} onChange={(e) => set('bio_de', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Bio — Shqip</label>
+              <textarea className="input-dark min-h-[110px] resize-y" value={form.bio_sq || ''} onChange={(e) => set('bio_sq', e.target.value)} />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Contact ── */}

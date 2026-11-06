@@ -22,10 +22,12 @@ const empty = {
   dbDesignImages: [] as string[],
   featured: false,
   order: 0,
+  description_de: '',
+  description_sq: '',
 };
 
 export default function ProjectForm({ project, onDone }: Props) {
-  const [form, setForm] = useState(project ? { ...project } : { ...empty });
+  const [form, setForm] = useState({ ...empty, ...(project ?? {}) });
   const [techInput, setTechInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -149,6 +151,29 @@ export default function ProjectForm({ project, onDone }: Props) {
           required
           placeholder="What this project does and why it matters..."
         />
+      </div>
+
+      {/* Translations — blank means the English text is used. */}
+      <div className="rounded-xl p-4" style={{ background: 'rgba(8,145,178,0.05)', border: '1px solid rgba(8,145,178,0.18)' }}>
+        <p className="text-sm font-semibold text-cyan-300 mb-3">Description in other languages</p>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Deutsch</label>
+            <textarea
+              className="input-dark min-h-[90px] resize-y"
+              value={form.description_de || ''}
+              onChange={(e) => set('description_de', e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Shqip</label>
+            <textarea
+              className="input-dark min-h-[90px] resize-y"
+              value={form.description_sq || ''}
+              onChange={(e) => set('description_sq', e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       <div>

@@ -23,6 +23,7 @@ const blank = (): FormState => ({
   company: '', role: '', startDate: '', endDate: '',
   current: false, description: '', location: '',
   type: 'work', order: 0, certificateUrl: '',
+  role_de: '', role_sq: '', description_de: '', description_sq: '',
 });
 
 function parseDescription(raw: string): { location: string; description: string } {
@@ -43,7 +44,15 @@ function buildDescription(location: string, description: string): string {
 
 function expToForm(exp: Experience): FormState {
   const { location, description } = parseDescription(exp.description);
-  return { ...exp, location, description };
+  return {
+    ...blank(),
+    ...exp,
+    location,
+    description,
+    // the translations are stored with the same "Place — text" shape
+    description_de: parseDescription(exp.description_de ?? '').description,
+    description_sq: parseDescription(exp.description_sq ?? '').description,
+  };
 }
 
 const TYPE_STYLE = {
@@ -138,6 +147,9 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
       const payload: Omit<Experience, 'id'> = {
         ...rest,
         description: buildDescription(location, form.description),
+        // the place is the same in every language, so it is reused
+        description_de: form.description_de?.trim() ? buildDescription(location, form.description_de) : '',
+        description_sq: form.description_sq?.trim() ? buildDescription(location, form.description_sq) : '',
       };
       if (editing) {
         await updateExperience(editing, payload);
@@ -176,6 +188,32 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
           <label className="block text-xs text-slate-400 mb-1">Role / Degree *</label>
           <input className="input-dark" value={form.role} onChange={(e) => setField('role', e.target.value)} />
         </div>
+      </div>
+
+      {/* Translations — blank falls back to the English text. */}
+      <div className="rounded-xl p-3" style={{ background: 'rgba(8,145,178,0.05)', border: '1px solid rgba(8,145,178,0.18)' }}>
+        <p className="text-xs font-semibold text-cyan-300 mb-2">Translations</p>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Role — Deutsch</label>
+            <input className="input-dark" value={form.role_de || ''} onChange={(e) => setField('role_de', e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Role — Shqip</label>
+            <input className="input-dark" value={form.role_sq || ''} onChange={(e) => setField('role_sq', e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Description — Deutsch</label>
+            <textarea className="input-dark min-h-[80px] resize-y" value={form.description_de || ''} onChange={(e) => setField('description_de', e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Description — Shqip</label>
+            <textarea className="input-dark min-h-[80px] resize-y" value={form.description_sq || ''} onChange={(e) => setField('description_sq', e.target.value)} />
+          </div>
+        </div>
+        <p className="text-[11px] text-slate-500 mt-2">
+          Leave the place out — it is added automatically from the Location field above.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

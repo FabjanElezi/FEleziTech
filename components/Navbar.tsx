@@ -99,17 +99,6 @@ export default function Navbar() {
 
         {/* Desktop right */}
         <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
-          {/* Nobody discovers a keyboard shortcut on their own. */}
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event('open-command-palette'))}
-            aria-label="Open the command palette"
-            title="Search and jump — ⌘K"
-            className="theme-toggle-btn text-[11px] font-semibold tracking-wide"
-            style={{ width: 'auto', padding: '0 0.55rem', letterSpacing: '0.02em' }}
-          >
-            ⌘K
-          </button>
           <ThemeToggle />
           <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
             Admin

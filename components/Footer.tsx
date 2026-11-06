@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useLang } from '@/components/LanguageProvider';
 
 export default function Footer() {
@@ -12,6 +13,9 @@ export default function Footer() {
       <p className="text-slate-600 text-sm">
         © {new Date().getFullYear()} Fabjan Elezi. {t('footer.rights')}
       </p>
+      <Link href="/privacy" className="text-slate-600 hover:text-cyan-400 text-xs mt-2 inline-block transition-colors">
+        {t('footer.privacy')}
+      </Link>
     </footer>
   );
 }

@@ -42,11 +42,14 @@ function rowToExp(d: Record<string, unknown>) {
     current: d.current, description: d.description,
     order: d.order, type: d.type,
     certificateUrl: d.certificate_url,
+    role_de: d.role_de ?? '', role_sq: d.role_sq ?? '',
+    description_de: d.description_de ?? '', description_sq: d.description_sq ?? '',
   };
 }
 
 export async function GET() {
   await ensureAwardType();
+  await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM experience ORDER BY "order" ASC');
   return Response.json(rows.map(rowToExp), NO_STORE);
 }

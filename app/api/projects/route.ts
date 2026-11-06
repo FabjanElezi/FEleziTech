@@ -19,11 +19,13 @@ function rowToProject(d: Record<string, unknown>) {
     githubLink: d.github_link, liveDemoLink: d.live_demo_link,
     documentUrl: d.document_url, dbDesignImages: d.db_design_images ?? [],
     featured: d.featured, order: d.order, createdAt: d.created_at,
+    description_de: d.description_de ?? '', description_sq: d.description_sq ?? '',
   };
 }
 
 export async function GET() {
   await ensureDbDesignColumn();
+  await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM projects ORDER BY "order" ASC');
   return Response.json(rows.map(rowToProject), NO_STORE);
 }

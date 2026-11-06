@@ -3,7 +3,31 @@ import { Portfolio, Project, Experience, Skill } from '@/types';
 
 type Row = Record<string, unknown>;
 
+// One column per language for everything a visitor reads. Added lazily, the
+// same way the visits table is, so there is no migration step to remember.
+let translationsReady = false;
+const TRANSLATED: [string, string[]][] = [
+  ['portfolio', ['title_de', 'title_sq', 'bio_de', 'bio_sq', 'hero_tagline_de', 'hero_tagline_sq']],
+  ['projects', ['description_de', 'description_sq']],
+  ['experience', ['role_de', 'role_sq', 'description_de', 'description_sq']],
+];
+
+export async function ensureTranslationColumns() {
+  if (translationsReady) return;
+  try {
+    for (const [table, columns] of TRANSLATED) {
+      for (const c of columns) {
+        await query(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS ${c} TEXT`);
+      }
+    }
+  } catch { /* never block a page render */ }
+  translationsReady = true;
+}
+
+const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v : undefined);
+
 export async function getPortfolio(): Promise<Portfolio | null> {
+  await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM portfolio WHERE id = $1', ['main']);
   if (!rows[0]) return null;
   const d = rows[0] as Row;
@@ -22,10 +46,17 @@ export async function getPortfolio(): Promise<Portfolio | null> {
     availableForWork: d.available_for_work as boolean | undefined,
     university: d.university as string | undefined,
     openToRemote: d.open_to_remote as boolean | undefined,
+    title_de: str(d.title_de),
+    title_sq: str(d.title_sq),
+    bio_de: str(d.bio_de),
+    bio_sq: str(d.bio_sq),
+    heroTagline_de: str(d.hero_tagline_de),
+    heroTagline_sq: str(d.hero_tagline_sq),
   };
 }
 
 export async function getProjects(): Promise<Project[]> {
+  await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM projects ORDER BY "order" ASC');
   return rows.map((d: Row) => ({
     id: d.id as string,
@@ -40,10 +71,13 @@ export async function getProjects(): Promise<Project[]> {
     featured: (d.featured ?? false) as boolean,
     order: (d.order ?? 0) as number,
     createdAt: (d.created_at ?? '') as string,
+    description_de: str(d.description_de),
+    description_sq: str(d.description_sq),
   }));
 }
 
 export async function getExperiences(): Promise<Experience[]> {
+  await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM experience ORDER BY "order" ASC');
   return rows.map((d: Row) => ({
     id: d.id as string,
@@ -56,6 +90,10 @@ export async function getExperiences(): Promise<Experience[]> {
     order: (d.order ?? 0) as number,
     type: d.type as 'work' | 'education' | 'award' | 'other',
     certificateUrl: d.certificate_url as string | undefined,
+    role_de: str(d.role_de),
+    role_sq: str(d.role_sq),
+    description_de: str(d.description_de),
+    description_sq: str(d.description_sq),
   }));
 }
 

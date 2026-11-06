@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Globe } from 'lucide-react';
@@ -9,7 +10,8 @@ interface Props { portfolio: Portfolio | null }
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function About({ portfolio }: Props) {
-  const bio        = portfolio?.bio      || '';
+  const { t, L } = useLang();
+  const bio        = L(portfolio, 'bio');
   const location   = portfolio?.location || 'Tirana, Albania';
   const university = portfolio?.university || 'Metropolitan University of Tirana';
   const openToRemote = portfolio?.openToRemote !== false;
@@ -17,7 +19,7 @@ export default function About({ portfolio }: Props) {
   const chips = [
     { icon: <MapPin size={14} className="text-cyan-400" />,      label: location },
     { icon: <GraduationCap size={14} className="text-cyan-400" />, label: university },
-    ...(openToRemote ? [{ icon: <Globe size={14} className="text-cyan-400" />, label: 'Open to Remote' }] : []),
+    ...(openToRemote ? [{ icon: <Globe size={14} className="text-cyan-400" />, label: t('about.remote') }] : []),
   ];
 
   return (
@@ -70,7 +72,7 @@ export default function About({ portfolio }: Props) {
               transition={{ duration: 0.45, ease, delay: 0.08 }}
             >
               <span className="w-8 h-px bg-cyan-500" />
-              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">About Me</span>
+              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('about.eyebrow')}</span>
             </motion.div>
 
             <motion.h2
@@ -80,7 +82,7 @@ export default function About({ portfolio }: Props) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease, delay: 0.14 }}
             >
-              Where business meets <span className="gradient-text">data and IT systems</span>
+              {t('about.headline')} <span className="gradient-text">{t('about.headlineAccent')}</span>
             </motion.h2>
 
             <motion.p

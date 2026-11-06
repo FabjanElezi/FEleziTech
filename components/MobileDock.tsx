@@ -1,17 +1,19 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { useEffect, useRef, useState } from 'react';
 import { Home, User, Code2, FolderOpen, Mail } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const sections = [
-  { id: 'hero',     label: 'Home',    Icon: Home },
-  { id: 'about',    label: 'About',   Icon: User },
-  { id: 'skills',   label: 'Skills',  Icon: Code2 },
-  { id: 'projects', label: 'Projects',Icon: FolderOpen },
-  { id: 'contact',  label: 'Contact', Icon: Mail },
+  { id: 'hero',     label: 'nav.home',     Icon: Home },
+  { id: 'about',    label: 'nav.about',    Icon: User },
+  { id: 'skills',   label: 'nav.skills',   Icon: Code2 },
+  { id: 'projects', label: 'nav.projects', Icon: FolderOpen },
+  { id: 'contact',  label: 'nav.contact',  Icon: Mail },
 ];
 
 export default function MobileDock() {
+  const { t } = useLang();
   const pathname = usePathname();
   const [active, setActive] = useState('hero');
   const dockRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ export default function MobileDock() {
             <button
               key={id}
               onClick={() => handleClick(id)}
-              aria-label={label}
+              aria-label={t(label)}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -129,7 +131,7 @@ export default function MobileDock() {
                   lineHeight: 1,
                 }}
               >
-                {label}
+                {t(label)}
               </span>
             </button>
           );

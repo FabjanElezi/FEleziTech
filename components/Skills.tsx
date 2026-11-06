@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { motion } from 'framer-motion';
 import { Skill } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -6,9 +7,9 @@ import CornerAccents from '@/components/CornerAccents';
 interface Props { skills: Skill[] }
 
 const categoryLabels: Record<string, string> = {
-  technical: 'Technical Skills',
-  language: 'Languages',
-  tool: 'Tools & Soft Skills',
+  technical: 'skills.technical',
+  language: 'skills.language',
+  tool: 'skills.tool',
 };
 
 const categoryCorner: Record<string, string> = {
@@ -24,6 +25,7 @@ const categoryChipClass: Record<string, string> = {
 };
 
 export default function Skills({ skills }: Props) {
+  const { t } = useLang();
   const grouped = skills.reduce<Record<string, Skill[]>>((acc, s) => {
     if (!acc[s.category]) acc[s.category] = [];
     acc[s.category].push(s);
@@ -47,7 +49,7 @@ export default function Skills({ skills }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Skills</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('skills.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
@@ -70,7 +72,7 @@ export default function Skills({ skills }: Props) {
               >
                 <CornerAccents color={categoryCorner[cat]} />
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">
-                  {categoryLabels[cat]}
+                  {t(categoryLabels[cat])}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {items.map((skill) => (

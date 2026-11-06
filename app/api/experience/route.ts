@@ -1,6 +1,7 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
+import { ensureTranslationColumns } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
@@ -54,10 +55,12 @@ export async function POST(req: Request) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const d = await req.json();
+  await ensureTranslationColumns();
   const { rows } = await query(
-    `INSERT INTO experience (company,role,start_date,end_date,current,description,"order",type,certificate_url)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
-    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null]
+    `INSERT INTO experience (company,role,start_date,end_date,current,description,"order",type,certificate_url,role_de,role_sq,description_de,description_sq)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
+    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null,
+     d.role_de??null,d.role_sq??null,d.description_de??null,d.description_sq??null]
   );
   revalidatePath('/');
   return Response.json({ id: rows[0].id });

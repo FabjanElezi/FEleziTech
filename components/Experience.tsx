@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { motion } from 'framer-motion';
 import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
@@ -12,13 +13,16 @@ interface Props { experiences: Exp[] }
 
 interface TimelineProps {
   items: Exp[];
-  label: string;
+  /** Which list this is — used for styling, never shown. */
+  kind: 'work' | 'education' | 'award';
   onCertificate: (url: string) => void;
 }
 
-function Timeline({ items, label, onCertificate }: TimelineProps) {
-    const isWork    = label === 'Experience';
-    const isAward   = label === 'Awards';
+function Timeline({ items, kind, onCertificate }: TimelineProps) {
+    const { t, L } = useLang();
+    const label     = t(`experience.${kind}`);
+    const isWork    = kind === 'work';
+    const isAward   = kind === 'award';
     const lineColor = isAward
       ? 'linear-gradient(to bottom, rgba(245,158,11,0.5), transparent)'
       : isWork
@@ -57,25 +61,27 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
                 <CornerAccents size={9} inset={7} />
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
                   <div className="min-w-0">
-                    <p className="font-semibold text-white text-sm leading-snug">{exp.role}</p>
+                    <p className="font-semibold text-white text-sm leading-snug">{L(exp, 'role')}</p>
                     <p className="text-cyan-400 text-sm">{exp.company}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="flex items-center gap-1 text-xs text-slate-500">
                       <Calendar size={11} />
-                      {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
+                      {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
                     </span>
-                    {exp.description?.includes(' — ') && (
+                    {L(exp, 'description')?.includes(' — ') && (
                       <span className="flex items-center gap-1 text-xs text-slate-600">
                         <MapPin size={11} />
-                        {exp.description.split(' — ')[0]}
+                        {L(exp, 'description').split(' — ')[0]}
                       </span>
                     )}
                   </div>
                 </div>
-                {exp.description && (
+                {L(exp, 'description') && (
                   <p className="text-slate-500 text-xs sm:text-sm mt-2 leading-relaxed">
-                    {exp.description.includes(' — ') ? exp.description.split(' — ').slice(1).join(' — ') : exp.description}
+                    {L(exp, 'description').includes(' — ')
+                      ? L(exp, 'description').split(' — ').slice(1).join(' — ')
+                      : L(exp, 'description')}
                   </p>
                 )}
                 {exp.certificateUrl && (
@@ -104,7 +110,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
                       e.currentTarget.style.textShadow = '0 0 8px rgba(212,175,55,0.5)';
                     }}
                   >
-                    <Award size={12} /> View Certificate
+                    <Award size={12} /> {t('experience.certificate')}
                   </button>
                 )}
               </div>
@@ -117,6 +123,7 @@ function Timeline({ items, label, onCertificate }: TimelineProps) {
 }
 
 export default function Experience({ experiences }: Props) {
+  const { t, L } = useLang();
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const openCertificate = useCallback((url: string) => {
@@ -143,26 +150,26 @@ export default function Experience({ experiences }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Timeline</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('experience.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
-            Experience &amp; <span className="gradient-text">Education</span>
+            {t('experience.headline')} <span className="gradient-text">{t('experience.headlineAccent')}</span>
           </h2>
         </motion.div>
 
         <div className="space-y-16 max-w-3xl mx-auto">
-          {work.length > 0 && <Timeline items={work} label="Experience" onCertificate={openCertificate} />}
+          {work.length > 0 && <Timeline items={work} kind="work" onCertificate={openCertificate} />}
           {other.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-2">
                 <Briefcase size={14} className="text-slate-500" />
-                Other experience
+                {t('experience.other')}
               </h3>
               <ul className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                 {other.map((exp, i) => {
-                  const hasLoc = exp.description?.includes(' — ');
-                  const loc = hasLoc ? exp.description.split(' — ')[0] : null;
+                  const hasLoc = L(exp, 'description')?.includes(' — ');
+                  const loc = hasLoc ? L(exp, 'description').split(' — ')[0] : null;
                   return (
                     <motion.li
                       key={exp.id}
@@ -174,13 +181,13 @@ export default function Experience({ experiences }: Props) {
                       style={{ borderColor: 'rgba(255,255,255,0.06)' }}
                     >
                       <span className="min-w-0">
-                        <span className="text-slate-300 font-medium">{exp.role}</span>
+                        <span className="text-slate-300 font-medium">{L(exp, 'role')}</span>
                         <span className="text-slate-600"> · </span>
                         <span className="text-slate-500">{exp.company}</span>
                         {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
                       </span>
                       <span className="text-xs text-slate-600 whitespace-nowrap sm:text-right">
-                        {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
+                        {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
                       </span>
                     </motion.li>
                   );
@@ -191,11 +198,11 @@ export default function Experience({ experiences }: Props) {
           {(work.length > 0 || other.length > 0) && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(8,145,178,0.3), rgba(6,182,212,0.25), transparent)' }} />
           )}
-          {education.length > 0 && <Timeline items={education} label="Education" onCertificate={openCertificate} />}
+          {education.length > 0 && <Timeline items={education} kind="education" onCertificate={openCertificate} />}
           {awards.length > 0 && education.length > 0 && (
             <div className="w-full h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.3), transparent)' }} />
           )}
-          {awards.length > 0 && <Timeline items={awards} label="Awards" onCertificate={openCertificate} />}
+          {awards.length > 0 && <Timeline items={awards} kind="award" onCertificate={openCertificate} />}
         </div>
       </div>
       {lightboxUrl && (

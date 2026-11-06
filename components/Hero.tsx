@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { FileText, ArrowDown, Mail } from 'lucide-react';
@@ -49,15 +50,16 @@ function Typewriter({ roles }: { roles: string[] }) {
 const reveal = (delay: number) => ({ '--d': `${delay}s` } as React.CSSProperties);
 
 export default function Hero({ portfolio }: Props) {
+  const { t, L } = useLang();
   const name = portfolio?.name || 'Fabjan Elezi';
-  const title = portfolio?.title || 'Information Systems M.Sc. Student · Data, IT & Business';
+  const title = L(portfolio, 'title') || 'Information Systems M.Sc. Student · Data, IT & Business';
   const cvUrl = portfolio?.cvUrl;
 
   const roles = [
-    'Turning business data into decisions',
-    'Building BI dashboards from real data',
-    'SQL · Python · Excel',
-    'IT infrastructure & security background',
+    t('hero.role1'),
+    t('hero.role2'),
+    t('hero.role3'),
+    t('hero.role4'),
   ];
 
   return (
@@ -105,7 +107,7 @@ export default function Hero({ portfolio }: Props) {
                 />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#0891b2' }} />
               </span>
-              Open to Werkstudent &amp; internship roles · Aachen
+              {t('hero.badge')}
             </span>
           </div>
         )}
@@ -114,7 +116,7 @@ export default function Hero({ portfolio }: Props) {
           className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-tight hero-in"
           style={reveal(0.1)}
         >
-          Hi, I&apos;m{' '}
+          {t('hero.greeting')}{' '}
           <span className="gradient-text">{name.split(' ')[0]}</span>
           <br />
           <span className="text-slate-300">{name.split(' ').slice(1).join(' ')}</span>
@@ -139,15 +141,15 @@ export default function Hero({ portfolio }: Props) {
           style={reveal(0.4)}
         >
           <a href="#projects" className="btn-primary">
-            View Projects <ArrowDown size={16} />
+            {t('hero.viewProjects')} <ArrowDown size={16} />
           </a>
           {cvUrl ? (
             <a href="/api/cv" target="_blank" rel="noopener noreferrer" className="btn-ghost">
-              View CV <FileText size={16} />
+              {t('hero.viewCv')} <FileText size={16} />
             </a>
           ) : (
             <a href="#contact" className="btn-ghost">
-              Get in Touch <Mail size={16} />
+              {t('hero.getInTouch')} <Mail size={16} />
             </a>
           )}
         </div>

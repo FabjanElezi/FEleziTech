@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, Link, Send, MapPin, Copy, Check } from 'lucide-react';
@@ -8,6 +9,7 @@ import CornerAccents from '@/components/CornerAccents';
 interface Props { portfolio: Portfolio | null }
 
 export default function Contact({ portfolio }: Props) {
+  const { t } = useLang();
   const email = portfolio?.email || 'fabio.elezi485@icloud.com';
   const phone = portfolio?.phone || '';
   const linkedin = portfolio?.linkedin || '';
@@ -41,14 +43,14 @@ export default function Contact({ portfolio }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Contact</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('contact.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-3">
-            Let&apos;s <span className="gradient-text">Connect</span>
+            {t('contact.headline')} <span className="gradient-text">{t('contact.headlineAccent')}</span>
           </h2>
           <p className="text-slate-500 text-base max-w-md mx-auto">
-            Open to Werkstudent, internship and junior roles in IT, data and software development, in Aachen/NRW or remote.
+            {t('contact.sub')}
           </p>
         </motion.div>
 
@@ -76,7 +78,7 @@ export default function Contact({ portfolio }: Props) {
               </a>
               <button
                 onClick={copyEmail}
-                aria-label={copied ? 'Email copied' : 'Copy email'}
+                aria-label={copied ? t('contact.copied') : t('contact.copy')}
                 className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all"
                 style={{
                   background: copied ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
@@ -129,7 +131,7 @@ export default function Contact({ portfolio }: Props) {
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 mb-0.5">LinkedIn</p>
-                  <p className="text-white text-sm font-medium">Connect on LinkedIn</p>
+                  <p className="text-white text-sm font-medium">{t('contact.connect')}</p>
                 </div>
               </motion.a>
             )}
@@ -172,12 +174,12 @@ export default function Contact({ portfolio }: Props) {
             >
               <Send size={22} className="text-cyan-400" />
             </div>
-            <h3 className="text-white font-bold text-xl mb-3">Ready to collaborate?</h3>
+            <h3 className="text-white font-bold text-xl mb-3">{t('contact.ready')}</h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
-              Whether it&apos;s an internship, project collaboration, or just a chat about tech — I&apos;d love to hear from you.
+              {t('contact.readyText')}
             </p>
             <a href={`mailto:${email}`} className="btn-primary self-start">
-              Send me an email <Send size={14} />
+              {t('contact.sendEmail')} <Send size={14} />
             </a>
           </motion.div>
         </div>

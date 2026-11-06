@@ -1,4 +1,8 @@
+'use client';
+import { useLang } from '@/components/LanguageProvider';
+
 export default function Footer() {
+  const { t } = useLang();
   return (
     <footer className="py-8 px-6 text-center relative">
       <div
@@ -6,7 +10,7 @@ export default function Footer() {
         style={{ background: 'linear-gradient(to right, transparent, rgba(8,145,178,0.25), rgba(6,182,212,0.2), transparent)' }}
       />
       <p className="text-slate-600 text-sm">
-        © {new Date().getFullYear()} Fabjan Elezi. All rights reserved.
+        © {new Date().getFullYear()} Fabjan Elezi. {t('footer.rights')}
       </p>
     </footer>
   );

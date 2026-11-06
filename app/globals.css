@@ -829,9 +829,12 @@ html[data-admin] body { background-image: none; }
 /* A specular highlight that follows the cursor, so the glass catches light
    instead of wearing a painted-on sheen. SurfaceFX writes --mx / --my. */
 
-/* :where() keeps this at zero specificity, so a positioning utility on the same
-   element — .absolute on a dropdown, say — still wins. */
-:where(.glass) { position: relative; }
+/* In @layer components, so Tailwind's utilities — which live in the later
+   @layer utilities — still win. An unlayered rule here would beat .absolute
+   outright, whatever its specificity, and strand a positioned dropdown. */
+@layer components {
+  .glass { position: relative; }
+}
 
 .glass::after,
 .btn-primary::after,

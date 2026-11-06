@@ -1,4 +1,5 @@
 'use client';
+import { useLang } from '@/components/LanguageProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ExternalLink, GitBranch, FileText, Star, Database } from 'lucide-react';
@@ -14,6 +15,7 @@ interface Props { projects: Project[] }
 const CLAMP_THRESHOLD = 160;
 
 function ProjectDescription({ text }: { text: string }) {
+  const { t } = useLang();
   const [expanded, setExpanded] = useState(false);
   const long = text.length > CLAMP_THRESHOLD;
   return (
@@ -24,7 +26,7 @@ function ProjectDescription({ text }: { text: string }) {
           onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
           className="mt-1 text-xs text-cyan-400 hover:text-cyan-300 transition-colors block"
         >
-          {expanded ? 'Show less ↑' : 'Read more ↓'}
+          {expanded ? t('projects.showLess') : t('projects.readMore')}
         </button>
       )}
     </div>
@@ -32,6 +34,7 @@ function ProjectDescription({ text }: { text: string }) {
 }
 
 export default function Projects({ projects }: Props) {
+  const { t, L } = useLang();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
   const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
@@ -46,13 +49,13 @@ export default function Projects({ projects }: Props) {
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('projects.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-4">
-            My <span className="gradient-text">Work</span>
+            {t('projects.headline')} <span className="gradient-text">{t('projects.headlineAccent')}</span>
           </h2>
-          <p className="text-slate-500 mt-8">Projects will appear here once added via the admin panel.</p>
+          <p className="text-slate-500 mt-8">{t('projects.empty')}</p>
         </div>
       </section>
     );
@@ -69,11 +72,11 @@ export default function Projects({ projects }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">Projects</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('projects.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
-            My <span className="gradient-text">Work</span>
+            {t('projects.headline')} <span className="gradient-text">{t('projects.headlineAccent')}</span>
           </h2>
         </motion.div>
 
@@ -144,7 +147,7 @@ export default function Projects({ projects }: Props) {
                         }}
                         whileHover={{ scale: 1.07 }}
                       >
-                        <ExternalLink size={15} /> View Project
+                        <ExternalLink size={15} /> {t('projects.view')}
                       </motion.a>
                     </motion.div>
                   )}
@@ -156,12 +159,12 @@ export default function Projects({ projects }: Props) {
                   <h3 className="text-white font-semibold text-base leading-tight">{project.title}</h3>
                   {project.featured && (
                     <span className="flex items-center gap-1 text-xs text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20 whitespace-nowrap">
-                      <Star size={10} fill="currentColor" /> Featured
+                      <Star size={10} fill="currentColor" /> {t('projects.featured')}
                     </span>
                   )}
                 </div>
 
-                <ProjectDescription text={project.description} />
+                <ProjectDescription text={L(project, 'description')} />
 
                 {project.techStack?.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
@@ -179,7 +182,7 @@ export default function Projects({ projects }: Props) {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[36px]"
                     >
-                      <GitBranch size={13} /> Code
+                      <GitBranch size={13} /> {t('projects.code')}
                     </a>
                   )}
                   {project.dbDesignImages && project.dbDesignImages.length > 0 && (
@@ -215,7 +218,7 @@ export default function Projects({ projects }: Props) {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors min-h-[36px]"
                     >
-                      <ExternalLink size={13} /> View Project
+                      <ExternalLink size={13} /> {t('projects.view')}
                     </a>
                   )}
                   {!isTouch && project.liveDemoLink && (
@@ -225,7 +228,7 @@ export default function Projects({ projects }: Props) {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors min-h-[36px]"
                     >
-                      <ExternalLink size={13} /> Live Demo
+                      <ExternalLink size={13} /> {t('projects.liveDemo')}
                     </a>
                   )}
                   {project.documentUrl && (
@@ -235,7 +238,7 @@ export default function Projects({ projects }: Props) {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[36px]"
                     >
-                      <FileText size={13} /> Docs
+                      <FileText size={13} /> {t('projects.docs')}
                     </a>
                   )}
                 </div>

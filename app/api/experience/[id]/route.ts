@@ -1,16 +1,20 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
+import { ensureTranslationColumns } from '@/lib/data';
 
 export async function PUT(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await ctx.params;
   const d = await req.json();
+  await ensureTranslationColumns();
   await query(
     `UPDATE experience SET company=$1,role=$2,start_date=$3,end_date=$4,current=$5,
-     description=$6,"order"=$7,type=$8,certificate_url=$9 WHERE id=$10`,
-    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null,id]
+     description=$6,"order"=$7,type=$8,certificate_url=$9,
+     role_de=$10,role_sq=$11,description_de=$12,description_sq=$13 WHERE id=$14`,
+    [d.company,d.role,d.startDate,d.endDate,d.current,d.description,d.order,d.type,d.certificateUrl??null,
+     d.role_de??null,d.role_sq??null,d.description_de??null,d.description_sq??null,id]
   );
   revalidatePath('/');
   return Response.json({ ok: true });

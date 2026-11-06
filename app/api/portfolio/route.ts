@@ -1,6 +1,7 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
+import { ensureTranslationColumns } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
@@ -23,6 +24,12 @@ export async function GET() {
     heroTagline: d.hero_tagline,
     availableForWork: d.available_for_work,
     university: d.university,
+    title_de: d.title_de,
+    title_sq: d.title_sq,
+    bio_de: d.bio_de,
+    bio_sq: d.bio_sq,
+    heroTagline_de: d.hero_tagline_de,
+    heroTagline_sq: d.hero_tagline_sq,
     openToRemote: d.open_to_remote,
   }, NO_STORE);
 }
@@ -31,15 +38,21 @@ export async function PUT(req: Request) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const d = await req.json();
+  await ensureTranslationColumns();
   await query(
-    `INSERT INTO portfolio (id,name,title,bio,email,phone,linkedin,github,location,profile_image,cv_url,hero_tagline,available_for_work,university,open_to_remote,updated_at)
-     VALUES ('main',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,now())
+    `INSERT INTO portfolio (id,name,title,bio,email,phone,linkedin,github,location,profile_image,cv_url,hero_tagline,available_for_work,university,open_to_remote,
+       title_de,title_sq,bio_de,bio_sq,hero_tagline_de,hero_tagline_sq,updated_at)
+     VALUES ('main',$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,now())
      ON CONFLICT (id) DO UPDATE SET
        name=$1,title=$2,bio=$3,email=$4,phone=$5,linkedin=$6,github=$7,location=$8,
        profile_image=$9,cv_url=$10,hero_tagline=$11,available_for_work=$12,
-       university=$13,open_to_remote=$14,updated_at=now()`,
+       university=$13,open_to_remote=$14,
+       title_de=$15,title_sq=$16,bio_de=$17,bio_sq=$18,hero_tagline_de=$19,hero_tagline_sq=$20,
+       updated_at=now()`,
     [d.name,d.title,d.bio,d.email,d.phone,d.linkedin,d.github,d.location,
-     d.profileImage,d.cvUrl,d.heroTagline,d.availableForWork,d.university,d.openToRemote]
+     d.profileImage,d.cvUrl,d.heroTagline,d.availableForWork,d.university,d.openToRemote,
+     d.title_de??null,d.title_sq??null,d.bio_de??null,d.bio_sq??null,
+     d.heroTagline_de??null,d.heroTagline_sq??null]
   );
   revalidatePath('/');
   return Response.json({ ok: true });

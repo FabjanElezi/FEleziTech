@@ -3,16 +3,19 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSwitch from '@/components/LanguageSwitch';
+import { useLang } from '@/components/LanguageProvider';
 
 const links = [
-  { href: '#about',      label: 'About' },
-  { href: '#skills',     label: 'Skills' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#projects',   label: 'Projects' },
-  { href: '#contact',    label: 'Contact' },
+  { href: '#about',      label: 'nav.about' },
+  { href: '#skills',     label: 'nav.skills' },
+  { href: '#experience', label: 'nav.experience' },
+  { href: '#projects',   label: 'nav.projects' },
+  { href: '#contact',    label: 'nav.contact' },
 ];
 
 export default function Navbar() {
+  const { t } = useLang();
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
@@ -91,7 +94,7 @@ export default function Navbar() {
                   else linkRefs.current.delete(l.href.slice(1));
                 }}
               >
-                {l.label}
+                {t(l.label)}
               </a>
             </li>
           ))}
@@ -99,6 +102,7 @@ export default function Navbar() {
 
         {/* Desktop right */}
         <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
+          <LanguageSwitch />
           <ThemeToggle />
           <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
             Admin
@@ -107,6 +111,7 @@ export default function Navbar() {
 
         {/* Mobile right — theme toggle + admin link */}
         <div className="md:hidden flex items-center gap-2 shrink-0">
+          <LanguageSwitch compact />
           <ThemeToggle />
           <Link
             href="/admin"

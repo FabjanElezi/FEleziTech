@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Skill } from '@/types';
+import { useLang } from '@/components/LanguageProvider';
 
 /**
  * An interactive 3D wireframe sphere, drawn on a plain canvas — no 3D library,
@@ -108,6 +109,7 @@ const CATEGORY: Record<string, string> = {
 interface Props { skills?: Skill[] }
 
 export default function Orb3D({ skills = [] }: Props) {
+  const { t } = useLang();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [touched, setTouched] = useState(false);
   const [selected, setSelected] = useState<Skill | null>(null);
@@ -522,9 +524,7 @@ export default function Orb3D({ skills = [] }: Props) {
             className="text-xs text-slate-500 transition-opacity duration-700"
             style={{ opacity: touched ? 0.45 : 1 }}
           >
-            {hasSkills
-              ? 'Drag to spin · click a ringed node for a skill · double-click to shatter'
-              : 'Drag to spin · tap it to send a ripple'}
+            {hasSkills ? t('orb.hintSkills') : t('orb.hintPlain')}
           </p>
         )}
       </div>

@@ -13,6 +13,13 @@ export interface Portfolio {
   availableForWork?: boolean;
   university?: string;
   openToRemote?: boolean;
+  // Translations. The suffix is what lib/i18n looks up, so it stays snake_case.
+  title_de?: string;
+  title_sq?: string;
+  bio_de?: string;
+  bio_sq?: string;
+  heroTagline_de?: string;
+  heroTagline_sq?: string;
 }
 
 export interface Project {
@@ -28,6 +35,8 @@ export interface Project {
   featured: boolean;
   order: number;
   createdAt: string;
+  description_de?: string;
+  description_sq?: string;
 }
 
 export interface Experience {
@@ -41,6 +50,10 @@ export interface Experience {
   order: number;
   type: 'work' | 'education' | 'award' | 'other';
   certificateUrl?: string;
+  role_de?: string;
+  role_sq?: string;
+  description_de?: string;
+  description_sq?: string;
 }
 
 export interface Skill {

@@ -1,6 +1,7 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
+import { ensureTranslationColumns } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
@@ -31,11 +32,13 @@ export async function POST(req: Request) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const d = await req.json();
+  await ensureTranslationColumns();
   const { rows } = await query(
-    `INSERT INTO projects (title,description,tech_stack,images,github_link,live_demo_link,document_url,db_design_images,featured,"order")
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10) RETURNING id`,
+    `INSERT INTO projects (title,description,tech_stack,images,github_link,live_demo_link,document_url,db_design_images,featured,"order",description_de,description_sq)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10,$11,$12) RETURNING id`,
     [d.title,d.description,d.techStack,d.images,d.githubLink,d.liveDemoLink,d.documentUrl,
-     JSON.stringify(d.dbDesignImages??[]),d.featured,d.order]
+     JSON.stringify(d.dbDesignImages??[]),d.featured,d.order,
+     d.description_de??null,d.description_sq??null]
   );
   revalidatePath('/');
   return Response.json({ id: rows[0].id });

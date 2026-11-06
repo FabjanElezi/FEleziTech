@@ -292,7 +292,13 @@ export default function Orb3D({ skills = [] }: Props) {
       ctx.font = '600 12px ui-sans-serif, system-ui, -apple-system, sans-serif';
       const pad = 7;
       const tw = ctx.measureText(text).width;
-      const bx = x + 12, by = y - 10, bw = tw + pad * 2, bh = 21;
+      const bw = tw + pad * 2, bh = 21;
+      // Keep the label inside the canvas: on a narrow screen a long skill name
+      // would otherwise run off the edge and be cut in half.
+      const right = x + 12;
+      const bx = right + bw <= w - 4 ? right : Math.max(4, Math.min(x - 12 - bw, w - bw - 4));
+      const by = Math.max(2, Math.min(y - 10, h - bh - 2));
+      const leaderX = bx > x ? bx : bx + bw;
       ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(bx, by, bw, bh, 7);
       else ctx.rect(bx, by, bw, bh);
@@ -310,8 +316,8 @@ export default function Orb3D({ skills = [] }: Props) {
       // little leader line back to the node
       ctx.strokeStyle = light ? 'rgba(8,145,178,0.35)' : 'rgba(34,211,238,0.35)';
       ctx.beginPath();
-      ctx.moveTo(x + 3, y);
-      ctx.lineTo(bx, by + bh / 2);
+      ctx.moveTo(x + (bx > x ? 3 : -3), y);
+      ctx.lineTo(leaderX, by + bh / 2);
       ctx.stroke();
     };
 

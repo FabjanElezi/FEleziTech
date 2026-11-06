@@ -22,7 +22,51 @@ export default function SurfaceFX() {
   useEffect(() => {
     const fine = window.matchMedia('(pointer: fine)').matches;
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!fine || calm) return;
+    if (calm) return;
+
+    // Touch: there is no cursor to follow, so the light is carried by the
+    // scroll instead — it sweeps down each card as the card crosses the screen.
+    if (!fine) {
+      let cards = Array.from(document.querySelectorAll<HTMLElement>('.glass'));
+      const recollect = new MutationObserver(() => {
+        cards = Array.from(document.querySelectorAll<HTMLElement>('.glass'));
+      });
+      recollect.observe(document.body, { childList: true, subtree: true });
+
+      let pending = false;
+      const sweep = () => {
+        pending = false;
+        const vh = window.innerHeight;
+        for (const el of cards) {
+          const r = el.getBoundingClientRect();
+          if (r.bottom < -40 || r.top > vh + 40 || !r.height) {
+            el.style.removeProperty('--lit');
+            continue;
+          }
+          // Brightest while the card sits in the middle of the screen.
+          const middle = r.top + r.height / 2;
+          const near = 1 - Math.min(1, Math.abs(middle - vh / 2) / (vh * 0.6));
+          el.style.setProperty('--lit', (near * 0.5).toFixed(2));
+          el.style.setProperty('--mx', '50%');
+          el.style.setProperty('--my', `${Math.max(-20, Math.min(120, ((vh / 2 - r.top) / r.height) * 100)).toFixed(0)}%`);
+        }
+      };
+      const onScroll = () => {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(sweep);
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+
+      return () => {
+        recollect.disconnect();
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      };
+    }
 
     let current: HTMLElement | null = null;
     let magnets: HTMLElement[] = [];

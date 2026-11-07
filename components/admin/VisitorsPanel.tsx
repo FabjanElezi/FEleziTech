@@ -4,6 +4,7 @@ import {
   RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin,
   Languages, Download, ChevronDown, Clock, Trash2,
 } from 'lucide-react';
+import { SITE_HOST } from '@/lib/site';
 
 type Recent = {
   at: string; path: string;
@@ -168,7 +169,7 @@ export default function VisitorsPanel() {
           <p className="text-xs text-slate-600">
             Your own visits are never counted while you are signed in here. On a phone or a
             browser where you are signed out, open{' '}
-            <span className="text-slate-400">felezitech.vercel.app/?notrack=1</span> once and that
+            <span className="text-slate-400">{SITE_HOST}/?notrack=1</span> once and that
             browser stops counting for good (<span className="text-slate-400">?notrack=0</span> undoes it).
           </p>
         </div>
@@ -245,7 +246,7 @@ export default function VisitorsPanel() {
         {stats.tags.length === 0 ? (
           <p className="text-xs text-slate-500 leading-relaxed">
             Add <span className="text-cyan-400">?ref=name</span> to the link when you share it, and every opening shows up here.
-            For an application: <span className="text-slate-300">felezitech.vercel.app/?ref=bmw</span>.
+            For an application: <span className="text-slate-300">{SITE_HOST}/?ref=bmw</span>.
             In your LinkedIn profile: <span className="text-slate-300">?ref=linkedin</span>.
           </p>
         ) : (

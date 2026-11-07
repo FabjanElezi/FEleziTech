@@ -32,7 +32,7 @@ export default function VisitTracker() {
 
     const params = new URLSearchParams(window.location.search);
 
-    // felezitech.vercel.app/?notrack=1 marks this browser as the owner's, so
+    // Opening the site with ?notrack=1 marks this browser as the owner's, so
     // nothing from it is ever counted (?notrack=0 undoes it).
     try {
       const flag = params.get('notrack');

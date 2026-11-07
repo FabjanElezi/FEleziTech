@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { SITE_HOST } from '@/lib/site';
 
 export const runtime = 'edge';
-export const alt = 'F.EleziTech – Fabjan Elezi Data & Information Systems Portfolio';
+export const alt = 'Fabjan Elezi – Data Analytics & IT Systems';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -59,7 +59,7 @@ export default function Image() {
           color: 'transparent',
           fontWeight: 600,
         }}>
-          Data & Information Systems Portfolio
+          Data Analytics & IT Systems
         </div>
 
         {/* Tags */}

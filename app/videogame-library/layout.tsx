@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     canonical: url('/videogame-library'),
   },
   openGraph: {
-    title: 'Video Game Library Database | FeleziTech',
+    title: 'Video Game Library Database | Fabjan Elezi',
     description: 'Relational MySQL database project by Fabjan Elezi — 9 tables with proper normalisation, foreign keys and M:N junction tables.',
     url: url('/videogame-library'),
   },

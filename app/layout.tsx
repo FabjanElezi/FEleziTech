@@ -26,8 +26,8 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
-    template: '%s | F.EleziTech',
+    default: 'Fabjan Elezi – Data Analytics & IT Systems',
+    template: '%s | Fabjan Elezi',
   },
   description:
     'Fabjan Elezi (F.EleziTech) – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: SITE_URL,
     siteName: 'F.EleziTech',
-    title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
+    title: 'Fabjan Elezi – Data Analytics & IT Systems',
     description:
       'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data, IT systems and software. Open to Werkstudent and internship roles.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
+    title: 'Fabjan Elezi – Data Analytics & IT Systems',
     description:
       'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to Werkstudent and internship roles in IT, data and software.',
   },

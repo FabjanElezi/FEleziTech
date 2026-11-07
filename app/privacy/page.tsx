@@ -50,6 +50,10 @@ const COPY = {
         p: 'Visit records are deleted automatically after 180 days.',
       },
       {
+        h: 'Security',
+        p: 'Failed admin login attempts are counted against a salted hash of the address they came from, so that repeated guessing can be stopped. That record is deleted on a successful sign-in and expires by itself.',
+      },
+      {
         h: 'Legal basis and your rights',
         p: 'The basis is legitimate interest (Art. 6(1)(f) GDPR) in understanding whether the site works and is read. You can ask what is held about you, ask for it to be deleted, or object to it entirely — write to the email address on the contact section, and it will be done.',
       },
@@ -95,6 +99,10 @@ const COPY = {
         p: 'Besuchsdaten werden nach 180 Tagen automatisch gelöscht.',
       },
       {
+        h: 'Sicherheit',
+        p: 'Fehlgeschlagene Anmeldeversuche im Adminbereich werden gegen einen gesalzenen Hash der Herkunftsadresse gezählt, damit wiederholtes Raten gestoppt werden kann. Dieser Eintrag wird bei erfolgreicher Anmeldung gelöscht und verfällt von selbst.',
+      },
+      {
         h: 'Rechtsgrundlage und Ihre Rechte',
         p: 'Grundlage ist das berechtigte Interesse (Art. 6 Abs. 1 lit. f DSGVO) daran, zu erkennen, ob die Seite funktioniert und gelesen wird. Sie können Auskunft verlangen, die Löschung verlangen oder der Verarbeitung widersprechen — eine E-Mail an die im Kontaktbereich genannte Adresse genügt.',
       },
@@ -138,6 +146,10 @@ const COPY = {
       {
         h: 'Sa kohë ruhen',
         p: 'Të dhënat e vizitave fshihen automatikisht pas 180 ditësh.',
+      },
+      {
+        h: 'Siguria',
+        p: 'Përpjekjet e dështuara për hyrje në panelin e administrimit numërohen kundrejt një hash-i të kripëzuar të adresës nga erdhën, që të ndalet gjetja me hamendje. Ky regjistrim fshihet sapo hyrja është e suksesshme dhe skadon vetvetiu.',
       },
       {
         h: 'Baza ligjore dhe të drejtat tuaja',

@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { url } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://felezitech.vercel.app/sitemap.xml',
+    sitemap: url('/sitemap.xml'),
   };
 }

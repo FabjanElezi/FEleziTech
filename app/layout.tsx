@@ -11,6 +11,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
 import MobileDock from '@/components/MobileDock';
 import MotionProvider from '@/components/MotionProvider';
+import { SITE_URL, SITE_HOST } from '@/lib/site';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -22,10 +23,8 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-const BASE_URL = 'https://felezitech.vercel.app';
-
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     template: '%s | F.EleziTech',
@@ -38,9 +37,9 @@ export const metadata: Metadata = {
     'web developer', 'data analyst', 'junior developer',
     'cybersecurity', 'data analytics', 'business intelligence', 'IT systems', 'software development', 'werkstudent',
     'React developer', 'Next.js developer', 'TypeScript',
-    'Aachen', 'felezitech.vercel.app',
+    'Aachen', SITE_HOST,
   ],
-  authors: [{ name: 'Fabjan Elezi', url: BASE_URL }],
+  authors: [{ name: 'Fabjan Elezi', url: SITE_URL }],
   creator: 'Fabjan Elezi',
   publisher: 'Fabjan Elezi',
   category: 'technology',
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: BASE_URL,
+    url: SITE_URL,
     siteName: 'F.EleziTech',
     title: 'Fabjan Elezi – F.EleziTech | Data & Information Systems Portfolio',
     description:
@@ -74,7 +73,7 @@ export const metadata: Metadata = {
     google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
   },
   alternates: {
-    canonical: BASE_URL,
+    canonical: SITE_URL,
   },
   icons: {
     icon: '/logo.png',
@@ -87,10 +86,10 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Person',
-      '@id': `${BASE_URL}/#person`,
+      '@id': `${SITE_URL}/#person`,
       name: 'Fabjan Elezi',
       alternateName: 'F.EleziTech',
-      url: BASE_URL,
+      url: SITE_URL,
       jobTitle: 'M.Sc. Information Systems Student',
       description:
         'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Working across data, IT systems and software development.',
@@ -107,11 +106,11 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
-      '@id': `${BASE_URL}/#website`,
-      url: BASE_URL,
+      '@id': `${SITE_URL}/#website`,
+      url: SITE_URL,
       name: 'F.EleziTech',
       description: 'Developer portfolio of Fabjan Elezi',
-      publisher: { '@id': `${BASE_URL}/#person` },
+      publisher: { '@id': `${SITE_URL}/#person` },
     },
   ],
 };

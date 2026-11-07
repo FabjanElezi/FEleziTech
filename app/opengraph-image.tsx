@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { SITE_HOST } from '@/lib/site';
 
 export const runtime = 'edge';
 export const alt = 'F.EleziTech – Fabjan Elezi Data & Information Systems Portfolio';
@@ -77,7 +78,7 @@ export default function Image() {
 
         {/* URL */}
         <div style={{ position: 'absolute', bottom: 36, fontSize: 16, color: '#475569' }}>
-          felezitech.vercel.app
+          {SITE_HOST}
         </div>
       </div>
     ),

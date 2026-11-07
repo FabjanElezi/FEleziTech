@@ -1,15 +1,16 @@
 import { MetadataRoute } from 'next';
+import { SITE_URL, url } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://felezitech.vercel.app',
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: 'https://felezitech.vercel.app/videogame-library',
+      url: url('/videogame-library'),
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,

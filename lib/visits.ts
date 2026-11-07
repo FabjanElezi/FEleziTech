@@ -85,7 +85,9 @@ export async function recordCvOpen(v: {
   await ensureCvTable();
   await query(
     `INSERT INTO cv_opens (country, region, city, ref_tag, device, browser, os, visitor_hash)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+     SELECT $1,$2,$3,$4,$5,$6,$7,$8
+      WHERE (SELECT count(*) FROM cv_opens
+              WHERE visitor_hash = $8 AND ts > now() - interval '1 hour') < 40`,
     [v.country, v.region, v.city, v.refTag, v.device, v.browser, v.os, v.visitorHash]
   );
 }
@@ -247,11 +249,15 @@ export type VisitInput = {
 
 export async function recordVisit(v: VisitInput) {
   await ensureVisitsTable();
+  // The endpoint is public, so one visitor is capped at 120 rows an hour. The
+  // check rides along inside the insert, so it costs no extra round trip.
   await query(
     `INSERT INTO visits
        (view_id, path, referrer, referrer_url, ref_tag, country, region, city, coords, tz, lang,
         device, browser, os, screen, viewport, hardware, connection, visitor_hash)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
+     SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19
+      WHERE (SELECT count(*) FROM visits
+              WHERE visitor_hash = $19 AND ts > now() - interval '1 hour') < 120`,
     [v.viewId, v.path.slice(0, 200), v.referrer, v.referrerUrl, v.refTag, v.country, v.region, v.city,
      v.coords, v.tz, v.lang, v.device, v.browser, v.os, v.screen, v.viewport, v.hardware,
      v.connection, v.visitorHash]

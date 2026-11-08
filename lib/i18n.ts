@@ -88,10 +88,24 @@ const en: Dict = {
   'contact.copy': 'Copy email',
   'contact.copied': 'Email copied',
 
-  'orb.hintSkills': 'Drag to spin · click a ringed node for a skill · double-click to shatter',
-  'orb.hintPlain': 'Drag to spin · tap it to send a ripple',
-
   'lang.label': 'Language',
+
+  'tr.window': 'fabjan@portfolio: ~',
+  'tr.preamble': 'traceroute to fabjan-elezi (aachen.de), 6 hops max',
+  'tr.done': 'destination reached ✓',
+  'tr.hint': 'Tap a hop for the detail. Yes, it is a traceroute. The CCNA is at hop 3.',
+  'tr.h1': 'B.Sc. Business Informatics · University Metropolitan Tirana',
+  'tr.h1d': 'Where it started: the TUMO game development and robotics workshop (2022–2023), first place at the Innovation & Entrepreneurship Workshop with RevoHelp (2023), customer service at Ring Center (2024), then a fullstack internship at Dominusoft (2025).',
+  'tr.h2': 'EDEKA Südwest · Logistics & Order Processing',
+  'tr.h2d': 'June to September 2024 in logistics and order processing — inventory data, accurate tracking and workflow organisation.',
+  'tr.h3': 'Erasmus · Masaryk University',
+  'tr.h3d': 'Exchange semester, February to June 2025. Also where the CCNA comes from: Cisco Enterprise Networking, Security & Automation, March 2025.',
+  'tr.h4': 'Ausable Club · Work & Travel USA',
+  'tr.h4d': 'Two seasons in the Adirondacks, New York: June to October 2025, then back with the same employer for July to October 2026.',
+  'tr.h5': 'SHET Influencers Media · IT Infrastructure Intern',
+  'tr.h5d': 'A four-week placement, April to May 2026: deployed a ZeroTier mesh VPN for secure remote access without exposing services publicly, and handled user access and network segmentation.',
+  'tr.h6': 'FH Aachen · M.Sc. Information Systems',
+  'tr.h6d': 'The current hop. Master’s programme in Information Systems, since October 2026.',
 };
 
 const de: Dict = {
@@ -166,10 +180,24 @@ const de: Dict = {
   'contact.copy': 'E-Mail kopieren',
   'contact.copied': 'E-Mail kopiert',
 
-  'orb.hintSkills': 'Ziehen zum Drehen · Knoten mit Ring anklicken für eine Kenntnis · Doppelklick zerlegt die Kugel',
-  'orb.hintPlain': 'Ziehen zum Drehen · antippen für eine Welle',
-
   'lang.label': 'Sprache',
+
+  'tr.window': 'fabjan@portfolio: ~',
+  'tr.preamble': 'traceroute to fabjan-elezi (aachen.de), 6 hops max',
+  'tr.done': 'Ziel erreicht ✓',
+  'tr.hint': 'Tippen Sie auf einen Hop für Details. Ja, das ist ein Traceroute. Der CCNA steckt in Hop 3.',
+  'tr.h1': 'B.Sc. Wirtschaftsinformatik · University Metropolitan Tirana',
+  'tr.h1d': 'Der Anfang: TUMO-Workshop für Spieleentwicklung und Robotik (2022–2023), erster Platz beim Innovation & Entrepreneurship Workshop mit RevoHelp (2023), Kundenservice bei Ring Center (2024), danach ein Fullstack-Praktikum bei Dominusoft (2025).',
+  'tr.h2': 'EDEKA Südwest · Logistik & Auftragsabwicklung',
+  'tr.h2d': 'Juni bis September 2024 in Logistik und Auftragsabwicklung — Bestandsdaten, genaue Nachverfolgung und Ablauforganisation.',
+  'tr.h3': 'Erasmus · Masaryk-Universität',
+  'tr.h3d': 'Austauschsemester von Februar bis Juni 2025. Von hier stammt auch der CCNA: Cisco Enterprise Networking, Security & Automation, März 2025.',
+  'tr.h4': 'Ausable Club · Work & Travel USA',
+  'tr.h4d': 'Zwei Saisons in den Adirondacks, New York: Juni bis Oktober 2025, dann erneut beim selben Arbeitgeber von Juli bis Oktober 2026.',
+  'tr.h5': 'SHET Influencers Media · Praktikant IT-Infrastruktur',
+  'tr.h5d': 'Vierwöchiges Praktikum, April bis Mai 2026: Aufbau eines ZeroTier-Mesh-VPN für sicheren Fernzugriff, ohne Dienste öffentlich zugänglich zu machen, dazu Benutzerzugriff und Netzsegmentierung.',
+  'tr.h6': 'FH Aachen · M.Sc. Information Systems',
+  'tr.h6d': 'Der aktuelle Hop. Masterstudium Information Systems, seit Oktober 2026.',
 };
 
 const sq: Dict = {
@@ -244,10 +272,24 @@ const sq: Dict = {
   'contact.copy': 'Kopjo email-in',
   'contact.copied': 'Email-i u kopjua',
 
-  'orb.hintSkills': 'Tërhiq për ta rrotulluar · kliko një nyjë me unazë për një aftësi · klik i dyfishtë e shpërbën',
-  'orb.hintPlain': 'Tërhiq për ta rrotulluar · prek për një valë',
-
   'lang.label': 'Gjuha',
+
+  'tr.window': 'fabjan@portfolio: ~',
+  'tr.preamble': 'traceroute to fabjan-elezi (aachen.de), 6 hops max',
+  'tr.done': 'destinacioni u arrit ✓',
+  'tr.hint': 'Prek një hop për detaje. Po, është një traceroute. CCNA-ja është te hop 3.',
+  'tr.h1': 'B.Sc. Informatikë Biznesi · University Metropolitan Tirana',
+  'tr.h1d': 'Aty ku filloi gjithçka: workshop-i i TUMO-s për zhvillim lojërash dhe robotikë (2022–2023), vendi i parë në Innovation & Entrepreneurship Workshop me RevoHelp (2023), shërbim ndaj klientit te Ring Center (2024), pastaj një praktikë fullstack te Dominusoft (2025).',
+  'tr.h2': 'EDEKA Südwest · Logjistikë & Përpunim Porosish',
+  'tr.h2d': 'Qershor deri shtator 2024 në logjistikë dhe përpunim porosish — të dhëna inventari, gjurmim i saktë dhe organizim i proceseve.',
+  'tr.h3': 'Erasmus · Universiteti Masaryk',
+  'tr.h3d': 'Semestër shkëmbimi, shkurt deri qershor 2025. Nga këtu vjen edhe CCNA-ja: Cisco Enterprise Networking, Security & Automation, mars 2025.',
+  'tr.h4': 'Ausable Club · Work & Travel USA',
+  'tr.h4d': 'Dy sezone në Adirondacks, Nju Jork: qershor deri tetor 2025, pastaj sërish me të njëjtin punëdhënës nga korrik deri tetor 2026.',
+  'tr.h5': 'SHET Influencers Media · Praktikant Infrastrukture IT',
+  'tr.h5d': 'Praktikë katërjavore, prill deri maj 2026: ngritja e një VPN-je mesh me ZeroTier për qasje të siguruar në distancë pa i ekspozuar shërbimet publikisht, si dhe menaxhimi i qasjes së përdoruesve dhe segmentimi i rrjetit.',
+  'tr.h6': 'FH Aachen · M.Sc. Information Systems',
+  'tr.h6d': 'Hopi aktual. Studime master në Information Systems, që nga tetori 2026.',
 };
 
 export const DICT: Record<Lang, Dict> = { en, de, sq };

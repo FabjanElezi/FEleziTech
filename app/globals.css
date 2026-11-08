@@ -914,3 +914,132 @@ html[data-admin] body { background-image: none; }
   .glass-hover:hover { translate: none; rotate: none; }
   .btn-primary, .btn-ghost { translate: none; }
 }
+
+/* ── traceroute fabjan-elezi ─────────────────────────────────────────────── */
+
+.tr-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+/* The rail the packet travels down. Sits under the node dots, which are 7px
+   wide and centred on it, so the line and the dots share one axis. */
+.tr-rail { padding-left: 0; margin: 0; list-style: none; position: relative; }
+.tr-rail::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 10px;
+  bottom: 14px;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    rgba(8,145,178,0.5), rgba(34,211,238,0.35), rgba(8,145,178,0.12));
+}
+
+/* The packet. Travels the rail on a loop; purely decorative. */
+.tr-packet {
+  position: absolute;
+  left: 0;
+  top: var(--rail-start, 6px);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 10px rgba(34,211,238,0.9), 0 0 20px rgba(34,211,238,0.45);
+  animation: tr-travel 7s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  pointer-events: none;
+}
+/* --rail is the measured distance from the first node to the last, set by the
+   component. transform, not top, so the travel stays off the layout path. */
+@keyframes tr-travel {
+  0%   { transform: translateY(0);              opacity: 0; }
+  6%   {                                        opacity: 1; }
+  92%  { transform: translateY(var(--rail, 0)); opacity: 1; }
+  100% { transform: translateY(var(--rail, 0)); opacity: 0; }
+}
+
+/* No entrance animation here, deliberately. A staggered fade with
+   animation-fill-mode: both inside this backdrop-filtered panel left stale
+   compositor tiles in Chrome: hops 2-6 computed to opacity 1 but were never
+   painted until a scroll forced a repaint. The panel has to render on first
+   paint, so the packet carries the motion instead. */
+.tr-hop { position: relative; }
+
+.tr-hop-btn {
+  display: grid;
+  grid-template-columns: 18px auto auto 1fr;
+  align-items: baseline;
+  gap: 0 10px;
+  width: 100%;
+  padding: 7px 6px 7px 18px;
+  min-height: 44px;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: background 0.18s ease;
+}
+.tr-hop-btn:hover,
+.tr-hop-btn:focus-visible { background: rgba(34,211,238,0.07); }
+
+/* The node dot on the rail. */
+.tr-node {
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0b1220;
+  border: 1px solid rgba(34,211,238,0.75);
+}
+.tr-node-last {
+  background: #22d3ee;
+  box-shadow: 0 0 9px rgba(34,211,238,0.8);
+}
+
+.tr-n     { color: #475569; text-align: right; }
+.tr-host  { color: #22d3ee; }
+.tr-when  { color: #64748b; font-size: 0.92em; white-space: nowrap; }
+.tr-line  { color: #cbd5e1; }
+
+/* On a phone the four columns do not fit on one line: stack the description
+   under the hostname instead of letting the grid squeeze it to nothing. */
+@media (max-width: 639px) {
+  .tr-hop-btn { grid-template-columns: 18px auto 1fr; }
+  .tr-line { grid-column: 2 / -1; color: #94a3b8; }
+}
+
+/* Detail panel. Collapsed by height so it animates, but it is kept in the DOM
+   and only hidden from assistive tech when closed. */
+.tr-detail {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.28s ease, opacity 0.2s ease;
+}
+.tr-detail[data-open='true'] { max-height: 240px; opacity: 1; }
+.tr-detail p {
+  color: #94a3b8;
+  font-size: 0.92em;
+  line-height: 1.6;
+  /* 43px + the 3px margin lines the text up with the hop description above it:
+     the button's 18px padding, its 18px hop-number column and the 10px gap. */
+  padding: 0 6px 10px 43px;
+  border-left: 1px solid rgba(34,211,238,0.18);
+  margin-left: 3px;
+}
+
+[data-theme='light'] .tr-n    { color: #94a3b8; }
+[data-theme='light'] .tr-host { color: #0e7490; }
+[data-theme='light'] .tr-when { color: #64748b; }
+[data-theme='light'] .tr-line { color: #334155; }
+[data-theme='light'] .tr-detail p { color: #475569; }
+[data-theme='light'] .tr-node { background: #ffffff; }
+
+/* Reduced motion: the packet stops and parks at the destination, the hops
+   appear without sliding. Nothing is hidden, nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .tr-packet { animation: none; opacity: 1; transform: translateY(var(--rail, 0)); }
+  .tr-detail { transition: none; }
+}

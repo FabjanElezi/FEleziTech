@@ -71,7 +71,7 @@ export default function MobileDock() {
   return (
     <div
       ref={dockRef}
-      className="md:hidden fixed bottom-5 left-1/2 z-50"
+      className="lg:hidden fixed bottom-5 left-1/2 z-50"
       style={{ transform: 'translateX(-50%)', transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)' }}
     >
       <div
@@ -94,6 +94,7 @@ export default function MobileDock() {
             <button
               key={id}
               onClick={() => handleClick(id)}
+              className="dock-item"
               aria-label={t(label)}
               style={{
                 display: 'flex',
@@ -101,7 +102,7 @@ export default function MobileDock() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '3px',
-                padding: '7px 7px',
+                padding: '7px 5px',
                 borderRadius: '80px',
                 border: 'none',
                 cursor: 'pointer',
@@ -110,7 +111,7 @@ export default function MobileDock() {
                   ? 'inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(34,211,238,0.3)'
                   : 'none',
                 transition: 'background 0.22s ease, box-shadow 0.22s ease',
-                minWidth: 48,
+                minWidth: 46,
                 minHeight: 48,
               }}
             >
@@ -141,6 +142,7 @@ export default function MobileDock() {
         {/* Services is its own page, so a link rather than a scroll target. */}
         <Link
           href="/services"
+          className="dock-item"
           aria-label={t('nav.services')}
           style={{
             display: 'flex',
@@ -148,9 +150,9 @@ export default function MobileDock() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '3px',
-            padding: '7px 7px',
+            padding: '7px 5px',
             borderRadius: '80px',
-            minWidth: 48,
+            minWidth: 46,
             minHeight: 48,
             textDecoration: 'none',
           }}

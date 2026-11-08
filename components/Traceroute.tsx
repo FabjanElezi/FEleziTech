@@ -11,7 +11,10 @@ import CornerAccents from '@/components/CornerAccents';
  * the network people, but each line still reads as a plain CV entry so that
  * someone in HR loses nothing by not getting it.
  *
- * No canvas and no 3D: a list, a rail and two CSS animations.
+ * No canvas and no 3D: a list, a rail and one CSS animation.
+ *
+ * Rendered inside the Experience section as an alternate view of the same
+ * dates, never as a section of its own. The timeline stays the default.
  */
 
 type Hop = {
@@ -68,72 +71,68 @@ export default function Traceroute() {
   }, [lang]);
 
   return (
-    <section id="journey" className="px-6 pb-8 pt-2 relative">
-      <div className="max-w-3xl mx-auto">
-        <div className="glass rounded-2xl relative overflow-hidden tr-term">
-          <CornerAccents color="rgba(8,145,178,0.38)" />
+    <div className="glass rounded-2xl relative overflow-hidden tr-term">
+      <CornerAccents color="rgba(8,145,178,0.38)" />
 
-          {/* Window bar */}
-          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/10">
-            <span className="tr-dot" style={{ background: 'rgba(248,113,113,0.65)' }} />
-            <span className="tr-dot" style={{ background: 'rgba(251,191,36,0.65)' }} />
-            <span className="tr-dot" style={{ background: 'rgba(52,211,153,0.65)' }} />
-            <span className="ml-2 text-[11px] text-slate-500 font-mono truncate">
-              {t('tr.window')}
-            </span>
-          </div>
-
-          <div className="px-4 sm:px-6 py-5 font-mono text-[12.5px] sm:text-sm leading-relaxed">
-            {/* Command + preamble */}
-            <p className="text-slate-300">
-              <span className="text-cyan-400">$</span> traceroute fabjan-elezi
-            </p>
-            <p className="text-slate-500 text-[11.5px] sm:text-xs mt-1 mb-4">
-              {t('tr.preamble')}
-            </p>
-
-            {/* Hops */}
-            <ol ref={railRef} className="relative tr-rail">
-              <span className="tr-packet" aria-hidden="true" />
-              {HOPS.map((h, i) => {
-                const shown = open === h.n || hover === h.n;
-                const last = i === HOPS.length - 1;
-                return (
-                  <li key={h.n} className="tr-hop">
-                    <button
-                      type="button"
-                      onClick={() => setOpen(open === h.n ? null : h.n)}
-                      onMouseEnter={() => setHover(h.n)}
-                      onMouseLeave={() => setHover(null)}
-                      onFocus={() => setHover(h.n)}
-                      onBlur={() => setHover(null)}
-                      aria-expanded={shown}
-                      aria-controls={`hop-${h.n}`}
-                      className="tr-hop-btn"
-                    >
-                      <span className={`tr-node ${last ? 'tr-node-last' : ''}`} aria-hidden="true" />
-                      <span className="tr-n">{h.n}</span>
-                      <span className="tr-host">{h.host}</span>
-                      <span className="tr-when">({h.when})</span>
-                      <span className="tr-line">{t(h.line)}</span>
-                    </button>
-                    <div
-                      id={`hop-${h.n}`}
-                      className="tr-detail"
-                      data-open={shown ? 'true' : 'false'}
-                    >
-                      <p>{t(h.detail)}</p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-
-            <p className="mt-4 text-emerald-400">{t('tr.done')}</p>
-            <p className="text-slate-600 text-[11px] sm:text-xs mt-2">{t('tr.hint')}</p>
-          </div>
-        </div>
+      {/* Window bar */}
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/10">
+        <span className="tr-dot" style={{ background: 'rgba(248,113,113,0.65)' }} />
+        <span className="tr-dot" style={{ background: 'rgba(251,191,36,0.65)' }} />
+        <span className="tr-dot" style={{ background: 'rgba(52,211,153,0.65)' }} />
+        <span className="ml-2 text-[11px] text-slate-500 font-mono truncate">
+          {t('tr.window')}
+        </span>
       </div>
-    </section>
+
+      <div className="px-4 sm:px-6 py-5 font-mono text-[12.5px] sm:text-sm leading-relaxed">
+        {/* Command + preamble */}
+        <p className="text-slate-300">
+          <span className="text-cyan-400">$</span> traceroute fabjan-elezi
+        </p>
+        <p className="text-slate-500 text-[11.5px] sm:text-xs mt-1 mb-4">
+          {t('tr.preamble')}
+        </p>
+
+        {/* Hops */}
+        <ol ref={railRef} className="relative tr-rail">
+          <span className="tr-packet" aria-hidden="true" />
+          {HOPS.map((h, i) => {
+            const shown = open === h.n || hover === h.n;
+            const last = i === HOPS.length - 1;
+            return (
+              <li key={h.n} className="tr-hop">
+                <button
+                  type="button"
+                  onClick={() => setOpen(open === h.n ? null : h.n)}
+                  onMouseEnter={() => setHover(h.n)}
+                  onMouseLeave={() => setHover(null)}
+                  onFocus={() => setHover(h.n)}
+                  onBlur={() => setHover(null)}
+                  aria-expanded={shown}
+                  aria-controls={`hop-${h.n}`}
+                  className="tr-hop-btn"
+                >
+                  <span className={`tr-node ${last ? 'tr-node-last' : ''}`} aria-hidden="true" />
+                  <span className="tr-n">{h.n}</span>
+                  <span className="tr-host">{h.host}</span>
+                  <span className="tr-when">({h.when})</span>
+                  <span className="tr-line">{t(h.line)}</span>
+                </button>
+                <div
+                  id={`hop-${h.n}`}
+                  className="tr-detail"
+                  data-open={shown ? 'true' : 'false'}
+                >
+                  <p>{t(h.detail)}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+
+        <p className="mt-4 text-emerald-400">{t('tr.done')}</p>
+        <p className="text-slate-600 text-[11px] sm:text-xs mt-2">{t('tr.hint')}</p>
+      </div>
+    </div>
   );
 }

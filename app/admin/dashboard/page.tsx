@@ -4,22 +4,23 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import {
-  getPortfolio, getProjects, getExperiences, getSkills,
+  getPortfolio, getProjects, getExperiences, getSkills, getServices,
   deleteProject,
 } from '@/lib/firestore';
-import { Portfolio, Project, Experience, Skill } from '@/types';
+import { Portfolio, Project, Experience, Skill, Service } from '@/types';
 import BioEditor from '@/components/admin/BioEditor';
 import ProjectForm from '@/components/admin/ProjectForm';
 import ExperienceEditor from '@/components/admin/ExperienceEditor';
 import SkillsEditor from '@/components/admin/SkillsEditor';
+import ServicesEditor from '@/components/admin/ServicesEditor';
 import VisitorsPanel from '@/components/admin/VisitorsPanel';
 import {
-  User, FolderOpen, Briefcase, Code2, LogOut,
+  User, FolderOpen, Briefcase, Code2, LogOut, Handshake,
   Plus, Pencil, Trash2, ExternalLink, Eye,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type Tab = 'bio' | 'projects' | 'experience' | 'skills' | 'visitors';
+type Tab = 'bio' | 'projects' | 'experience' | 'skills' | 'services' | 'visitors';
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null | 'new'>(null);
 
@@ -40,16 +42,20 @@ export default function Dashboard() {
   const load = useCallback(async () => {
     setDataLoading(true);
     try {
-      const [p, pr, ex, sk] = await Promise.all([
+      const [p, pr, ex, sk, sv] = await Promise.all([
         getPortfolio(),
         getProjects(),
         getExperiences(),
         getSkills(),
+        // Services are newer than the rest; a failure here must not stop the
+        // other tabs from loading.
+        getServices().catch(() => [] as Service[]),
       ]);
       setPortfolio(p);
       setProjects(pr);
       setExperiences(ex);
       setSkills(sk);
+      setServices(sv);
     } catch {
       toast.error('Failed to load data');
     } finally {
@@ -85,6 +91,7 @@ export default function Dashboard() {
     { id: 'projects', label: 'Projects', icon: <FolderOpen size={16} /> },
     { id: 'experience', label: 'Experience', icon: <Briefcase size={16} /> },
     { id: 'skills', label: 'Skills', icon: <Code2 size={16} /> },
+    { id: 'services', label: 'Services', icon: <Handshake size={16} /> },
     { id: 'visitors', label: 'Visitors', icon: <Eye size={16} /> },
 ];
 
@@ -96,7 +103,7 @@ export default function Dashboard() {
         style={{ background: 'rgba(9,13,21,0.9)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(16px)' }}
       >
         <div className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="Fabjan Elezi Tech" width={96} height={32} className="object-contain h-8 w-auto" />
+          <Image src="/logo.svg" alt="Fabjan Elezi" width={96} height={32} className="object-contain h-8 w-auto" />
           <span className="text-slate-500 text-xs hidden sm:inline">Admin Panel</span>
         </div>
 
@@ -219,6 +226,13 @@ export default function Dashboard() {
               <div>
                 <h2 className="text-lg font-bold text-white mb-6">Skills</h2>
                 <SkillsEditor skills={skills} onChanged={setSkills} />
+              </div>
+            )}
+
+            {tab === 'services' && (
+              <div>
+                <h2 className="text-lg font-bold text-white mb-6">Services</h2>
+                <ServicesEditor services={services} onChanged={setServices} />
               </div>
             )}
 

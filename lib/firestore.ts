@@ -1,4 +1,4 @@
-import { Portfolio, Project, Experience, Skill } from '@/types';
+import { Portfolio, Project, Experience, Skill, Service } from '@/types';
 
 // ── Portfolio ──────────────────────────────────────────────
 
@@ -114,4 +114,36 @@ export async function updateSkill(id: string, data: Partial<Skill>) {
 export async function deleteSkill(id: string) {
   const r = await fetch(`/api/skills/${id}`, { method: 'DELETE' });
   if (!r.ok) throw new Error('Failed to delete skill');
+}
+
+// ── Services ───────────────────────────────────────────────
+
+export async function getServices(): Promise<Service[]> {
+  const r = await fetch('/api/services', { cache: 'no-store' });
+  if (!r.ok) throw new Error('Failed to fetch services');
+  return r.json();
+}
+
+export async function addService(data: Omit<Service, 'id'>): Promise<string> {
+  const r = await fetch('/api/services', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!r.ok) throw new Error('Failed to add service');
+  return (await r.json()).id as string;
+}
+
+export async function updateService(id: string, data: Omit<Service, 'id'>) {
+  const r = await fetch(`/api/services/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!r.ok) throw new Error('Failed to update service');
+}
+
+export async function deleteService(id: string) {
+  const r = await fetch(`/api/services/${id}`, { method: 'DELETE' });
+  if (!r.ok) throw new Error('Failed to delete service');
 }

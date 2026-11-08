@@ -1,5 +1,5 @@
 import { query } from './db';
-import { Portfolio, Project, Experience, Skill } from '@/types';
+import { Portfolio, Project, Experience, Skill, Service, ServiceIcon } from '@/types';
 
 type Row = Record<string, unknown>;
 
@@ -145,4 +145,114 @@ export async function getSkills(): Promise<Skill[]> {
     level: d.level as string | undefined,
     order: (d.order ?? 0) as number,
   }));
+}
+
+// ── Services ──────────────────────────────────────────────────────────────
+
+let servicesReady = false;
+
+// The four offers the site launched with. Each is backed by real work on the
+// site: this portfolio, FETech Analytics, the SHET internship plus the Cisco
+// course, and the video game library database.
+const SERVICE_SEED: Omit<Service, 'id'>[] = [
+  {
+    order: 0, icon: 'web',
+    title: 'Website building',
+    title_de: 'Websites erstellen',
+    title_sq: 'Ndërtim faqesh web',
+    description: 'Portfolio sites, landing pages and small business websites — fast, mobile-first and built with Next.js and React. This site is an example.',
+    description_de: 'Portfolio-Websites, Landingpages und Websites für kleine Unternehmen — schnell, mobil optimiert und mit Next.js und React gebaut. Diese Seite ist ein Beispiel.',
+    description_sq: 'Faqe portofoli, landing pages dhe faqe për biznese të vogla — të shpejta, të optimizuara për celular dhe të ndërtuara me Next.js dhe React. Kjo faqe është një shembull.',
+  },
+  {
+    order: 1, icon: 'data',
+    title: 'Data & BI dashboards',
+    title_de: 'Daten- & BI-Dashboards',
+    title_sq: 'Dashboard-e të dhënash & BI',
+    description: 'Dashboards and reports that turn raw data into decisions — Power BI, SQL and custom web dashboards like FETech Analytics.',
+    description_de: 'Dashboards und Berichte, die aus Rohdaten Entscheidungen machen — Power BI, SQL und individuelle Web-Dashboards wie FETech Analytics.',
+    description_sq: 'Dashboard-e dhe raporte që i kthejnë të dhënat e papërpunuara në vendime — Power BI, SQL dhe dashboard-e web si FETech Analytics.',
+  },
+  {
+    order: 2, icon: 'network',
+    title: 'IT setup & networking',
+    title_de: 'IT-Einrichtung & Netzwerke',
+    title_sq: 'Konfigurim IT & rrjeta',
+    description: 'Network and remote-access setup for small offices and teams: VPN, user access and backups. Backed by a Cisco CCNA course and hands-on infrastructure work.',
+    description_de: 'Netzwerk- und Fernzugriffs-Einrichtung für kleine Büros und Teams: VPN, Benutzerzugriff und Backups. Gestützt auf einen Cisco-CCNA-Kurs und praktische Infrastrukturarbeit.',
+    description_sq: 'Konfigurim rrjeti dhe qasjeje në distancë për zyra e ekipe të vogla: VPN, qasje përdoruesish dhe backup. I mbështetur nga kursi Cisco CCNA dhe punë praktike në infrastrukturë.',
+  },
+  {
+    order: 3, icon: 'database',
+    title: 'Database design',
+    title_de: 'Datenbankdesign',
+    title_sq: 'Dizajn bazash të dhënash',
+    description: 'Relational database design — schemas, normalisation and ER diagrams, so your data stays consistent as it grows.',
+    description_de: 'Relationales Datenbankdesign — Schemata, Normalisierung und ER-Diagramme, damit Ihre Daten auch beim Wachsen konsistent bleiben.',
+    description_sq: 'Dizajn bazash të dhënash relacionale — skema, normalizim dhe diagrame ER, që të dhënat të mbeten të qëndrueshme ndërsa rriten.',
+  },
+];
+
+/**
+ * Created lazily like every other table here. The seed runs only on the
+ * request that actually creates the table: if Fabjo later deletes every
+ * service in Admin, they must stay deleted rather than reappear on the next
+ * page load, which a plain "seed when empty" would do.
+ */
+export async function ensureServicesTable() {
+  if (servicesReady) return;
+  try {
+    const { rows } = await query(`SELECT to_regclass('public.services') IS NULL AS missing`);
+    const missing = Boolean((rows[0] as Row | undefined)?.missing);
+    await query(`
+      CREATE TABLE IF NOT EXISTS services (
+        id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        title          TEXT NOT NULL,
+        description    TEXT NOT NULL DEFAULT '',
+        icon           TEXT NOT NULL DEFAULT 'web',
+        "order"        INT  NOT NULL DEFAULT 0,
+        title_de       TEXT,
+        title_sq       TEXT,
+        description_de TEXT,
+        description_sq TEXT
+      )`);
+    if (missing) {
+      for (const s of SERVICE_SEED) {
+        await query(
+          `INSERT INTO services (title,description,icon,"order",title_de,title_sq,description_de,description_sq)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+          [s.title, s.description, s.icon, s.order,
+           s.title_de ?? null, s.title_sq ?? null, s.description_de ?? null, s.description_sq ?? null]
+        );
+      }
+    }
+    servicesReady = true;
+  } catch { /* never block a page render; try again on the next request */ }
+}
+
+const ICONS: ServiceIcon[] = ['web', 'data', 'network', 'database'];
+
+export function rowToService(d: Row): Service {
+  const icon = ICONS.includes(d.icon as ServiceIcon) ? (d.icon as ServiceIcon) : 'web';
+  return {
+    id: d.id as string,
+    title: (d.title ?? '') as string,
+    description: (d.description ?? '') as string,
+    icon,
+    order: (d.order ?? 0) as number,
+    title_de: str(d.title_de),
+    title_sq: str(d.title_sq),
+    description_de: str(d.description_de),
+    description_sq: str(d.description_sq),
+  };
+}
+
+export async function getServices(): Promise<Service[]> {
+  await ensureServicesTable();
+  try {
+    const { rows } = await query('SELECT * FROM services ORDER BY "order" ASC');
+    return (rows as Row[]).map(rowToService);
+  } catch {
+    return [];
+  }
 }

@@ -15,6 +15,18 @@ const INSTAGRAM = { handle: 'revoweb_official', href: 'https://www.instagram.com
 type Lang = 'en' | 'de' | 'sq';
 const WORK: { title: string; img: string; href?: string; stack: string; tag: Record<Lang, string>; text: Record<Lang, string> }[] = [
   {
+    title: 'ParaFluent',
+    img: '/work/parafluent.jpg',
+    href: 'https://parafluent.me',
+    stack: 'Next.js · Postgres',
+    tag: { en: 'Website + booking system', de: 'Website + Buchungssystem', sq: 'Faqe + sistem rezervimesh' },
+    text: {
+      en: 'Bilingual website and booking system for an online English teacher, with level test, live time slots, automatic emails and an admin panel she manages herself.',
+      de: 'Zweisprachige Website mit Buchungssystem für eine Online-Englischlehrerin – mit Einstufungstest, Live-Terminen, automatischen E-Mails und einem Admin-Bereich, den sie selbst pflegt.',
+      sq: 'Faqe dygjuhëshe me sistem rezervimesh për një mësuese anglishteje online – me test niveli, orare live, email-e automatike dhe panel që e menaxhon vetë.',
+    },
+  },
+  {
     title: 'FETech Analytics',
     img: '/work/fetech-analytics.jpg',
     href: 'https://fetech-analytics.vercel.app/',
@@ -47,18 +59,6 @@ const WORK: { title: string; img: string; href?: string; stack: string; tag: Rec
       en: 'Landing page and product pages for a startup concept.',
       de: 'Landingpage und Produktseiten für ein Startup-Konzept.',
       sq: 'Landing page dhe faqe produkti për një koncept startup-i.',
-    },
-  },
-  {
-    title: 'AI Security Demo',
-    img: '/work/ai-security-demo.jpg',
-    href: 'https://adversarial-robustness.vercel.app/',
-    stack: 'React · Tailwind',
-    tag: { en: 'Interactive web app', de: 'Interaktive Web-App', sq: 'Aplikacion web interaktiv' },
-    text: {
-      en: 'A live demo that shows how AI image models can be fooled, and how to defend them.',
-      de: 'Eine Live-Demo, die zeigt, wie sich KI-Bildmodelle täuschen lassen und wie man sie schützt.',
-      sq: 'Demo live që tregon si mashtrohen modelet AI të imazheve dhe si mbrohen.',
     },
   },
 ];

@@ -9,24 +9,26 @@ import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
 const DbDesignLightbox = dynamic(() => import('@/components/DbDesignLightbox'), { ssr: false });
+const ProjectDialog = dynamic(() => import('@/components/ProjectDialog'), { ssr: false });
 
 interface Props { projects: Project[] }
 
 const CLAMP_THRESHOLD = 160;
 
-function ProjectDescription({ text }: { text: string }) {
+// The card always shows three lines. "Read more" opens the full details in a
+// dialog, so the card never grows and the row around it stays even.
+function ProjectDescription({ text, canOpen, onOpen }: { text: string; canOpen: boolean; onOpen: () => void }) {
   const { t } = useLang();
-  const [expanded, setExpanded] = useState(false);
-  const long = text.length > CLAMP_THRESHOLD;
   return (
     <div className="text-slate-500 text-sm leading-relaxed mb-4 flex-1">
-      <span className={!expanded && long ? 'line-clamp-3' : undefined}>{text}</span>
-      {long && (
+      <span className="line-clamp-3">{text}</span>
+      {canOpen && (
         <button
-          onClick={(e) => { e.stopPropagation(); setExpanded((v) => !v); }}
+          onClick={(e) => { e.stopPropagation(); onOpen(); }}
+          aria-haspopup="dialog"
           className="mt-1 text-xs text-cyan-400 hover:text-cyan-300 transition-colors block"
         >
-          {expanded ? t('projects.showLess') : t('projects.readMore')}
+          {t('projects.readMore')}
         </button>
       )}
     </div>
@@ -38,6 +40,7 @@ export default function Projects({ projects }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
   const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
+  const [openProject, setOpenProject] = useState<Project | null>(null);
   // Four is what a visitor actually reads. The rest stay one click away
   // rather than turning the section into a wall.
   const [showAll, setShowAll] = useState(false);
@@ -168,7 +171,11 @@ export default function Projects({ projects }: Props) {
                   )}
                 </div>
 
-                <ProjectDescription text={L(project, 'description')} />
+                <ProjectDescription
+                  text={L(project, 'description')}
+                  canOpen={L(project, 'description').length > CLAMP_THRESHOLD || (project.images?.length ?? 0) > 1}
+                  onOpen={() => setOpenProject(project)}
+                />
 
                 {project.techStack?.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
@@ -269,6 +276,11 @@ export default function Projects({ projects }: Props) {
       {dbLightbox && (
         <DbDesignLightbox images={dbLightbox} onClose={() => setDbLightbox(null)} />
       )}
+      <AnimatePresence>
+        {openProject && (
+          <ProjectDialog key={openProject.id} project={openProject} onClose={() => setOpenProject(null)} />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

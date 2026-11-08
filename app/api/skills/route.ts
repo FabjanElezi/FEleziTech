@@ -1,6 +1,7 @@
 import { query } from '@/lib/db';
 import { getAuthEmail } from '@/lib/auth-server';
 import { revalidatePath } from 'next/cache';
+import { ensureSkillCategories } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
@@ -18,6 +19,7 @@ export async function POST(req: Request) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const d = await req.json();
+  await ensureSkillCategories();
   const { rows } = await query(
     `INSERT INTO skills (name,category,level,"order") VALUES ($1,$2,$3,$4) RETURNING id`,
     [d.name, d.category, d.level, d.order]

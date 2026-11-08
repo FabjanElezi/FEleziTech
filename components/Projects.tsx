@@ -38,6 +38,10 @@ export default function Projects({ projects }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
   const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
+  // Four is what a visitor actually reads. The rest stay one click away
+  // rather than turning the section into a wall.
+  const [showAll, setShowAll] = useState(false);
+  const VISIBLE = 4;
 
   useEffect(() => {
     setIsTouch(window.matchMedia('(hover: none)').matches);
@@ -45,7 +49,7 @@ export default function Projects({ projects }: Props) {
 
   if (projects.length === 0) {
     return (
-      <section id="projects" className="py-32 px-6">
+      <section id="projects" className="py-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
@@ -62,13 +66,13 @@ export default function Projects({ projects }: Props) {
   }
 
   return (
-    <section id="projects" className="py-32 px-6">
+    <section id="projects" className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-18"
+          className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
@@ -81,7 +85,7 @@ export default function Projects({ projects }: Props) {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 perspective-field">
-          {projects.map((project, i) => (
+          {(showAll ? projects : projects.slice(0, VISIBLE)).map((project, i) => (
             <motion.article
               key={project.id}
               className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative"
@@ -246,6 +250,21 @@ export default function Projects({ projects }: Props) {
             </motion.article>
           ))}
         </div>
+
+        {projects.length > VISIBLE && (
+          <div className="flex justify-center mt-10">
+            <button
+              type="button"
+              onClick={() => setShowAll((v) => !v)}
+              aria-expanded={showAll}
+              className="btn-ghost text-sm"
+            >
+              {showAll
+                ? t('projects.showFewer')
+                : `${t('projects.showMore')} (${projects.length - VISIBLE})`}
+            </button>
+          </div>
+        )}
       </div>
       {dbLightbox && (
         <DbDesignLightbox images={dbLightbox} onClose={() => setDbLightbox(null)} />

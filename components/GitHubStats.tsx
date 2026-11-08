@@ -62,7 +62,7 @@ export default function GitHubStats() {
   ];
 
   return (
-    <section className="py-20 px-6 relative">
+    <section className="py-14 px-6 relative">
       <div className="max-w-5xl mx-auto">
 
         <motion.div

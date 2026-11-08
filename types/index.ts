@@ -59,7 +59,7 @@ export interface Experience {
 export interface Skill {
   id: string;
   name: string;
-  category: 'technical' | 'language' | 'tool';
+  category: 'data' | 'systems' | 'web' | 'language';
   level?: string;
   order: number;
 }

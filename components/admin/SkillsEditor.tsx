@@ -10,20 +10,21 @@ interface Props {
   onChanged: (items: Skill[]) => void;
 }
 
-const CATEGORIES: Skill['category'][] = ['technical', 'language', 'tool'];
+const CATEGORIES: Skill['category'][] = ['data', 'systems', 'web', 'language'];
 const CATEGORY_LABELS: Record<Skill['category'], string> = {
-  technical: 'Technical Skills',
+  data: 'Data & Analytics',
+  systems: 'IT Systems & Networking',
+  web: 'Web Development',
   language: 'Languages',
-  tool: 'Tools & Software',
 };
 
 export default function SkillsEditor({ skills, onChanged }: Props) {
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<Skill['category']>('technical');
+  const [category, setCategory] = useState<Skill['category']>('data');
   const [level, setLevel] = useState('');
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<{ name: string; category: Skill['category']; level: string }>({ name: '', category: 'technical', level: '' });
+  const [editForm, setEditForm] = useState<{ name: string; category: Skill['category']; level: string }>({ name: '', category: 'data', level: '' });
   const [saving, setSaving] = useState(false);
 
   async function add() {

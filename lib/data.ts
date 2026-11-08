@@ -24,6 +24,44 @@ export async function ensureTranslationColumns() {
   translationsReady = true;
 }
 
+let skillCategoriesReady = false;
+
+/**
+ * The skills.category column was created when there were three groups
+ * (technical / language / tool) and the database still refuses anything else:
+ * writing 'data' comes back a 500 while 'technical' succeeds. The site now has
+ * four groups, so widen the column once, lazily, the same way the translation
+ * columns are added.
+ *
+ * Converting to plain text covers both shapes this can take -- a CHECK
+ * constraint or a named enum -- and dropping any category CHECK afterwards
+ * covers the case where the column was already text. Values are preserved
+ * either way, and a failure here must never block a page render.
+ */
+export async function ensureSkillCategories() {
+  if (skillCategoriesReady) return;
+  try {
+    await query('ALTER TABLE skills ALTER COLUMN category TYPE TEXT USING category::text');
+  } catch { /* already text, or not permitted — the DROP below may still help */ }
+  try {
+    await query(`
+      DO $$
+      DECLARE c text;
+      BEGIN
+        FOR c IN
+          SELECT conname FROM pg_constraint
+           WHERE conrelid = 'skills'::regclass
+             AND contype = 'c'
+             AND pg_get_constraintdef(oid) ILIKE '%category%'
+        LOOP
+          EXECUTE format('ALTER TABLE skills DROP CONSTRAINT %I', c);
+        END LOOP;
+      END $$;
+    `);
+  } catch { /* never block a page render */ }
+  skillCategoriesReady = true;
+}
+
 const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v : undefined);
 
 export async function getPortfolio(): Promise<Portfolio | null> {
@@ -98,11 +136,12 @@ export async function getExperiences(): Promise<Experience[]> {
 }
 
 export async function getSkills(): Promise<Skill[]> {
+  await ensureSkillCategories();
   const { rows } = await query('SELECT * FROM skills ORDER BY "order" ASC');
   return rows.map((d: Row) => ({
     id: d.id as string,
     name: d.name as string,
-    category: d.category as 'technical' | 'language' | 'tool',
+    category: d.category as Skill['category'],
     level: d.level as string | undefined,
     order: (d.order ?? 0) as number,
   }));

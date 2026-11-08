@@ -146,7 +146,7 @@ export default function Experience({ experiences }: Props) {
   const other     = experiences.filter((e) => e.type === 'other');
 
   return (
-    <section id="experience" className="py-32 px-6">
+    <section id="experience" className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

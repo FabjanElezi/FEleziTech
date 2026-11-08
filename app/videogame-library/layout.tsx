@@ -4,7 +4,7 @@ import { url } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Video Game Library Database',
   description:
-    'A normalised MySQL relational database for a video game lending library — 9 tables, foreign keys, M:N junctions. Project by Fabjan Elezi (FeleziTech).',
+    'A normalised MySQL relational database for a video game lending library — 9 tables, foreign keys, M:N junctions. Project by Fabjan Elezi.',
   alternates: {
     canonical: url('/videogame-library'),
   },

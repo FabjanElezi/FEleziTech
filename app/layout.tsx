@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     template: '%s | Fabjan Elezi',
   },
   description:
-    'Fabjan Elezi (F.EleziTech) – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
+    'Fabjan Elezi – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
   keywords: [
-    'F.EleziTech', 'felezitech', 'Fabjan Elezi', 'fabjan elezi',
+    'Fabjan Elezi', 'fabjan elezi',
     'developer portfolio', 'information systems student', 'business informatics', 'FH Aachen',
     'web developer', 'data analyst', 'junior developer',
     'cybersecurity', 'data analytics', 'business intelligence', 'IT systems', 'software development', 'werkstudent',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    siteName: 'F.EleziTech',
+    siteName: 'Fabjan Elezi',
     title: 'Fabjan Elezi – Data Analytics & IT Systems',
     description:
       'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data, IT systems and software. Open to Werkstudent and internship roles.',
@@ -88,7 +88,6 @@ const jsonLd = {
       '@type': 'Person',
       '@id': `${SITE_URL}/#person`,
       name: 'Fabjan Elezi',
-      alternateName: 'F.EleziTech',
       url: SITE_URL,
       jobTitle: 'M.Sc. Information Systems Student',
       description:
@@ -108,7 +107,7 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: 'F.EleziTech',
+      name: 'Fabjan Elezi',
       description: 'Developer portfolio of Fabjan Elezi',
       publisher: { '@id': `${SITE_URL}/#person` },
     },

@@ -1,7 +1,8 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
 import { useEffect, useRef, useState } from 'react';
-import { Home, User, Code2, FolderOpen, Mail } from 'lucide-react';
+import { Home, User, Code2, FolderOpen, Mail, Briefcase } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const sections = [
@@ -78,7 +79,7 @@ export default function MobileDock() {
           display: 'flex',
           alignItems: 'center',
           gap: '2px',
-          padding: '6px 10px',
+          padding: '6px 6px',
           borderRadius: '100px',
           background: 'rgba(9,13,21,0.6)',
           backdropFilter: 'blur(48px) saturate(210%) brightness(1.12) contrast(0.94)',
@@ -100,7 +101,7 @@ export default function MobileDock() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '3px',
-                padding: '7px 11px',
+                padding: '7px 7px',
                 borderRadius: '80px',
                 border: 'none',
                 cursor: 'pointer',
@@ -136,6 +137,37 @@ export default function MobileDock() {
             </button>
           );
         })}
+
+        {/* Services is its own page, so a link rather than a scroll target. */}
+        <Link
+          href="/services"
+          aria-label={t('nav.services')}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '3px',
+            padding: '7px 7px',
+            borderRadius: '80px',
+            minWidth: 48,
+            minHeight: 48,
+            textDecoration: 'none',
+          }}
+        >
+          <Briefcase size={19} style={{ color: 'rgba(148,163,184,0.75)' }} />
+          <span
+            style={{
+              fontSize: '9px',
+              fontFamily: 'var(--font-geist-sans), sans-serif',
+              color: 'rgba(148,163,184,0.55)',
+              letterSpacing: '0.05em',
+              lineHeight: 1,
+            }}
+          >
+            {t('nav.services')}
+          </span>
+        </Link>
       </div>
     </div>
   );

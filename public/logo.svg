@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" width="480" height="160" role="img" aria-label="Fabjan Elezi Tech">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="47 4 386 128" width="386" height="128" role="img" aria-label="Fabjan Elezi">
   <defs>
     <linearGradient id="fe" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#a5f3fc"/>
@@ -26,9 +26,4 @@
   </g>
   <!-- Wordmark -->
   <text x="240" y="122" text-anchor="middle" font-family="Geist, 'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="24" letter-spacing="4.5" fill="#e2e8f0">FABJAN ELEZI</text>
-  <g fill="#67e8f9">
-    <rect x="150" y="141" width="52" height="1.5"/>
-    <text x="240" y="147" text-anchor="middle" font-family="Geist, 'Space Grotesk', system-ui, sans-serif" font-weight="600" font-size="13" letter-spacing="6">TECH</text>
-    <rect x="278" y="141" width="52" height="1.5"/>
-  </g>
 </svg>

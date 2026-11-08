@@ -34,18 +34,6 @@ export default function Image() {
           background: 'radial-gradient(circle, rgba(6,182,212,0.14) 0%, transparent 70%)',
         }} />
 
-        {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
-          <div style={{
-            width: 6, height: 48,
-            background: 'linear-gradient(to bottom, #0891b2, #22d3ee)',
-            borderRadius: 4,
-          }} />
-          <span style={{ fontSize: 22, color: '#0891b2', fontWeight: 700, letterSpacing: 4, textTransform: 'uppercase' }}>
-            FeleziTech
-          </span>
-        </div>
-
         {/* Name */}
         <div style={{ fontSize: 72, fontWeight: 800, color: '#ffffff', letterSpacing: -2, lineHeight: 1 }}>
           Fabjan Elezi

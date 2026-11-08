@@ -208,7 +208,25 @@ export default function ServicesView({ portfolio, services }: { portfolio: Portf
 
         {/* Intro */}
         <section className="max-w-5xl mx-auto px-6 pt-14 pb-16">
-          <motion.div {...fade}>
+          <motion.div {...fade} className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-12">
+           {/* A face next to the offer: on phones above the headline, on desktop to the right. */}
+           <div className="order-1 md:order-2 shrink-0">
+            <div
+              className="relative w-28 h-28 md:w-60 md:h-60 rounded-full p-[3px] md:p-1"
+              style={{ background: 'linear-gradient(135deg, #67e8f9, #0891b2)', boxShadow: '0 0 48px rgba(34,211,238,0.28)' }}
+            >
+              <Image
+                src="/og-photo.jpg"
+                alt="Fabjan Elezi"
+                width={240}
+                height={240}
+                priority
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
+           </div>
+
+           <div className="order-2 md:order-1 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-8 h-px bg-cyan-500" />
               <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{c.eyebrow}</span>
@@ -234,6 +252,7 @@ export default function ServicesView({ portfolio, services }: { portfolio: Portf
                 <InstagramIcon size={16} /> {c.instagram}
               </a>
             </div>
+           </div>
           </motion.div>
         </section>
 

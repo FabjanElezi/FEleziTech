@@ -17,8 +17,11 @@ export default function Footer({ portfolio }: Props) {
   const github = portfolio?.github;
   const email = portfolio?.email;
 
+  // The scroll-to-top button is fixed at bottom 2rem, right 1.5rem, so on a
+  // phone it parks exactly where these last lines sit and covers the end of the
+  // copyright. The extra bottom padding lifts them clear of it.
   return (
-    <footer className="py-8 px-6 text-center relative">
+    <footer className="pt-8 pb-28 md:pb-8 px-6 text-center relative">
       <div
         className="absolute top-0 left-0 right-0 h-px"
         style={{ background: 'linear-gradient(to right, transparent, rgba(8,145,178,0.25), rgba(6,182,212,0.2), transparent)' }}

@@ -1,7 +1,8 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MessageCircle, Mail } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Mail, ArrowUpRight } from 'lucide-react';
 import { useLang } from '@/components/LanguageProvider';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -11,6 +12,57 @@ import Footer from '@/components/Footer';
 import { Portfolio, Service } from '@/types';
 
 const INSTAGRAM = { handle: 'revoweb_official', href: 'https://www.instagram.com/revoweb_official/' };
+type Lang = 'en' | 'de' | 'sq';
+const WORK: { title: string; img: string; href?: string; stack: string; tag: Record<Lang, string>; text: Record<Lang, string> }[] = [
+  {
+    title: 'FETech Analytics',
+    img: '/work/fetech-analytics.jpg',
+    href: 'https://fetech-analytics.vercel.app/',
+    stack: 'Next.js · PostgreSQL',
+    tag: { en: 'Data dashboard', de: 'Daten-Dashboard', sq: 'Dashboard të dhënash' },
+    text: {
+      en: 'Sales, customers and forecasts for a retail business in one dashboard.',
+      de: 'Umsatz, Kunden und Prognosen eines Händlers in einem Dashboard.',
+      sq: 'Shitjet, klientët dhe parashikimet e një biznesi në një dashboard.',
+    },
+  },
+  {
+    title: 'Bio Farm',
+    img: '/work/bio-farm.jpg',
+    stack: 'Django · Bootstrap',
+    tag: { en: 'Business website', de: 'Unternehmenswebsite', sq: 'Faqe biznesi' },
+    text: {
+      en: 'Website for a farm stay with menu, rooms and booking. Built during an internship.',
+      de: 'Website für einen Bauernhof mit Menü, Zimmern und Buchung. Im Praktikum gebaut.',
+      sq: 'Faqe për një agroturizëm me menu, dhoma dhe rezervim. E ndërtuar gjatë praktikës.',
+    },
+  },
+  {
+    title: 'RevoHelp',
+    img: '/work/revohelp.jpg',
+    href: 'https://monarchsilgrit.wixsite.com/revohelpofficial',
+    stack: 'Wix',
+    tag: { en: 'Startup website', de: 'Startup-Website', sq: 'Faqe startup-i' },
+    text: {
+      en: 'Landing page and product pages for a startup concept.',
+      de: 'Landingpage und Produktseiten für ein Startup-Konzept.',
+      sq: 'Landing page dhe faqe produkti për një koncept startup-i.',
+    },
+  },
+  {
+    title: 'AI Security Demo',
+    img: '/work/ai-security-demo.jpg',
+    href: 'https://adversarial-robustness.vercel.app/',
+    stack: 'React · Tailwind',
+    tag: { en: 'Interactive web app', de: 'Interaktive Web-App', sq: 'Aplikacion web interaktiv' },
+    text: {
+      en: 'A live demo that shows how AI image models can be fooled, and how to defend them.',
+      de: 'Eine Live-Demo, die zeigt, wie sich KI-Bildmodelle täuschen lassen und wie man sie schützt.',
+      sq: 'Demo live që tregon si mashtrohen modelet AI të imazheve dhe si mbrohen.',
+    },
+  },
+];
+
 const FALLBACK_PHONE = '+49 174 8696164';
 // Client work goes to the RevoWeb inbox, not the job-application one.
 const SERVICES_EMAIL = 'revowebofficial@gmail.com';
@@ -26,6 +78,8 @@ const COPY = {
     whatsapp: 'Message on WhatsApp',
     instagram: 'See my work',
     whatTitle: 'What I offer',
+    workTitle: 'Recent work',
+    visit: 'Visit',
     howTitle: 'How it works',
     steps: [
       { h: 'Free consultation', p: 'Tell me what you need on WhatsApp, Telegram or email. We figure out together what makes sense.' },
@@ -49,6 +103,8 @@ const COPY = {
     whatsapp: 'Auf WhatsApp schreiben',
     instagram: 'Meine Arbeiten',
     whatTitle: 'Was ich anbiete',
+    workTitle: 'Aktuelle Arbeiten',
+    visit: 'Ansehen',
     howTitle: 'So läuft es ab',
     steps: [
       { h: 'Kostenloses Erstgespräch', p: 'Schreiben Sie mir per WhatsApp, Telegram oder E-Mail, was Sie brauchen. Gemeinsam klären wir, was sinnvoll ist.' },
@@ -72,6 +128,8 @@ const COPY = {
     whatsapp: 'Shkruani në WhatsApp',
     instagram: 'Shikoni punët',
     whatTitle: 'Çfarë ofroj',
+    workTitle: 'Punë të fundit',
+    visit: 'Shiko',
     howTitle: 'Si funksionon',
     steps: [
       { h: 'Konsultë falas', p: 'Më tregoni çfarë ju duhet në WhatsApp, Telegram ose email. Bashkë shohim çfarë ka kuptim.' },
@@ -119,6 +177,7 @@ function Heading({ children }: { children: React.ReactNode }) {
 export default function ServicesView({ portfolio, services }: { portfolio: Portfolio | null; services: Service[] }) {
   const { lang } = useLang();
   const c = COPY[lang] ?? COPY.en;
+  const l: Lang = lang in COPY ? (lang as Lang) : 'en';
   const phone = portfolio?.phone || FALLBACK_PHONE;
   const email = SERVICES_EMAIL;
   const personalEmail = portfolio?.email || '';
@@ -185,6 +244,45 @@ export default function ServicesView({ portfolio, services }: { portfolio: Portf
             <ServiceCards services={services} />
           </section>
         )}
+
+        {/* Work */}
+        <section className="max-w-5xl mx-auto px-6 pb-16">
+          <Heading>{c.workTitle}</Heading>
+          <div className="grid sm:grid-cols-2 gap-6">
+            {WORK.map((w, i) => (
+              <motion.article
+                key={w.title}
+                {...fade}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="glass rounded-2xl overflow-hidden relative group"
+              >
+                <div className="relative aspect-[2/1] overflow-hidden border-b border-white/5">
+                  <Image
+                    src={w.img}
+                    alt={`${w.title} — ${w.tag[l]}`}
+                    fill
+                    sizes="(min-width: 640px) 480px, 100vw"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center justify-between gap-3 mb-1">
+                    <span className="text-xs text-cyan-400 font-medium">{w.tag[l]}</span>
+                    <span className="text-[11px] text-slate-500">{w.stack}</span>
+                  </div>
+                  <h3 className="text-white font-semibold">{w.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mt-1">{w.text[l]}</p>
+                  {w.href && (
+                    <a href={w.href} target="_blank" rel="noopener noreferrer"
+                       className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 mt-3 transition-colors">
+                      {c.visit} <ArrowUpRight size={14} aria-hidden="true" />
+                    </a>
+                  )}
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </section>
 
         {/* How */}
         <section className="max-w-5xl mx-auto px-6 pb-16">

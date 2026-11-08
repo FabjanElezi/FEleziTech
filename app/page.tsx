@@ -5,22 +5,20 @@ import Skills from '@/components/Skills';
 import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
-import Services from '@/components/Services';
 import Footer from '@/components/Footer';
 import SectionDivider from '@/components/SectionDivider';
-import { getPortfolio, getProjects, getExperiences, getSkills, getServices } from '@/lib/data';
+import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 import SocialSidebar from '@/components/SocialSidebar';
 
 // Always render from the database so Admin edits show up on the very next visit.
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const [portfolio, projects, experiences, skills, services] = await Promise.all([
+  const [portfolio, projects, experiences, skills] = await Promise.all([
     getPortfolio(),
     getProjects(),
     getExperiences(),
     getSkills(),
-    getServices(),
   ]);
 
   return (
@@ -47,12 +45,6 @@ export default async function HomePage() {
         <Experience experiences={experiences} />
         <SectionDivider flip />
         <Projects projects={projects} />
-        {services.length > 0 && (
-          <>
-            <SectionDivider flip />
-            <Services services={services} />
-          </>
-        )}
         <SectionDivider />
         <Contact portfolio={portfolio} />
         <Footer portfolio={portfolio} />

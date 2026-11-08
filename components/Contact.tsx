@@ -2,7 +2,8 @@
 import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2 } from 'lucide-react';
+import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2, ArrowRight } from 'lucide-react';
+import NextLink from 'next/link';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
@@ -53,6 +54,9 @@ export default function Contact({ portfolio }: Props) {
           <p className="text-slate-500 text-base max-w-md mx-auto">
             {t('contact.sub')}
           </p>
+          <NextLink href="/services" className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 mt-3 transition-colors">
+            {t('contact.servicesHint')} <ArrowRight size={14} aria-hidden="true" />
+          </NextLink>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 perspective-field">

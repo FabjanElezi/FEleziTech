@@ -168,7 +168,7 @@ export default function ServicesEditor({ services, onChanged }: Props) {
   return (
     <div className="space-y-4">
       <p className="text-xs text-slate-500">
-        Shown on the site in the Services section, between Projects and Contact. Pricing is always shown as “on request”.
+        Shown on the separate /services page (linked from the navbar, contact section and footer). Pricing is always shown as “on request”.
       </p>
 
       {editing === 'new' ? formBlock : (

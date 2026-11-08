@@ -70,9 +70,14 @@ export default function Footer({ portfolio }: Props) {
       <p className="text-slate-600 text-sm">
         © {new Date().getFullYear()} Fabjan Elezi. {t('footer.rights')}
       </p>
-      <Link href="/privacy" className="text-slate-600 hover:text-cyan-400 text-xs mt-2 inline-block transition-colors">
-        {t('footer.privacy')}
-      </Link>
+      <div className="flex items-center justify-center gap-4 mt-2">
+        <Link href="/services" className="text-slate-600 hover:text-cyan-400 text-xs inline-block transition-colors">
+          {t('nav.services')}
+        </Link>
+        <Link href="/privacy" className="text-slate-600 hover:text-cyan-400 text-xs inline-block transition-colors">
+          {t('footer.privacy')}
+        </Link>
+      </div>
     </footer>
   );
 }

@@ -57,7 +57,7 @@ export default function MobileDock() {
     };
   }, [pathname]);
 
-  if (pathname.startsWith('/admin')) return null;
+  if (pathname.startsWith('/admin') || pathname.startsWith('/services')) return null;
 
   const handleClick = (id: string) => {
     if (id === 'hero') {

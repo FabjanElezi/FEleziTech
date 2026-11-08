@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowUpRight } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { useLang } from '@/components/LanguageProvider';
@@ -98,6 +99,11 @@ export default function Navbar() {
               </a>
             </li>
           ))}
+          <li>
+            <Link href="/services" className="nav-link text-sm text-slate-400 inline-flex items-center gap-0.5">
+              {t('nav.services')} <ArrowUpRight size={13} aria-hidden="true" />
+            </Link>
+          </li>
         </ul>
 
         {/* Desktop right */}

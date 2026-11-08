@@ -1010,6 +1010,20 @@ html[data-admin] body { background-image: none; }
   .tr-line { grid-column: 2 / -1; color: #94a3b8; }
 }
 
+/* Narrowest phones (iPhone SE and the like). The longest hop,
+   "adirondacks.ny.us (2025, 2026)", cannot share a line with a date that is
+   not allowed to wrap, and a grid overflows rather than wraps. Give the date
+   its own row instead of letting the page scroll sideways. Measured: the
+   longest hop stops fitting just under 370px, so 375px phones keep the
+   compact single line. */
+@media (max-width: 374px) {
+  .tr-hop-btn { grid-template-columns: 18px 1fr; }
+  .tr-n    { grid-column: 1; grid-row: 1; }
+  .tr-host { grid-column: 2; grid-row: 1; overflow-wrap: anywhere; }
+  .tr-when { grid-column: 2; grid-row: 2; }
+  .tr-line { grid-column: 2; grid-row: 3; }
+}
+
 /* Detail panel. Collapsed by height so it animates, but it is kept in the DOM
    and only hidden from assistive tech when closed. */
 .tr-detail {

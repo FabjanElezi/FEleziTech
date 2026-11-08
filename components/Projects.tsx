@@ -41,10 +41,10 @@ export default function Projects({ projects }: Props) {
   const [isTouch, setIsTouch] = useState(false);
   const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
   const [openProject, setOpenProject] = useState<Project | null>(null);
-  // Four is what a visitor actually reads. The rest stay one click away
-  // rather than turning the section into a wall.
+  // Six fills two complete rows of the 3-column grid (and three of the
+  // 2-column one); the rest stay one click away.
   const [showAll, setShowAll] = useState(false);
-  const VISIBLE = 4;
+  const VISIBLE = 6;
 
   useEffect(() => {
     setIsTouch(window.matchMedia('(hover: none)').matches);

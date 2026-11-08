@@ -104,22 +104,13 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
-          <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
-            Admin
-          </Link>
         </div>
 
-        {/* Mobile right — theme toggle + admin link */}
+        {/* Mobile right. No admin link: /admin is reached by typing the URL,
+            so visitors are not shown a door they cannot open. */}
         <div className="md:hidden flex items-center gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
-          <Link
-            href="/admin"
-            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors"
-            style={{ minHeight: 44, display: 'flex', alignItems: 'center', padding: '0 6px' }}
-          >
-            Admin
-          </Link>
         </div>
       </nav>
     </header>

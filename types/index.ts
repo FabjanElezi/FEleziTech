@@ -63,3 +63,17 @@ export interface Skill {
   level?: string;
   order: number;
 }
+
+export type ServiceIcon = 'web' | 'data' | 'network' | 'database';
+
+export interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon: ServiceIcon;
+  order: number;
+  title_de?: string;
+  title_sq?: string;
+  description_de?: string;
+  description_sq?: string;
+}

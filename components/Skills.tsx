@@ -6,22 +6,29 @@ import CornerAccents from '@/components/CornerAccents';
 
 interface Props { skills: Skill[] }
 
+// Four groups, in the order a recruiter should read them: the analytics
+// first, then the systems side, then the web stack, then languages.
+const CATS = ['data', 'systems', 'web', 'language'] as const;
+
 const categoryLabels: Record<string, string> = {
-  technical: 'skills.technical',
+  data: 'skills.data',
+  systems: 'skills.systems',
+  web: 'skills.web',
   language: 'skills.language',
-  tool: 'skills.tool',
 };
 
 const categoryCorner: Record<string, string> = {
-  technical: 'rgba(8,145,178,0.38)',
-  language: 'rgba(6,182,212,0.35)',
-  tool: 'rgba(16,185,129,0.35)',
+  data: 'rgba(8,145,178,0.38)',
+  systems: 'rgba(16,185,129,0.35)',
+  web: 'rgba(6,182,212,0.35)',
+  language: 'rgba(245,158,11,0.32)',
 };
 
 const categoryChipClass: Record<string, string> = {
-  technical: 'skill-chip-purple',
-  language: 'skill-chip-cyan',
-  tool: 'skill-chip-emerald',
+  data: 'skill-chip-purple',
+  systems: 'skill-chip-emerald',
+  web: 'skill-chip-cyan',
+  language: 'skill-chip-amber',
 };
 
 export default function Skills({ skills }: Props) {
@@ -31,9 +38,14 @@ export default function Skills({ skills }: Props) {
     acc[s.category].push(s);
     return acc;
   }, {});
+  // Sort inside each card. The query orders by "order" across the whole table,
+  // so a card's own sequence would otherwise depend on values in other cards.
+  for (const list of Object.values(grouped)) {
+    list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
 
   return (
-    <section id="skills" className="py-24 px-6 relative">
+    <section id="skills" className="py-20 px-6 relative">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -57,14 +69,14 @@ export default function Skills({ skills }: Props) {
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start perspective-field">
-          {(['technical', 'language', 'tool'] as const).map((cat, i) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 perspective-field">
+          {CATS.map((cat, i) => {
             const items = grouped[cat] || [];
             if (items.length === 0) return null;
             return (
               <motion.div
                 key={cat}
-                className="glass rounded-2xl p-6 relative glass-hover"
+                className="glass rounded-2xl p-6 relative glass-hover h-full"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

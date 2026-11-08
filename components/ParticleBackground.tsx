@@ -87,18 +87,15 @@ export default function ParticleBackground() {
     let dots: Dot[] = [];
     const glyphs: Glyph[] = [];
     let scrollY = 0;
-    let maxScroll = 1;
     let mountAlpha = 0;                                    // fades in on load to avoid pop-in flash
     const dist2 = new Float32Array(DOT_COUNT * DOT_COUNT); // reused every frame — no per-frame alloc
 
     function resize() {
       W = canvas!.width  = window.innerWidth;
       H = canvas!.height = window.innerHeight;
-      maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
     }
     const onScroll = () => {
       scrollY = window.scrollY;
-      maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
     };
     resize();
     dots = Array.from({ length: DOT_COUNT }, () => spawnDot(W, H));
@@ -115,10 +112,9 @@ export default function ParticleBackground() {
       ctx!.clearRect(0, 0, W, H);
       frame++;
 
-      // scroll-based visibility: hero (top) and contact (bottom)
-      const topFade    = Math.max(0, 1 - scrollY / (H * 1.1));
-      const bottomFade = Math.max(0, Math.min(1, (scrollY - (maxScroll - H * 1.6)) / (H * 0.6)));
-      const pageFactor = Math.max(topFade, bottomFade);
+      // Hero only. It used to fade back in near the contact section; now it
+      // belongs to the hero and is gone for the rest of the page.
+      const pageFactor = Math.max(0, 1 - scrollY / (H * 1.1));
 
       mountAlpha = Math.min(1, mountAlpha + 0.018); // ~56 frames ≈ 0.9 s fade-in
 

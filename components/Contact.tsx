@@ -28,7 +28,7 @@ export default function Contact({ portfolio }: Props) {
   };
 
   return (
-    <section id="contact" className="py-32 px-6 relative">
+    <section id="contact" className="py-20 px-6 relative">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{

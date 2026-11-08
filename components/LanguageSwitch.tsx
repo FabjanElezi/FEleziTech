@@ -33,7 +33,7 @@ export default function LanguageSwitch({ compact = false }: { compact?: boolean 
         onClick={() => setOpen((v) => !v)}
         className="theme-toggle-btn flex items-center gap-1.5"
         style={{ width: 'auto', padding: compact ? '0 0.5rem' : '0 0.6rem' }}
-        aria-label={t('lang.label')}
+        aria-label={`${t('lang.label')}: ${current.label} (${current.short})`}
         aria-haspopup="listbox"
         aria-expanded={open}
         title={t('lang.label')}

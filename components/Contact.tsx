@@ -2,7 +2,7 @@
 import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Link, Send, MapPin, Copy, Check } from 'lucide-react';
+import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2 } from 'lucide-react';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
@@ -13,6 +13,7 @@ export default function Contact({ portfolio }: Props) {
   const email = portfolio?.email || 'fabio.elezi485@icloud.com';
   const phone = portfolio?.phone || '';
   const linkedin = portfolio?.linkedin || '';
+  const github = portfolio?.github || '';
   const location = portfolio?.location || 'Tirana, Albania';
   const [copied, setCopied] = useState(false);
 
@@ -132,6 +133,30 @@ export default function Contact({ portfolio }: Props) {
                 <div>
                   <p className="text-xs text-slate-500 mb-0.5">LinkedIn</p>
                   <p className="text-white text-sm font-medium">{t('contact.connect')}</p>
+                </div>
+              </motion.a>
+            )}
+
+            {github && (
+              <motion.a
+                href={github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
+                initial={{ opacity: 0, x: -18 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.2 }}
+              >
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(6,182,212,0.15)' }}
+                >
+                  <Code2 size={18} className="text-cyan-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 mb-0.5">{t('contact.github')}</p>
+                  <p className="text-white text-sm font-medium">{t('contact.viewCode')}</p>
                 </div>
               </motion.a>
             )}

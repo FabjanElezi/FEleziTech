@@ -180,7 +180,7 @@ export default function Projects({ projects }: Props) {
                       href={project.githubLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[44px]"
                     >
                       <GitBranch size={13} /> {t('projects.code')}
                     </a>
@@ -188,7 +188,7 @@ export default function Projects({ projects }: Props) {
                   {project.dbDesignImages && project.dbDesignImages.length > 0 && (
                     <button
                       onClick={() => setDbLightbox(project.dbDesignImages!)}
-                      className="db-design-btn flex items-center gap-1.5 text-xs font-semibold transition-all min-h-[36px]"
+                      className="db-design-btn flex items-center gap-1.5 text-xs font-semibold transition-all min-h-[44px]"
                       style={{
                         color: '#22d3ee',
                         background: 'rgba(6,182,212,0.1)',
@@ -216,7 +216,7 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors min-h-[44px]"
                     >
                       <ExternalLink size={13} /> {t('projects.view')}
                     </a>
@@ -226,7 +226,7 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors min-h-[44px]"
                     >
                       <ExternalLink size={13} /> {t('projects.liveDemo')}
                     </a>
@@ -236,7 +236,7 @@ export default function Projects({ projects }: Props) {
                       href={project.documentUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[36px]"
+                      className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[44px]"
                     >
                       <FileText size={13} /> {t('projects.docs')}
                     </a>

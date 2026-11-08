@@ -53,7 +53,7 @@ export default async function HomePage() {
         <Projects projects={projects} />
         <SectionDivider />
         <Contact portfolio={portfolio} />
-        <Footer />
+        <Footer portfolio={portfolio} />
       </div>
     </main>
   );

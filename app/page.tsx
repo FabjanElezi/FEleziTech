@@ -9,7 +9,6 @@ import Footer from '@/components/Footer';
 import SectionDivider from '@/components/SectionDivider';
 import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 import SocialSidebar from '@/components/SocialSidebar';
-import Traceroute from '@/components/Traceroute';
 
 // Always render from the database so Admin edits show up on the very next visit.
 export const dynamic = 'force-dynamic';
@@ -40,7 +39,6 @@ export default async function HomePage() {
         <SocialSidebar linkedin={portfolio?.linkedin} github={portfolio?.github} email={portfolio?.email} />
         <Navbar />
         <Hero portfolio={portfolio} />
-        <Traceroute />
         <SectionDivider />
         <About portfolio={portfolio} />
         <SectionDivider flip />

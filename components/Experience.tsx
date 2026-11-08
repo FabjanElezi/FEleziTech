@@ -8,6 +8,9 @@ import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
 const CertificateLightbox = dynamic(() => import('@/components/CertificateLightbox'), { ssr: false });
+// Only loaded if someone actually asks for the terminal view, so the default
+// view carries none of its weight.
+const Traceroute = dynamic(() => import('@/components/Traceroute'), { ssr: false });
 
 interface Props { experiences: Exp[] }
 
@@ -125,6 +128,9 @@ function Timeline({ items, kind, onCertificate }: TimelineProps) {
 export default function Experience({ experiences }: Props) {
   const { t, L } = useLang();
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  // The timeline is the default. The traceroute is the same dates for anyone
+  // who enjoys it, and nobody has to meet it first.
+  const [asTraceroute, setAsTraceroute] = useState(false);
 
   const openCertificate = useCallback((url: string) => {
     const isPdf = /\.pdf(\?|$)/i.test(url);
@@ -156,8 +162,23 @@ export default function Experience({ experiences }: Props) {
           <h2 className="section-title text-white">
             {t('experience.headline')} <span className="gradient-text">{t('experience.headlineAccent')}</span>
           </h2>
+
+          <button
+            type="button"
+            onClick={() => setAsTraceroute((v) => !v)}
+            aria-pressed={asTraceroute}
+            className="tr-toggle"
+          >
+            <span aria-hidden="true" className="font-mono">{asTraceroute ? '\u2190' : '>_'}</span>
+            {asTraceroute ? t('tr.viewTimeline') : t('tr.viewAs')}
+          </button>
         </motion.div>
 
+        {asTraceroute ? (
+          <div className="max-w-3xl mx-auto">
+            <Traceroute />
+          </div>
+        ) : (
         <div className="space-y-16 max-w-3xl mx-auto">
           {work.length > 0 && <Timeline items={work} kind="work" onCertificate={openCertificate} />}
           {other.length > 0 && (
@@ -204,6 +225,7 @@ export default function Experience({ experiences }: Props) {
           )}
           {awards.length > 0 && <Timeline items={awards} kind="award" onCertificate={openCertificate} />}
         </div>
+        )}
       </div>
       {lightboxUrl && (
         <CertificateLightbox url={lightboxUrl} onClose={() => setLightboxUrl(null)} />

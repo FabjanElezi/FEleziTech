@@ -60,8 +60,8 @@ export default function Contact({ portfolio }: Props) {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 perspective-field">
-          {/* Contact cards */}
-          <div className="space-y-4">
+          {/* Contact cards — min-w-0 lets the long email truncate on narrow phones */}
+          <div className="space-y-4 min-w-0">
             <motion.div
               className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
               initial={{ opacity: 0, x: -18 }}
@@ -187,7 +187,7 @@ export default function Contact({ portfolio }: Props) {
 
           {/* CTA card */}
           <motion.div
-            className="glass rounded-2xl p-8 flex flex-col justify-center relative"
+            className="glass rounded-2xl p-6 sm:p-8 flex flex-col justify-center relative min-w-0"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}

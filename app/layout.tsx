@@ -125,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen antialiased pb-24 md:pb-0" suppressHydrationWarning>
+      <body className="min-h-screen antialiased pb-24 lg:pb-0" suppressHydrationWarning>
         <LanguageProvider>
           <MotionProvider>
             <ScrollProgress />

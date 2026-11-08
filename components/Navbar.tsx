@@ -77,14 +77,14 @@ export default function Navbar() {
 
   return (
     <header ref={headerRef} className="navbar fixed z-50">
-      <nav className="h-14 flex items-center justify-between px-5">
+      <nav className="h-14 flex items-center justify-between px-3 sm:px-5">
         {/* Logo */}
         <Link href="/" className="hover:opacity-80 transition-opacity flex items-center mt-1 shrink-0">
-          <Image src="/logo.svg" alt="Fabjan Elezi" width={160} height={53} className="object-contain" priority fetchPriority="high" />
+          <Image src="/logo.svg" alt="Fabjan Elezi" width={160} height={53} className="object-contain w-[112px] sm:w-[160px] h-auto" priority fetchPriority="high" />
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-4 lg:gap-6 mx-4">
+        <ul className="hidden lg:flex items-center gap-5 xl:gap-6 mx-4">
           {links.map((l) => (
             <li key={l.href}>
               <a
@@ -107,7 +107,7 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop right */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-3 shrink-0">
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
           <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
@@ -116,7 +116,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile right — theme toggle + admin link */}
-        <div className="md:hidden flex items-center gap-2 shrink-0">
+        <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
           <Link

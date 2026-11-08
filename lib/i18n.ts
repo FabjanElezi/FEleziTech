@@ -83,6 +83,8 @@ const en: Dict = {
   'contact.location': 'Location',
   'contact.linkedin': 'LinkedIn',
   'contact.connect': 'Connect on LinkedIn',
+  'contact.github': 'GitHub',
+  'contact.viewCode': 'See my code',
   'contact.copy': 'Copy email',
   'contact.copied': 'Email copied',
 
@@ -159,6 +161,8 @@ const de: Dict = {
   'contact.location': 'Standort',
   'contact.linkedin': 'LinkedIn',
   'contact.connect': 'Auf LinkedIn vernetzen',
+  'contact.github': 'GitHub',
+  'contact.viewCode': 'Meinen Code ansehen',
   'contact.copy': 'E-Mail kopieren',
   'contact.copied': 'E-Mail kopiert',
 
@@ -235,6 +239,8 @@ const sq: Dict = {
   'contact.location': 'Vendndodhja',
   'contact.linkedin': 'LinkedIn',
   'contact.connect': 'Lidhu në LinkedIn',
+  'contact.github': 'GitHub',
+  'contact.viewCode': 'Shiko kodin tim',
   'contact.copy': 'Kopjo email-in',
   'contact.copied': 'Email-i u kopjua',
 

@@ -33,7 +33,7 @@ export default function Skills({ skills }: Props) {
   }, {});
 
   return (
-    <section id="skills" className="py-32 px-6 relative">
+    <section id="skills" className="py-24 px-6 relative">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -45,7 +45,7 @@ export default function Skills({ skills }: Props) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-18"
+          className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
@@ -57,7 +57,7 @@ export default function Skills({ skills }: Props) {
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 perspective-field">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start perspective-field">
           {(['technical', 'language', 'tool'] as const).map((cat, i) => {
             const items = grouped[cat] || [];
             if (items.length === 0) return null;

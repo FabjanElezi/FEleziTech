@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { Analytics } from '@vercel/analytics/next';
 import VisitTracker from '@/components/VisitTracker';
-import CursorGlow from '@/components/CursorGlow';
 import SurfaceFX from '@/components/SurfaceFX';
 import { LanguageProvider } from '@/components/LanguageProvider';
 import ParticleBackground from '@/components/ParticleBackground';
@@ -130,7 +129,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LanguageProvider>
           <MotionProvider>
             <ScrollProgress />
-            <CursorGlow />
             <SurfaceFX />
             <div className="grain" aria-hidden />
             <ParticleBackground />

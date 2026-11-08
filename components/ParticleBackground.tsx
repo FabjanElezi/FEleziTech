@@ -3,33 +3,21 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
 // ── plexus config ────────────────────────────────────────────
-const DOT_COUNT  = 44;
-const LINK_DIST  = 175;    // max distance to connect two nodes
-const TRI_ALPHA  = 0.055;  // filled triangle face opacity
-const LINE_MAX_A = 0.72;
+// Thinned so the network sits behind the headline instead of competing with
+// it: fewer nodes (links grow with the square of the count, so this alone
+// removes well over half the lines), shorter reach, fainter strokes.
+const DOT_COUNT  = 28;
+const LINK_DIST  = 150;    // max distance to connect two nodes
+const TRI_ALPHA  = 0.03;   // filled triangle face opacity
+const LINE_MAX_A = 0.38;
 const MAX_SPEED  = 0.22;
 
-// ── glyphs ──────────────────────────────────────────────────
-const SYMS = ['</>','{}','[]','=>','01','//','&&','::','fn','if','0x','#!','~~','λ','<>'];
-const GLYPH_COLORS = ['#22d3ee','#22d3ee','#0891b2','#22d3ee'];
-const MAX_GLYPHS  = 8;
-const SPAWN_EVERY = 55;
 
 function rand(a: number, b: number) { return Math.random() * (b - a) + a; }
-function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
 
 interface Dot {
   x: number; y: number; r: number;
   vx: number; vy: number; o: number;
-}
-
-type Phase = 'in' | 'hold' | 'out';
-interface Glyph {
-  sym: string; x: number; y: number;
-  vx: number; vy: number;
-  o: number; maxO: number;
-  phase: Phase; phaseT: number;
-  size: number; c: string;
 }
 
 function spawnDot(w: number, h: number): Dot {
@@ -39,32 +27,7 @@ function spawnDot(w: number, h: number): Dot {
     r: rand(1.4, 3.0),
     vx: rand(-0.12, 0.12),
     vy: rand(-0.12, 0.12),
-    o: rand(0.55, 0.95),
-  };
-}
-
-function spawnGlyph(w: number, h: number): Glyph {
-  const edge = Math.floor(Math.random() * 4);
-  let x: number, y: number, vx: number, vy: number;
-  if (edge === 0) {
-    x = rand(w * 0.05, w * 0.95); y = rand(-20, -5);
-    vx = rand(-0.1, 0.1); vy = rand(0.07, 0.15);
-  } else if (edge === 1) {
-    x = rand(-30, -8); y = rand(h * 0.05, h * 0.95);
-    vx = rand(0.06, 0.14); vy = rand(-0.06, 0.06);
-  } else if (edge === 2) {
-    x = rand(w + 8, w + 30); y = rand(h * 0.05, h * 0.95);
-    vx = rand(-0.14, -0.06); vy = rand(-0.06, 0.06);
-  } else {
-    x = rand(w * 0.05, w * 0.95); y = rand(h + 5, h + 20);
-    vx = rand(-0.1, 0.1); vy = rand(-0.15, -0.07);
-  }
-  return {
-    sym: pick(SYMS), x, y, vx, vy,
-    o: 0, maxO: rand(0.4, 0.62),
-    phase: 'in', phaseT: 0,
-    size: Math.floor(rand(11, 16)),
-    c: pick(GLYPH_COLORS),
+    o: rand(0.35, 0.65),
   };
 }
 
@@ -83,9 +46,7 @@ export default function ParticleBackground() {
 
     let raf: number;
     let W = 0, H = 0;
-    let frame = 0;
     let dots: Dot[] = [];
-    const glyphs: Glyph[] = [];
     let scrollY = 0;
     let mountAlpha = 0;                                    // fades in on load to avoid pop-in flash
     const dist2 = new Float32Array(DOT_COUNT * DOT_COUNT); // reused every frame — no per-frame alloc
@@ -110,7 +71,6 @@ export default function ParticleBackground() {
 
     function tick() {
       ctx!.clearRect(0, 0, W, H);
-      frame++;
 
       // Hero only. It used to fade back in near the contact section; now it
       // belongs to the hero and is gone for the rest of the page.
@@ -184,7 +144,7 @@ export default function ParticleBackground() {
         }
 
         // ── plexus lines ──────────────────────────────────────
-        ctx!.lineWidth = 1.3;
+        ctx!.lineWidth = 1;
         ctx!.strokeStyle = '#22d3ee';
         for (let i = 0; i < DOT_COUNT; i++) {
           for (let j = i + 1; j < DOT_COUNT; j++) {
@@ -220,31 +180,6 @@ export default function ParticleBackground() {
           ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
           ctx!.fill();
         }
-      }
-
-      // ── glyphs — more dense on mobile ────────────────────────
-      const glyphCap   = mobile ? 24 : MAX_GLYPHS;
-      const spawnEvery = mobile ? 16 : SPAWN_EVERY;
-      if (frame % spawnEvery === 0 && glyphs.length < glyphCap) {
-        glyphs.push(spawnGlyph(W, H));
-      }
-      for (let i = glyphs.length - 1; i >= 0; i--) {
-        const g = glyphs[i];
-        g.x += g.vx; g.y += g.vy;
-        g.phaseT++;
-        if (g.phase === 'in') {
-          g.o = Math.min(g.o + g.maxO / 40, g.maxO);
-          if (g.phaseT >= 40) { g.phase = 'hold'; g.phaseT = 0; }
-        } else if (g.phase === 'hold') {
-          if (g.phaseT >= 160 + Math.floor(rand(0, 120))) { g.phase = 'out'; g.phaseT = 0; }
-        } else {
-          g.o = Math.max(g.o - g.maxO / 50, 0);
-          if (g.o <= 0) { glyphs.splice(i, 1); continue; }
-        }
-        ctx!.globalAlpha = Math.min(1, g.o * alpha * (mobile ? 1.5 : 1));
-        ctx!.fillStyle = g.c;
-        ctx!.font = `${g.size}px ui-monospace, monospace`;
-        ctx!.fillText(g.sym, g.x, g.y);
       }
 
       ctx!.globalAlpha = 1;

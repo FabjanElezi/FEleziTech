@@ -16,6 +16,12 @@ export const metadata: Metadata = {
       'Websites, data dashboards, IT setup and database design. Free first consultation, price on request.',
     url: url('/services'),
   },
+  // The root layout sets the portfolio title for X/Twitter; override it here.
+  twitter: {
+    title: 'Services | Fabjan Elezi',
+    description:
+      'Websites, data dashboards, IT setup and database design. Free first consultation, price on request.',
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { SITE_HOST } from '@/lib/site';
+import { googleFont } from '@/lib/og';
 
 // The card LinkedIn, WhatsApp, Slack etc. show when someone shares the link.
 export const alt = 'Fabjan Elezi – Data Analytics & IT Systems';
@@ -11,23 +12,6 @@ export const contentType = 'image/png';
 const EYEBROW = 'M.SC. INFORMATION SYSTEMS · FH AACHEN';
 const TAGLINE = 'Data Analytics & IT Systems';
 const NOTE = 'Open to Werkstudent & internship roles · Aachen';
-
-/**
- * Space Grotesk is the site's heading font. Google Fonts serves a TTF (which
- * the image renderer needs) when asked for just the characters used here. If
- * the request fails the card still renders, in the built-in font.
- */
-async function spaceGrotesk(weight: number, text: string): Promise<ArrayBuffer | null> {
-  try {
-    const css = await fetch(
-      `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@${weight}&text=${encodeURIComponent(text)}`,
-    ).then((r) => r.text());
-    const src = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
-    return src ? await fetch(src).then((r) => r.arrayBuffer()) : null;
-  } catch {
-    return null;
-  }
-}
 
 // A fixed constellation in the spirit of the hero's network, drawn once.
 const NODES: [number, number][] = [
@@ -44,8 +28,8 @@ const EDGES: [number, number][] = [
 export default async function Image() {
   const allText = `Fabjan Elezi${EYEBROW}${TAGLINE}${NOTE}${SITE_HOST}`;
   const [bold, medium, photo, logo] = await Promise.all([
-    spaceGrotesk(700, allText),
-    spaceGrotesk(500, allText),
+    googleFont('Space Grotesk', 700, allText),
+    googleFont('Space Grotesk', 500, allText),
     readFile(join(process.cwd(), 'public/og-photo.jpg')),
     readFile(join(process.cwd(), 'public/logo.png')),
   ]);

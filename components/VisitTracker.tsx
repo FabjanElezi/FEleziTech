@@ -72,6 +72,8 @@ export default function VisitTracker() {
       tz,
       hardware,
       connection: nav.connection?.effectiveType ?? null,
+      // Set by headless and remote-controlled browsers.
+      wd: navigator.webdriver === true ? 1 : 0,
     });
 
     let sentView = false;

@@ -1,5 +1,5 @@
 import {
-  recordVisit, recordEngagement, visitorHash, isBot, parseAgent,
+  recordVisit, recordEngagement, visitorHash, arrivalBotReason, parseAgent,
   referrerHost, referrerUrl, cleanTag, clean, coords, primaryLang,
 } from '@/lib/visits';
 import { getAuthEmail } from '@/lib/auth-server';
@@ -9,14 +9,13 @@ export const dynamic = 'force-dynamic';
 const NO = () => new Response(null, { status: 204 });
 
 // Public endpoint: one row per page view, updated once when the visitor leaves.
-// Never stores the raw IP — it is only used in-memory to build a daily-rotating
-// pseudonymous hash.
+// Never stores the raw IP — it is only used in memory to build a daily-rotating
+// pseudonymous hash and to spot cloud/data-centre networks (bots).
 export async function POST(req: Request) {
   try {
     if (req.headers.get('dnt') === '1') return NO();
 
     const ua = req.headers.get('user-agent') ?? '';
-    if (isBot(ua)) return NO();
 
     // Never count the owner's own visits while signed in to Admin.
     if (await getAuthEmail()) return NO();
@@ -63,6 +62,8 @@ export async function POST(req: Request) {
       hardware: clean(body.hardware, 40),
       connection: clean(body.connection, 20),
       visitorHash: visitorHash(ip, ua),
+      // Bots are kept but marked, so the panel can hide or show them.
+      botReason: arrivalBotReason(ua, ip, body.wd === 1),
     });
 
     return NO();

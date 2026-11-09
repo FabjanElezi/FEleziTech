@@ -23,7 +23,7 @@ const COPY = {
       },
       {
         h: 'Your IP address is not stored',
-        p: 'It is used for two things in the moment the request arrives — to work out the approximate city, and to build a pseudonymous identifier — and is then discarded. The identifier is a SHA-256 hash of the IP address, the browser string, the date and a secret key. It cannot be reversed, and because the date is part of it, it changes every day. Nobody, including the site owner, can connect two visits on different days to the same person.',
+        p: 'It is used for three things in the moment the request arrives — to work out the approximate city, to build a pseudonymous identifier, and to check whether it belongs to a cloud data centre (then the visit is marked as a bot) — and is then discarded. The identifier is a SHA-256 hash of the IP address, the browser string, the date and a secret key. It cannot be reversed, and because the date is part of it, it changes every day. Nobody, including the site owner, can connect two visits on different days to the same person.',
       },
       {
         h: 'Opening the CV',
@@ -72,7 +72,7 @@ const COPY = {
       },
       {
         h: 'Ihre IP-Adresse wird nicht gespeichert',
-        p: 'Sie wird im Moment der Anfrage für zwei Dinge verwendet — die ungefähre Stadt zu bestimmen und eine pseudonyme Kennung zu bilden — und danach verworfen. Die Kennung ist ein SHA-256-Hash aus IP-Adresse, Browser-Kennung, Datum und einem geheimen Schlüssel. Sie ist nicht umkehrbar und ändert sich täglich, weil das Datum Teil davon ist. Niemand, auch nicht der Betreiber, kann zwei Besuche an verschiedenen Tagen derselben Person zuordnen.',
+        p: 'Sie wird im Moment der Anfrage für drei Dinge verwendet — die ungefähre Stadt zu bestimmen, eine pseudonyme Kennung zu bilden und zu prüfen, ob sie zu einem Cloud-Rechenzentrum gehört (dann wird der Besuch als Bot markiert) — und danach verworfen. Die Kennung ist ein SHA-256-Hash aus IP-Adresse, Browser-Kennung, Datum und einem geheimen Schlüssel. Sie ist nicht umkehrbar und ändert sich täglich, weil das Datum Teil davon ist. Niemand, auch nicht der Betreiber, kann zwei Besuche an verschiedenen Tagen derselben Person zuordnen.',
       },
       {
         h: 'Öffnen des Lebenslaufs',
@@ -121,7 +121,7 @@ const COPY = {
       },
       {
         h: 'Adresa juaj IP nuk ruhet',
-        p: 'Përdoret në çastin e kërkesës për dy gjëra — për të përcaktuar qytetin e përafërt dhe për të ndërtuar një identifikues pseudonim — dhe pastaj hidhet. Identifikuesi është një hash SHA-256 i adresës IP, i të dhënave të shfletuesit, i datës dhe i një çelësi sekret. Nuk mund të kthehet mbrapsht dhe ndryshon çdo ditë, sepse data është pjesë e tij. Askush, as pronari i faqes, nuk mund t’i lidhë dy vizita në ditë të ndryshme me të njëjtin person.',
+        p: 'Përdoret në çastin e kërkesës për tri gjëra — për të përcaktuar qytetin e përafërt, për të ndërtuar një identifikues pseudonim dhe për të kontrolluar nëse vjen nga një qendër të dhënash në cloud (atëherë vizita shënohet si bot) — dhe pastaj hidhet. Identifikuesi është një hash SHA-256 i adresës IP, i të dhënave të shfletuesit, i datës dhe i një çelësi sekret. Nuk mund të kthehet mbrapsht dhe ndryshon çdo ditë, sepse data është pjesë e tij. Askush, as pronari i faqes, nuk mund t’i lidhë dy vizita në ditë të ndryshme me të njëjtin person.',
       },
       {
         h: 'Hapja e CV-së',

@@ -5,13 +5,14 @@ import { query } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 const NO_STORE = { headers: { 'Cache-Control': 'no-store' } };
 
-// Admin only: aggregated visit statistics.
-export async function GET() {
+// Admin only: aggregated visit statistics. Bots are left out unless ?bots=1.
+export async function GET(req: Request) {
   const auth = await getAuthEmail();
   if (!auth) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
+  const includeBots = new URL(req.url).searchParams.get('bots') === '1';
   try {
-    return Response.json(await getVisitStats(), NO_STORE);
+    return Response.json(await getVisitStats(includeBots), NO_STORE);
   } catch {
     return Response.json({ error: 'Could not load visit statistics' }, { status: 500 });
   }

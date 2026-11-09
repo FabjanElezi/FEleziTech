@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { query } from './db';
+import { dataCentre } from './datacenter';
 
 // Visit tracking that deliberately stores no raw IP address.
 // Each visitor is identified by a salted hash of IP + user agent that is rotated
@@ -42,6 +43,8 @@ export async function ensureVisitsTable() {
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS dwell_s    INTEGER`);
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS scroll_pct INTEGER`);
     await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS actions    TEXT`);
+    // Why the visit looks automated (crawler, data centre, ...); NULL for a person.
+    await query(`ALTER TABLE visits ADD COLUMN IF NOT EXISTS bot_reason TEXT`);
     await query('CREATE INDEX IF NOT EXISTS visits_ts_idx ON visits (ts DESC)');
     await query('CREATE INDEX IF NOT EXISTS visits_visitor_idx ON visits (visitor_hash)');
     await query('CREATE INDEX IF NOT EXISTS visits_view_idx ON visits (view_id)');
@@ -70,6 +73,7 @@ export async function ensureCvTable() {
         visitor_hash TEXT NOT NULL
       )
     `);
+    await query(`ALTER TABLE cv_opens ADD COLUMN IF NOT EXISTS bot_reason TEXT`);
     await query('CREATE INDEX IF NOT EXISTS cv_opens_ts_idx ON cv_opens (ts DESC)');
     cvReady = true;
   } catch {
@@ -81,14 +85,15 @@ export async function ensureCvTable() {
 export async function recordCvOpen(v: {
   country: string | null; region: string | null; city: string | null;
   refTag: string | null; device: string; browser: string; os: string; visitorHash: string;
+  botReason: string | null;
 }) {
   await ensureCvTable();
   await query(
-    `INSERT INTO cv_opens (country, region, city, ref_tag, device, browser, os, visitor_hash)
-     SELECT $1,$2,$3,$4,$5,$6,$7,$8
+    `INSERT INTO cv_opens (country, region, city, ref_tag, device, browser, os, visitor_hash, bot_reason)
+     SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9
       WHERE (SELECT count(*) FROM cv_opens
               WHERE visitor_hash = $8 AND ts > now() - interval '1 hour') < 40`,
-    [v.country, v.region, v.city, v.refTag, v.device, v.browser, v.os, v.visitorHash]
+    [v.country, v.region, v.city, v.refTag, v.device, v.browser, v.os, v.visitorHash, v.botReason]
   );
 }
 
@@ -110,11 +115,104 @@ export function visitorHash(ip: string, userAgent: string) {
   return createHash('sha256').update(`${ip}|${userAgent}|${day}|${secret}`).digest('hex').slice(0, 32);
 }
 
-const BOT = /bot|crawler|spider|crawling|slurp|bingpreview|headless|lighthouse|pingdom|curl|wget|python-requests|node-fetch|axios|monitor|preview/i;
+// ── Bots ─────────────────────────────────────────────────────
+// Bots are recorded but marked, so the panel can hide them by default and
+// still show them on request.
+
+/** Crawlers and link previews that say who they are. First match wins. */
+const CRAWLERS: [RegExp, string][] = [
+  [/facebookexternalhit|facebookcatalog|meta-external/i, 'Meta link preview'],
+  [/googlebot|google-inspectiontool|googleother|adsbot-google|mediapartners-google|apis-google|feedfetcher-google|google-read-aloud|storebot-google/i, 'Google crawler'],
+  [/bingbot|bingpreview|msnbot|adidxbot/i, 'Bing crawler'],
+  [/linkedinbot/i, 'LinkedIn link preview'],
+  [/whatsapp/i, 'WhatsApp link preview'],
+  [/telegrambot/i, 'Telegram link preview'],
+  [/twitterbot/i, 'X link preview'],
+  [/slackbot|slack-imgproxy/i, 'Slack link preview'],
+  [/discordbot/i, 'Discord link preview'],
+  [/applebot/i, 'Apple crawler'],
+  [/duckduckbot|duckassistbot/i, 'DuckDuckGo crawler'],
+  [/yandex/i, 'Yandex crawler'],
+  [/baiduspider/i, 'Baidu crawler'],
+  [/gptbot|chatgpt-user|oai-searchbot/i, 'OpenAI crawler'],
+  [/claudebot|claude-user|claude-searchbot|anthropic-ai/i, 'Anthropic crawler'],
+  [/perplexitybot|perplexity-user/i, 'Perplexity crawler'],
+  [/ccbot/i, 'Common Crawl'],
+  [/bytespider/i, 'ByteDance crawler'],
+  [/amazonbot/i, 'Amazon crawler'],
+  [/ahrefs|semrush|mj12bot|dotbot|petalbot|seznambot|screaming frog/i, 'SEO crawler'],
+  [/headlesschrome|phantomjs|puppeteer|playwright|selenium|lighthouse|pagespeed|gtmetrix/i, 'Headless browser'],
+  [/curl|wget|python|node-fetch|axios|go-http-client|okhttp|java\/|libwww|httpclient|scrapy/i, 'Script'],
+  [/uptime|pingdom|statuscake|monitor/i, 'Uptime monitor'],
+  [/bot|crawler|spider|crawling|slurp|preview/i, 'Other crawler'],
+];
+
+/** Friendly name of a self-declared crawler, or null for a normal browser. */
+export function crawlerName(userAgent: string) {
+  if (!userAgent) return 'No browser name';
+  for (const [re, name] of CRAWLERS) if (re.test(userAgent)) return name;
+  return null;
+}
 
 export function isBot(userAgent: string) {
-  return !userAgent || BOT.test(userAgent);
+  return crawlerName(userAgent) !== null;
 }
+
+/**
+ * What can be told the moment a request arrives. The IP address is only
+ * compared against cloud networks here, in memory; just the provider's name
+ * is kept.
+ */
+export function arrivalBotReason(userAgent: string, ip: string, automated = false) {
+  const crawler = crawlerName(userAgent);
+  if (crawler) return crawler;
+  if (automated) return 'Automated browser';
+  const dc = dataCentre(ip);
+  return dc ? `Data centre · ${dc}` : null;
+}
+
+/** Small towns that are mostly server farms (AWS, Google, Meta, Microsoft). */
+const DATA_CENTRE_TOWNS: [country: string, city: string, region?: string][] = [
+  ['US', 'Boardman'], ['US', 'Council Bluffs'], ['US', 'Prineville'], ['US', 'Forest City'],
+  ['US', 'Springfield', 'NE'], ['US', 'Papillion'], ['US', 'Ashburn'], ['US', 'Floris'],
+  ['US', 'Sterling', 'VA'], ['US', 'The Dalles'], ['US', 'Altoona', 'IA'], ['US', 'Los Lunas'],
+  ['US', 'Eagle Mountain'], ['US', 'New Albany', 'OH'], ['US', 'Moncks Corner'], ['US', 'Lenoir'],
+  ['US', 'Pryor'], ['US', 'Quincy', 'WA'], ['NL', 'Eemshaven'], ['NL', 'Middenmeer'],
+  ['FI', 'Hamina'], ['BE', 'Saint-Ghislain'], ['IE', 'Clonee'], ['SE', 'Luleå'],
+];
+const townSql = DATA_CENTRE_TOWNS
+  .map(([c, city, r]) => `(country = '${c}' AND city = '${city}'${r ? ` AND region = '${r}'` : ''})`)
+  .join(' OR ');
+
+/**
+ * Why a stored visit looks automated, or NULL for a person. Read from the
+ * columns at query time, so new rules also apply to older visits.
+ *  - screen 800x600 / 2000x2000: what headless Chrome and Meta's renderer report
+ *  - UTC as the clock: servers; people get Europe/London, Europe/Berlin, ...
+ *  - memory size from Safari, Firefox or any iPhone: those never report it, so
+ *    the browser name is fake
+ *  - a desktop "window" exactly as big as the screen: no browser bar, headless
+ */
+const VISIT_BOT_SQL = `(CASE
+  WHEN bot_reason IS NOT NULL THEN bot_reason
+  WHEN ${townSql} THEN 'Data-centre town'
+  WHEN screen IN ('800x600', '2000x2000') THEN 'Headless browser screen'
+  WHEN tz IN ('UTC', 'Etc/UTC', 'Etc/GMT', 'Etc/Unknown') THEN 'Server time zone'
+  WHEN hardware LIKE '%GB%' AND (os LIKE 'iOS%' OR browser LIKE 'Safari%' OR browser LIKE 'Firefox%') THEN 'Fake browser details'
+  WHEN browser ~ '^(Chrome|Firefox|Edge) [0-9]{1,2}$' THEN 'Outdated or fake browser'
+  WHEN device = 'Desktop' AND screen IS NOT NULL AND viewport = screen THEN 'Window as big as the screen'
+  WHEN dwell_s < 2 AND coalesce(scroll_pct, 0) = 0 THEN 'Left within 2 s, no scroll'
+END)`;
+
+const CV_BOT_SQL = `(CASE
+  WHEN bot_reason IS NOT NULL THEN bot_reason
+  WHEN ${townSql} THEN 'Data-centre town'
+  WHEN browser ~ '^(Chrome|Firefox|Edge) [0-9]{1,2}$' THEN 'Outdated or fake browser'
+END)`;
+
+/** The table with a "bot" column added, and the bots left out unless asked for. */
+const scored = (table: string, rule: string, includeBots: boolean) =>
+  `(SELECT * FROM (SELECT *, ${rule} AS bot FROM ${table}) s${includeBots ? '' : ' WHERE s.bot IS NULL'})`;
 
 const ver = (re: RegExp, ua: string) => {
   const m = ua.match(re);
@@ -245,6 +343,7 @@ export type VisitInput = {
   hardware: string | null;
   connection: string | null;
   visitorHash: string;
+  botReason: string | null;
 };
 
 export async function recordVisit(v: VisitInput) {
@@ -254,13 +353,13 @@ export async function recordVisit(v: VisitInput) {
   await query(
     `INSERT INTO visits
        (view_id, path, referrer, referrer_url, ref_tag, country, region, city, coords, tz, lang,
-        device, browser, os, screen, viewport, hardware, connection, visitor_hash)
-     SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19
+        device, browser, os, screen, viewport, hardware, connection, visitor_hash, bot_reason)
+     SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20
       WHERE (SELECT count(*) FROM visits
               WHERE visitor_hash = $19 AND ts > now() - interval '1 hour') < 120`,
     [v.viewId, v.path.slice(0, 200), v.referrer, v.referrerUrl, v.refTag, v.country, v.region, v.city,
      v.coords, v.tz, v.lang, v.device, v.browser, v.os, v.screen, v.viewport, v.hardware,
-     v.connection, v.visitorHash]
+     v.connection, v.visitorHash, v.botReason]
   );
   // Occasional cleanup: keep half a year, no more.
   if (Math.random() < 0.02) {
@@ -283,13 +382,17 @@ export async function recordEngagement(viewId: string, dwell: number, scroll: nu
 
 export type VisitStats = Awaited<ReturnType<typeof getVisitStats>>;
 
-export async function getVisitStats() {
+/** Visit statistics. Bots are left out unless includeBots is set. */
+export async function getVisitStats(includeBots = false) {
   await ensureVisitsTable();
   const n = (v: unknown) => Number(v ?? 0);
 
   await ensureCvTable();
 
-  const [totals, daily, paths, refs, tags, places, systems, langs, cv, cvRecent, recent] = await Promise.all([
+  const V = scored('visits', VISIT_BOT_SQL, includeBots);
+  const C = scored('cv_opens', CV_BOT_SQL, includeBots);
+
+  const [totals, daily, paths, refs, tags, places, systems, langs, cv, cvRecent, recent, bots, cvBots] = await Promise.all([
     query(`
       SELECT
         count(*)                                                          AS views,
@@ -300,48 +403,61 @@ export async function getVisitStats() {
         count(DISTINCT visitor_hash) FILTER (WHERE ts > now() - interval '7 days')   AS visitors_7d,
         coalesce(round(avg(dwell_s)    FILTER (WHERE dwell_s    > 0)), 0) AS avg_dwell,
         coalesce(round(avg(scroll_pct) FILTER (WHERE scroll_pct > 0)), 0) AS avg_scroll
-      FROM visits
+      FROM ${V} visits
     `),
     query(`
       SELECT to_char(d.day, 'YYYY-MM-DD') AS day,
              count(v.id)                   AS views,
              count(DISTINCT v.visitor_hash) AS visitors
       FROM generate_series(current_date - interval '13 days', current_date, interval '1 day') AS d(day)
-      LEFT JOIN visits v ON v.ts >= d.day AND v.ts < d.day + interval '1 day'
+      LEFT JOIN ${V} v ON v.ts >= d.day AND v.ts < d.day + interval '1 day'
       GROUP BY d.day ORDER BY d.day
     `),
-    query(`SELECT path, count(*) AS views FROM visits GROUP BY path ORDER BY views DESC LIMIT 8`),
+    query(`SELECT path, count(*) AS views FROM ${V} visits GROUP BY path ORDER BY views DESC LIMIT 8`),
     query(`SELECT referrer, count(*) AS views, count(DISTINCT visitor_hash) AS visitors
-           FROM visits GROUP BY 1 ORDER BY views DESC LIMIT 10`),
+           FROM ${V} visits GROUP BY 1 ORDER BY views DESC LIMIT 10`),
     query(`SELECT ref_tag, count(*) AS views, count(DISTINCT visitor_hash) AS visitors,
                   to_char(max(ts), 'YYYY-MM-DD HH24:MI') AS last_seen
-           FROM visits WHERE ref_tag IS NOT NULL
+           FROM ${V} visits WHERE ref_tag IS NOT NULL
            GROUP BY 1 ORDER BY views DESC LIMIT 15`),
     query(`SELECT coalesce(country, '??') AS country, city, region,
                   count(*) AS views, count(DISTINCT visitor_hash) AS visitors
-           FROM visits GROUP BY 1,2,3 ORDER BY views DESC LIMIT 12`),
+           FROM ${V} visits GROUP BY 1,2,3 ORDER BY views DESC LIMIT 12`),
     query(`SELECT coalesce(device, 'Unknown') AS device, coalesce(os, 'Unknown') AS os,
                   count(*) AS views
-           FROM visits GROUP BY 1,2 ORDER BY views DESC LIMIT 10`),
-    query(`SELECT lang, count(*) AS views FROM visits
+           FROM ${V} visits GROUP BY 1,2 ORDER BY views DESC LIMIT 10`),
+    query(`SELECT lang, count(*) AS views FROM ${V} visits
            WHERE lang IS NOT NULL GROUP BY 1 ORDER BY views DESC LIMIT 8`),
     query(`SELECT count(*) AS opens,
                   count(DISTINCT visitor_hash) AS people,
                   count(*) FILTER (WHERE ts > now() - interval '7 days') AS opens_7d
-           FROM cv_opens`),
+           FROM ${C} cv_opens`),
     query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, country, region, city,
-                  ref_tag, device, browser, os
-           FROM cv_opens ORDER BY ts DESC LIMIT 20`),
+                  ref_tag, device, browser, os, bot
+           FROM ${C} cv_opens ORDER BY ts DESC LIMIT 20`),
     query(`SELECT to_char(ts, 'YYYY-MM-DD HH24:MI') AS at, path, country, region, city, coords, tz, lang,
                   device, browser, os, screen, viewport, hardware, connection,
-                  referrer, referrer_url, ref_tag, dwell_s, scroll_pct, actions
-           FROM visits ORDER BY ts DESC LIMIT 30`),
+                  referrer, referrer_url, ref_tag, dwell_s, scroll_pct, actions, bot
+           FROM ${V} visits ORDER BY ts DESC LIMIT 30`),
+    // Always counted, so the panel can say how many were hidden and why.
+    query(`SELECT bot AS reason, count(*) AS views
+           FROM (SELECT ${VISIT_BOT_SQL} AS bot FROM visits) b
+           WHERE bot IS NOT NULL GROUP BY 1 ORDER BY views DESC`),
+    query(`SELECT count(*) AS opens FROM cv_opens WHERE ${CV_BOT_SQL} IS NOT NULL`),
   ]);
 
   const t = totals.rows[0] ?? {};
   const str = (v: unknown) => (v == null ? null : String(v));
 
+  const botReasons = bots.rows.map((r) => ({ reason: String(r.reason), views: n(r.views) }));
+
   return {
+    includeBots,
+    bots: {
+      views: botReasons.reduce((sum, r) => sum + r.views, 0),
+      cvOpens: n(cvBots.rows[0]?.opens),
+      reasons: botReasons,
+    },
     totals: {
       views: n(t.views), visitors: n(t.visitors),
       views24h: n(t.views_24h), visitors24h: n(t.visitors_24h),
@@ -370,6 +486,7 @@ export async function getVisitStats() {
       recent: cvRecent.rows.map((r) => ({
         at: String(r.at), country: str(r.country), region: str(r.region), city: str(r.city),
         tag: str(r.ref_tag), device: String(r.device ?? ''), browser: String(r.browser ?? ''), os: str(r.os),
+        bot: str(r.bot),
       })),
     },
     recent: recent.rows.map((r) => ({
@@ -385,6 +502,7 @@ export async function getVisitStats() {
       dwell: r.dwell_s == null ? null : n(r.dwell_s),
       scroll: r.scroll_pct == null ? null : n(r.scroll_pct),
       actions: str(r.actions),
+      bot: str(r.bot),
     })),
   };
 }

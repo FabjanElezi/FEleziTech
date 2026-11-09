@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, Fragment } from 'react';
 import {
   RefreshCw, Globe, Monitor, Link2, FileText, Tag, MapPin,
-  Languages, Download, ChevronDown, Clock, Trash2,
+  Languages, Download, ChevronDown, Clock, Trash2, Bot,
 } from 'lucide-react';
 import { SITE_HOST } from '@/lib/site';
 
@@ -15,9 +15,12 @@ type Recent = {
   hardware: string | null; connection: string | null;
   source: string; referrerUrl: string | null; tag: string | null;
   dwell: number | null; scroll: number | null; actions: string | null;
+  bot: string | null;
 };
 
 type Stats = {
+  includeBots: boolean;
+  bots: { views: number; cvOpens: number; reasons: { reason: string; views: number }[] };
   totals: {
     views: number; visitors: number; views24h: number; visitors24h: number;
     views7d: number; visitors7d: number; avgDwell: number; avgScroll: number;
@@ -34,6 +37,7 @@ type Stats = {
     recent: {
       at: string; country: string | null; region: string | null; city: string | null;
       tag: string | null; device: string; browser: string; os: string | null;
+      bot: string | null;
     }[];
   };
   recent: Recent[];
@@ -46,6 +50,16 @@ const flag = (cc: string) =>
 
 const place = (p: { country: string | null; city: string | null; region: string | null }) =>
   [p.city, p.region && p.region !== p.city ? p.region : null, p.country].filter(Boolean).join(', ');
+
+const BOT_TINT = { background: 'rgba(245,158,11,0.12)', color: '#fbbf24' };
+
+function BotTag({ reason }: { reason: string }) {
+  return (
+    <span className="ml-1.5 px-1.5 py-px rounded text-[10px] font-medium" style={BOT_TINT} title={reason}>
+      bot
+    </span>
+  );
+}
 
 const secs = (s: number | null) => {
   if (s == null || s <= 0) return '—';
@@ -106,10 +120,11 @@ export default function VisitorsPanel() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState<number | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [showBots, setShowBots] = useState(false);
 
   const fetchStats = useCallback(async (signal?: AbortSignal) => {
     try {
-      const r = await fetch('/api/visits', { cache: 'no-store', signal });
+      const r = await fetch(showBots ? '/api/visits?bots=1' : '/api/visits', { cache: 'no-store', signal });
       if (!r.ok) throw new Error();
       const data = await r.json();
       if (signal?.aborted) return;
@@ -121,7 +136,13 @@ export default function VisitorsPanel() {
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
-  }, []);
+  }, [showBots]);
+
+  const toggleBots = () => {
+    setLoading(true);
+    setOpen(null);
+    setShowBots((b) => !b);
+  };
 
   const reset = useCallback(async () => {
     setConfirmReset(false);
@@ -157,11 +178,12 @@ export default function VisitorsPanel() {
 
   const maxDay = Math.max(1, ...stats.daily.map((d) => d.views));
   const noData = stats.totals.views === 0;
+  const botCount = stats.bots.views + stats.bots.cvOpens;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="text-sm text-slate-500 space-y-1">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
+        <div className="text-sm text-slate-500 space-y-1 min-w-0">
           <p>
             Page views on the public site. No cookies and no IP address stored — only what a
             browser sends anyway, plus how long the page was open.
@@ -172,8 +194,29 @@ export default function VisitorsPanel() {
             <span className="text-slate-400">{SITE_HOST}/?notrack=1</span> once and that
             browser stops counting for good (<span className="text-slate-400">?notrack=0</span> undoes it).
           </p>
+          {botCount > 0 && (
+            <p className="text-xs flex items-center gap-1.5" style={{ color: showBots ? '#fbbf24' : undefined }}>
+              <Bot size={12} className="shrink-0" />
+              {showBots
+                ? <span>Bots included: {botCount} marked <span className="px-1 rounded" style={BOT_TINT}>bot</span> below.</span>
+                : <span className="text-slate-600">{botCount} bot {botCount === 1 ? 'visit' : 'visits'} hidden (crawlers, link previews, data centres, headless browsers).</span>}
+            </p>
+          )}
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <button
+            role="switch"
+            aria-checked={showBots}
+            onClick={toggleBots}
+            className="btn-ghost text-xs flex items-center gap-2"
+            style={{ padding: '6px 12px', ...(showBots ? { color: '#fcd34d', borderColor: 'rgba(251,191,36,0.4)' } : {}) }}
+            title="Crawlers, link previews, cloud data centres and headless browsers"
+          >
+            <Bot size={13} /> Show bots
+            <span className="relative inline-block w-7 h-4 rounded-full transition-colors" style={{ background: showBots ? '#f59e0b' : 'rgba(255,255,255,0.15)' }}>
+              <span className="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform" style={{ transform: showBots ? 'translateX(12px)' : 'none' }} />
+            </span>
+          </button>
           {confirmReset ? (
             <>
               <button onClick={reset} className="btn-ghost text-xs" style={{ padding: '6px 12px', color: '#fca5a5', borderColor: 'rgba(248,113,113,0.4)' }}>
@@ -201,7 +244,9 @@ export default function VisitorsPanel() {
 
       {noData && (
         <p className="text-sm text-slate-400 rounded-xl p-4" style={{ background: 'rgba(8,145,178,0.07)', border: '1px solid rgba(8,145,178,0.2)' }}>
-          No visits recorded yet. Open the site in a normal browser tab and come back in a minute.
+          {botCount > 0 && !showBots
+            ? 'No visits from people yet, only bots. Switch on "Show bots" to see them.'
+            : 'No visits recorded yet. Open the site in a normal browser tab and come back in a minute.'}
         </p>
       )}
 
@@ -296,7 +341,7 @@ export default function VisitorsPanel() {
               <tbody>
                 {stats.cv.recent.map((c, i) => (
                   <tr key={i} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">{c.at}</td>
+                    <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">{c.at}{c.bot && <BotTag reason={c.bot} />}</td>
                     <td className="py-1.5 pr-4 text-slate-400 whitespace-nowrap">
                       {c.country ? `${flag(c.country)} ${place(c) || c.country}` : '—'}
                     </td>
@@ -315,6 +360,10 @@ export default function VisitorsPanel() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {showBots && (
+          <List icon={<Bot size={12} />} title="Why marked as bot" empty="No bots"
+                rows={stats.bots.reasons.map((r) => ({ label: r.reason, value: r.views }))} />
+        )}
         <List icon={<Link2 size={12} />} title="Where they came from" empty="Nothing yet"
               rows={stats.sources.map((s) => ({ label: s.label, value: s.views, sub: `${s.visitors} visitors` }))} />
         <List icon={<MapPin size={12} />} title="Places" empty="Nothing yet"
@@ -349,12 +398,13 @@ export default function VisitorsPanel() {
                   <Fragment key={i}>
                     <tr onClick={() => setOpen(open === i ? null : i)}
                         className="cursor-pointer hover:bg-white/[0.03]"
-                        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                        style={{ borderTop: '1px solid rgba(255,255,255,0.05)', opacity: v.bot ? 0.75 : 1 }}>
                       <td className="py-1.5 pr-4 text-slate-500 whitespace-nowrap">
                         <span className="inline-flex items-center gap-1">
                           <ChevronDown size={11} className="transition-transform" style={{ transform: open === i ? 'none' : 'rotate(-90deg)' }} />
                           {v.at}
                         </span>
+                        {v.bot && <BotTag reason={v.bot} />}
                       </td>
                       <td className="py-1.5 pr-4 text-slate-300 truncate max-w-[130px]">{v.path}</td>
                       <td className="py-1.5 pr-4 text-slate-400 truncate max-w-[160px]" title={v.referrerUrl ?? undefined}>
@@ -373,6 +423,7 @@ export default function VisitorsPanel() {
                       <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                         <td colSpan={6} className="p-3" style={{ background: 'rgba(8,145,178,0.05)' }}>
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                            <Detail label="Marked as bot" value={v.bot} />
                             <Detail label="Operating system" value={v.os} />
                             <Detail label="Browser" value={v.browser} />
                             <Detail label="Screen" value={v.screen} />

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import { recordCvOpen, visitorHash, isBot, parseAgent, tagFromReferer } from '@/lib/visits';
+import { recordCvOpen, visitorHash, arrivalBotReason, parseAgent, tagFromReferer } from '@/lib/visits';
 import { getAuthEmail } from '@/lib/auth-server';
 
 export async function GET(req: Request) {
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   try {
     const ua = req.headers.get('user-agent') ?? '';
     const owner = await getAuthEmail();   // the owner's own opens don't count
-    if (!owner && !isBot(ua) && req.headers.get('dnt') !== '1') {
+    if (!owner && req.headers.get('dnt') !== '1') {
       const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
       const { device, browser, os } = parseAgent(ua);
       const city = req.headers.get('x-vercel-ip-city');
@@ -38,6 +38,8 @@ export async function GET(req: Request) {
         refTag: tagFromReferer(req.headers.get('referer')),
         device, browser, os,
         visitorHash: visitorHash(ip, ua),
+        // Link previews (WhatsApp, LinkedIn, ...) fetch the CV too: kept, but marked.
+        botReason: arrivalBotReason(ua, ip),
       });
     }
   } catch {

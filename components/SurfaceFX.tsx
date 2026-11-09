@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  *
  *  - a specular highlight follows the cursor across cards and buttons
  *  - cards lean towards the cursor, with real perspective
- *  - buttons drift towards the cursor when it comes close
+ *  - buttons drift towards the cursor when it comes close (not in Admin)
  *
  * Everything is done by writing CSS custom properties, never `transform`, so
  * nothing here can fight framer-motion for control of an element.
@@ -112,10 +112,16 @@ export default function SurfaceFX() {
         }
       }
 
-      // 3: buttons drift towards a cursor that comes near.
+      // 3: buttons drift towards a cursor that comes near (public site only;
+      // in Admin, buttons stay where they are).
+      const still = window.location.pathname.startsWith('/admin');
       for (const b of magnets) {
-        const r = b.getBoundingClientRect();
-        if (!r.width) continue;
+        const r = still ? null : b.getBoundingClientRect();
+        if (!r || !r.width) {
+          b.style.removeProperty('--magx');
+          b.style.removeProperty('--magy');
+          continue;
+        }
         const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
         const dx = mx - cx, dy = my - cy;
         const near = Math.max(0, 1 - Math.hypot(dx, dy) / (Math.max(r.width, r.height) / 2 + REACH));

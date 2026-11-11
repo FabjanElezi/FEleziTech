@@ -924,6 +924,32 @@ html.theme-transitioning .input-dark {
 [data-theme="light"] .hj-step.is-on b { color: #0e7490; }
 [data-theme="light"] .hj-step i { background: #0891b2; box-shadow: none; }
 
+/* ── Experience: the explanation under an entry opens on "Read more" ─────── */
+
+.exp-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 0;
+  border: 0; background: none;
+  font: inherit; font-size: 0.75rem; font-weight: 600;
+  color: #22d3ee;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.exp-toggle:hover { color: #a5f3fc; }
+.exp-toggle:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; border-radius: 4px; }
+.exp-toggle svg { transition: transform 0.3s ease; }
+.exp-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+@media (pointer: coarse) { .exp-toggle { min-height: 36px; } }
+/* opens by growing from zero height, without measuring anything */
+.exp-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+.exp-more > div { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility 0s linear 0.32s; }
+.exp-more[data-open] { grid-template-rows: 1fr; }
+.exp-more[data-open] > div { visibility: visible; transition-delay: 0s; }
+@media (prefers-reduced-motion: reduce) { .exp-more, .exp-more > div, .exp-toggle svg { transition: none; } }
+@media print { .exp-more { grid-template-rows: 1fr; } .exp-more > div { visibility: visible; } .exp-toggle { display: none; } }
+[data-theme="light"] .exp-toggle { color: #0e7490; }
+[data-theme="light"] .exp-toggle:hover { color: #155e75; }
+
 /* Body copy inside cards: one step brighter than the meta text, so it reads easily on the dark page */
 .text-body { color: #94a3b8; }
 [data-theme="light"] .text-body { color: #475569; }

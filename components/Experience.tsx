@@ -1,9 +1,9 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
 import { motion } from 'framer-motion';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useId } from 'react';
 import dynamic from 'next/dynamic';
-import { Briefcase, GraduationCap, Calendar, MapPin, Award, Trophy } from 'lucide-react';
+import { Briefcase, GraduationCap, Calendar, MapPin, Award, Trophy, ChevronDown } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 
@@ -21,8 +21,120 @@ interface TimelineProps {
   onCertificate: (url: string) => void;
 }
 
+interface EntryProps {
+  exp: Exp;
+  index: number;
+  dotClass: string;
+  dotStyle: React.CSSProperties;
+  onCertificate: (url: string) => void;
+}
+
+/**
+ * One card on a timeline. Closed, it says what, where and when, so the list
+ * reads at a glance. The explanation opens on "Read more".
+ */
+function TimelineEntry({ exp, index, dotClass, dotStyle, onCertificate }: EntryProps) {
+  const { t, L } = useLang();
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  // Descriptions are stored as "Place — what he did there".
+  const text = L(exp, 'description') || '';
+  const cut = text.indexOf(' — ');
+  const place = cut >= 0 ? text.slice(0, cut) : '';
+  const detail = cut >= 0 ? text.slice(cut + 3) : text;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      className="relative"
+    >
+      <div
+        className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 ${dotClass}`}
+        style={dotStyle}
+      />
+      <div className="glass rounded-xl p-4 sm:px-5 glass-hover relative">
+        <CornerAccents size={9} inset={7} />
+        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+          <div className="min-w-0">
+            <p className="font-semibold text-white text-sm leading-snug">{L(exp, 'role')}</p>
+            <p className="text-cyan-400 text-sm">{exp.company}</p>
+          </div>
+          {/* One line on phones, a right-hand column from 640px */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 sm:flex-col sm:items-end sm:gap-1 shrink-0">
+            <span className="flex items-center gap-1 text-xs text-slate-500">
+              <Calendar size={11} />
+              {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
+            </span>
+            {place && (
+              <span className="flex items-center gap-1 text-xs text-slate-600">
+                <MapPin size={11} />
+                {place}
+              </span>
+            )}
+          </div>
+        </div>
+        {(detail || exp.certificateUrl) && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {detail && (
+              <button
+                type="button"
+                className="exp-toggle"
+                aria-expanded={open}
+                aria-controls={panelId}
+                onClick={() => setOpen((v) => !v)}
+              >
+                {open ? t('experience.less') : t('experience.more')}
+                <ChevronDown size={13} aria-hidden="true" />
+              </button>
+            )}
+            {exp.certificateUrl && (
+              <button
+                onClick={() => onCertificate(exp.certificateUrl!)}
+                className="cert-btn flex items-center gap-1.5 text-xs font-semibold transition-all"
+                style={{
+                  color: '#f0c040',
+                  background: 'rgba(212,175,55,0.15)',
+                  border: '1px solid rgba(212,175,55,0.55)',
+                  borderRadius: '6px',
+                  padding: '4px 10px',
+                  boxShadow: '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)',
+                  textShadow: '0 0 8px rgba(212,175,55,0.5)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(212,175,55,0.25)';
+                  e.currentTarget.style.borderColor = 'rgba(212,175,55,0.85)';
+                  e.currentTarget.style.boxShadow = '0 0 18px rgba(212,175,55,0.45), 0 0 36px rgba(212,175,55,0.18)';
+                  e.currentTarget.style.textShadow = '0 0 12px rgba(212,175,55,0.8)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(212,175,55,0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(212,175,55,0.55)';
+                  e.currentTarget.style.boxShadow = '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)';
+                  e.currentTarget.style.textShadow = '0 0 8px rgba(212,175,55,0.5)';
+                }}
+              >
+                <Award size={12} /> {t('experience.certificate')}
+              </button>
+            )}
+          </div>
+        )}
+        {detail && (
+          <div id={panelId} className="exp-more" data-open={open ? '' : undefined} aria-hidden={!open}>
+            <div>
+              <p className="text-body text-xs sm:text-sm pt-3 leading-relaxed">{detail}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 function Timeline({ items, kind, onCertificate }: TimelineProps) {
-    const { t, L } = useLang();
+    const { t } = useLang();
     const label     = t(`experience.${kind}`);
     const isWork    = kind === 'work';
     const isAward   = kind === 'award';
@@ -46,78 +158,9 @@ function Timeline({ items, kind, onCertificate }: TimelineProps) {
       </h3>
       <div className="relative">
         <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: lineColor }} />
-        <div className="space-y-10 pl-6">
+        <div className="space-y-4 sm:space-y-5 pl-6">
           {items.map((exp, i) => (
-            <motion.div
-              key={exp.id}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="relative"
-            >
-              <div
-                className={`absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 ${dotClass}`}
-                style={dotStyle}
-              />
-              <div className="glass rounded-xl p-4 sm:p-5 glass-hover relative">
-                <CornerAccents size={9} inset={7} />
-                <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 mb-1">
-                  <div className="min-w-0">
-                    <p className="font-semibold text-white text-sm leading-snug">{L(exp, 'role')}</p>
-                    <p className="text-cyan-400 text-sm">{exp.company}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className="flex items-center gap-1 text-xs text-slate-500">
-                      <Calendar size={11} />
-                      {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
-                    </span>
-                    {L(exp, 'description')?.includes(' — ') && (
-                      <span className="flex items-center gap-1 text-xs text-slate-600">
-                        <MapPin size={11} />
-                        {L(exp, 'description').split(' — ')[0]}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {L(exp, 'description') && (
-                  <p className="text-body text-xs sm:text-sm mt-2 leading-relaxed">
-                    {L(exp, 'description').includes(' — ')
-                      ? L(exp, 'description').split(' — ').slice(1).join(' — ')
-                      : L(exp, 'description')}
-                  </p>
-                )}
-                {exp.certificateUrl && (
-                  <button
-                    onClick={() => onCertificate(exp.certificateUrl!)}
-                    className="cert-btn mt-3 flex items-center gap-1.5 text-xs font-semibold transition-all"
-                    style={{
-                      color: '#f0c040',
-                      background: 'rgba(212,175,55,0.15)',
-                      border: '1px solid rgba(212,175,55,0.55)',
-                      borderRadius: '6px',
-                      padding: '4px 10px',
-                      boxShadow: '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)',
-                      textShadow: '0 0 8px rgba(212,175,55,0.5)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(212,175,55,0.25)';
-                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.85)';
-                      e.currentTarget.style.boxShadow = '0 0 18px rgba(212,175,55,0.45), 0 0 36px rgba(212,175,55,0.18)';
-                      e.currentTarget.style.textShadow = '0 0 12px rgba(212,175,55,0.8)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(212,175,55,0.15)';
-                      e.currentTarget.style.borderColor = 'rgba(212,175,55,0.55)';
-                      e.currentTarget.style.boxShadow = '0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.08)';
-                      e.currentTarget.style.textShadow = '0 0 8px rgba(212,175,55,0.5)';
-                    }}
-                  >
-                    <Award size={12} /> {t('experience.certificate')}
-                  </button>
-                )}
-              </div>
-            </motion.div>
+            <TimelineEntry key={exp.id} exp={exp} index={i} dotClass={dotClass} dotStyle={dotStyle} onCertificate={onCertificate} />
           ))}
         </div>
       </div>
@@ -230,6 +273,8 @@ export default function Experience({ experiences }: Props) {
       {lightboxUrl && (
         <CertificateLightbox url={lightboxUrl} onClose={() => setLightboxUrl(null)} />
       )}
+      {/* Without JavaScript nothing can be opened, so the explanations are simply shown. */}
+      <noscript><style>{'.exp-more{grid-template-rows:1fr}.exp-more>div{visibility:visible}.exp-toggle{display:none}'}</style></noscript>
     </section>
   );
 }

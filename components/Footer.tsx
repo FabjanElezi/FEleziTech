@@ -122,10 +122,7 @@ export default function Footer({ portfolio }: Props) {
 
       <div className="footer-bottom max-w-5xl mx-auto mt-10 pt-5 md:pr-20 xl:pr-0 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-600">
         <p>© {new Date().getFullYear()} Fabjan Elezi. {t('footer.rights')}</p>
-        <p className="flex items-center gap-4">
-          <span>{t('footer.built')}</span>
-          <Link href="/privacy" className="hover:text-cyan-400 transition-colors">{t('footer.privacy')}</Link>
-        </p>
+        <Link href="/privacy" className="hover:text-cyan-400 transition-colors">{t('footer.privacy')}</Link>
       </div>
     </footer>
   );

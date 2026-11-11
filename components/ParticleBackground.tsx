@@ -36,7 +36,8 @@ export default function ParticleBackground() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname.startsWith('/admin')) return;
+    // Not in Admin, and not on the home page: its hero draws the data story instead.
+    if (pathname.startsWith('/admin') || pathname === '/') return;
     // Respect the OS "reduce motion" setting: skip the animation entirely.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = ref.current;
@@ -194,6 +195,8 @@ export default function ParticleBackground() {
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [pathname]);
+
+  if (pathname === '/') return null;
 
   return (
     <canvas

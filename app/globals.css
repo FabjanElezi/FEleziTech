@@ -826,6 +826,48 @@ html.theme-transitioning .input-dark {
   .hero-in { animation: none; }
 }
 
+/* ── Hero: the data story (components/HeroDataStory.tsx) ─────────────────── */
+
+.ds-plot { position: relative; width: 100%; aspect-ratio: 16 / 11; }
+.ds-plot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.ds-steps { display: flex; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+.ds-steps li { flex: 1; min-width: 0; }
+.ds-step {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 10px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.ds-step b { display: block; font-family: var(--font-geist-mono), ui-monospace, monospace; font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.08em; }
+.ds-step span { display: block; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* progress line: fills while the step is showing */
+.ds-step::before { content: ''; position: absolute; left: 0; top: -1px; height: 2px; width: 0; background: #22d3ee; box-shadow: 0 0 12px #22d3ee; }
+.ds-step:hover { color: #cbd5e1; }
+.ds-step:focus-visible { outline: 2px solid #22d3ee; outline-offset: 4px; border-radius: 4px; }
+.ds-step.is-on { color: #fff; }
+.ds-step.is-on b { color: #22d3ee; }
+.ds-step.is-on::before { animation: ds-fill var(--ds-hold, 3s) linear both; }
+.ds-step.is-done::before { width: 100%; opacity: 0.35; }
+@keyframes ds-fill { from { width: 0; } to { width: 100%; } }
+@media (pointer: coarse) { .ds-step { min-height: 44px; } }
+@media (max-width: 639px) { .ds-plot { aspect-ratio: 16 / 10; } .ds-step span { font-size: 0.75rem; } }
+@media (prefers-reduced-motion: reduce) { .ds-step.is-on::before { animation: none; width: 100%; } }
+
+[data-theme="light"] .ds-step { border-top-color: rgba(15,23,42,0.14); color: #64748b; }
+[data-theme="light"] .ds-step:hover { color: #334155; }
+[data-theme="light"] .ds-step.is-on { color: #0b1220; }
+[data-theme="light"] .ds-step.is-on b { color: #0e7490; }
+[data-theme="light"] .ds-step::before { background: #0891b2; box-shadow: none; }
+
 /* ── Admin: plain tool surface, no decorative atmosphere ─────────────────── */
 html[data-admin] body::before,
 html[data-admin] body::after { display: none; }

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 768–1023px wide and wider than tall: small laptop windows, tablets and phones on their side */
+@custom-variant mdl (@media (min-width: 768px) and (max-width: 1023.98px) and (orientation: landscape));
+
 :root {
   --bg-primary: #070b12;
   --bg-secondary: #0d121c;

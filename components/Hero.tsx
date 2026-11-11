@@ -63,7 +63,7 @@ export default function Hero({ portfolio }: Props) {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-10 lg:pt-28 lg:pb-12">
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-10 mdl:pb-8 lg:pt-28 lg:pb-12">
       {/* Background orbs */}
       <div
         className="absolute pointer-events-none"
@@ -86,9 +86,10 @@ export default function Hero({ portfolio }: Props) {
         }}
       />
 
-      {/* Text on the left, the data story on the right; one centred column below 1024px. */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-20 2xl:px-12 grid items-center gap-y-8 lg:gap-x-8 lg:gap-y-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto]">
-      <div className="text-center lg:text-left lg:col-start-1 lg:row-start-1 lg:self-end">
+      {/* Text on the left, the data story on the right (from 1024px, and in wide-but-short windows: `mdl`).
+          One centred column otherwise. */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mdl:px-16 lg:px-20 2xl:px-12 grid items-center gap-y-8 mdl:gap-x-6 mdl:gap-y-0 mdl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] mdl:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto]">
+      <div className="text-center mdl:text-left mdl:col-start-1 mdl:row-start-1 mdl:self-end lg:text-left lg:col-start-1 lg:row-start-1 lg:self-end">
         {portfolio?.availableForWork !== false && (
           <div className="mb-6 hero-in" style={reveal(0)}>
             <span
@@ -115,7 +116,7 @@ export default function Hero({ portfolio }: Props) {
         )}
 
         <h1
-          className="text-4xl sm:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight text-white mb-4 leading-tight hero-in"
+          className="text-4xl sm:text-6xl mdl:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight text-white mb-4 leading-tight hero-in"
           style={reveal(0.1)}
         >
           {t('hero.greeting')}{' '}
@@ -132,14 +133,14 @@ export default function Hero({ portfolio }: Props) {
         </p>
 
         <p
-          className="hero-tagline text-base mb-10 max-w-xl mx-auto lg:mx-0 font-medium hero-in"
+          className="hero-tagline text-base mb-10 mdl:mb-7 max-w-xl mx-auto mdl:mx-0 lg:mx-0 font-medium hero-in"
           style={{ color: 'rgba(34,211,238,0.75)', ...reveal(0.3) }}
         >
           <Typewriter roles={roles} />
         </p>
 
         <div
-          className="flex flex-wrap items-center justify-center lg:justify-start gap-4 hero-in"
+          className="flex flex-wrap items-center justify-center mdl:justify-start lg:justify-start gap-4 hero-in"
           style={reveal(0.4)}
         >
           <a href="#projects" className="btn-primary">
@@ -158,12 +159,12 @@ export default function Hero({ portfolio }: Props) {
       </div>
 
       <HeroDataStory
-        className="hero-in w-full max-w-md sm:max-w-xl mx-auto lg:max-w-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-center"
+        className="hero-in w-full max-w-md sm:max-w-xl mx-auto mdl:max-w-none mdl:col-start-2 mdl:row-start-1 mdl:row-span-2 mdl:self-center lg:max-w-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-center"
         style={reveal(0.45)}
       />
 
       {/* Social links: under the buttons on desktop, after the animation on phones */}
-      <div className="flex items-center justify-center lg:justify-start gap-3 lg:mt-8 lg:col-start-1 lg:row-start-2 lg:self-start hero-in" style={reveal(0.55)}>
+      <div className="flex items-center justify-center mdl:justify-start mdl:mt-6 mdl:col-start-1 mdl:row-start-2 mdl:self-start lg:justify-start gap-3 lg:mt-8 lg:col-start-1 lg:row-start-2 lg:self-start hero-in" style={reveal(0.55)}>
         {portfolio?.linkedin && (
           <a
             href={portfolio.linkedin}

@@ -36,7 +36,7 @@ export default function ParticleBackground() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Not in Admin, and not on the home page: its hero has the globe instead.
+    // Not in Admin, and not on the home page: its hero has its own animation.
     if (pathname.startsWith('/admin') || pathname === '/') return;
     // Respect the OS "reduce motion" setting: skip the animation entirely.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

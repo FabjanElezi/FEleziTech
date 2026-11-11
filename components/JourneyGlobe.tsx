@@ -2,17 +2,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '@/components/LanguageProvider';
 
-// The hero's picture: his real path, drawn on a globe. Tirana (bachelor's),
-// Brno (exchange semester), New York (two Work & Travel seasons) and Aachen
-// (master's, now). Every stop is already listed under Experience on this page.
+// His real path, drawn on a globe. Tirana (bachelor's), Brno (exchange
+// semester), New York (two Work & Travel seasons) and Aachen (master's, now).
+// Every stop is already listed under Experience on this page.
 //
-// On wide screens the globe is bigger than the hero and sits behind its right
-// half. On phones and upright tablets it rises from the bottom, below the text.
-// The four stops take turns being the highlighted one, a click on a stop in the
-// bar jumps to it, and the globe can be dragged.
+// The globe fills whatever holds it: its parent element is the frame, and an
+// empty box marked `data-globe-slot` inside that frame says where the globe
+// goes. If the box sits beside other content, the globe is bigger than the
+// frame and sits behind that side. Otherwise its top rises from the bottom of
+// the box (`data-zoom` on the box makes it bigger than the box, so only a cap
+// shows). The four stops take turns being the highlighted one, a click on a
+// stop in the bar jumps to it, and the globe can be dragged.
 //
 // Plain 2D canvas, no map or 3D library. The sphere itself is painted once;
-// only the dots, routes and markers are redrawn, and only while the hero is on
+// only the dots, routes and markers are redrawn, and only while the globe is on
 // screen in a visible tab. The labels are real text, moved along with their
 // dots, and they are placed so that they never cover each other, a dot or the
 // edge of the screen, whatever the screen size or language.
@@ -205,7 +208,7 @@ function placeLabels(sizes: Size[], views: View[], bounds: Bounds, keep: number[
 }
 
 /* ── Component ─────────────────────────────────────────────────────────── */
-export default function HeroJourney() {
+export default function JourneyGlobe() {
   const { t, lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -229,7 +232,7 @@ export default function HeroJourney() {
     let light = document.documentElement.getAttribute('data-theme') === 'light';
     const land = landDots();
 
-    // where the globe is: all in pixels of the hero section, except bx.. (the canvas box)
+    // where the globe is: all in pixels of the frame (the parent element), except bx.. (the canvas box)
     let W = 0, H = 0, R = 1, cx = 0, cy = 0, bx = 0, by = 0, bw = 1, bh = 1, scale = 1, dotSize = 2;
     let side = true, slotTop = 0, laidOut = '';
     let homeLon = -8, homeLat = 44, sway = 6;
@@ -364,7 +367,7 @@ export default function HeroJourney() {
       laidOut = key; W = w; H = h; side = beside; slotTop = sTop;
       let barX: number, barY: number, barW: number;
       if (side) {
-        // Bigger than the hero on purpose: its upper left part fills the right half.
+        // Bigger than the frame on purpose: its upper left part fills the right half.
         const room = W - 12 - sLeft;
         R = clamp(Math.min(H * 0.56, (room - 170) / 1.004), 190, 640);
         cx = sLeft + 0.654 * R + 70 + Math.max(0, room - (1.004 * R + 170)) * 0.4;
@@ -380,13 +383,15 @@ export default function HeroJourney() {
         bounds.x0 = sLeft + 8; bounds.x1 = W - 12; bounds.y0 = 84; bounds.y1 = barY - 12;
       } else {
         // The top of the globe, wide enough to hold New York on the left and Tirana on the right.
-        R = clamp(Math.min((W - 80) / 1.064, sH * 0.98), 150, 560);
+        const zoom = Number(slot.dataset.zoom) || 0.98;   // above 1: bigger than the box, so only its cap shows
+        R = clamp(Math.min((W - 80) / 1.064, sH * zoom), 150, 640);
         cx = W / 2 + 0.031 * R;
         cy = sTop + 26 + R;
         homeLon = -22; homeLat = 14; sway = 3;
-        barW = Math.min(W - 32, 520);
+        barW = Math.min(W - (W < 340 ? 12 : 32), 520);   // a narrow frame gives the bar almost its full width
         barX = (W - barW) / 2;
-        barY = sTop + sH - barH;
+        // When the box ends where the frame ends, the bar keeps a little air below it.
+        barY = sTop + sH - barH - (H - (sTop + sH) < 12 ? 14 : 0);
         bounds.x0 = 8; bounds.x1 = W - 8; bounds.y0 = sTop + 4; bounds.y1 = barY - 10;
       }
       dotSize = clamp(R / 210, 1.8, 2.6);
@@ -668,11 +673,11 @@ export default function HeroJourney() {
     refitRef.current();
   }, [lang]);
 
-  const names = PLACES.map((_, i) => t(`hero.j${i + 1}`));
+  const names = PLACES.map((_, i) => t(`path.${i + 1}`));
 
   return (
     <div ref={rootRef} className="hj">
-      <div ref={stageRef} className="hj-stage" role="img" aria-label={t('hero.journeyLabel')}>
+      <div ref={stageRef} className="hj-stage" role="img" aria-label={t('path.label')}>
         <canvas ref={baseRef} aria-hidden />
         <canvas ref={liveRef} aria-hidden />
       </div>
@@ -681,11 +686,11 @@ export default function HeroJourney() {
         {PLACES.map((place, i) => (
           <li key={place.id} className={`hj-place${i === MAIN ? ' is-main' : ''}`}>
             <b>{names[i]}</b>
-            <span>{t(`hero.j${i + 1}s`)}</span>
+            <span>{t(`path.${i + 1}s`)}</span>
           </li>
         ))}
       </ol>
-      <ol ref={barRef} className="hj-bar" aria-label={t('hero.journeyStops')}>
+      <ol ref={barRef} className="hj-bar" aria-label={t('path.stops')}>
         {PLACES.map((place, i) => (
           <li key={place.id}>
             <button

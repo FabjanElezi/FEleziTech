@@ -20,7 +20,7 @@ const CLAMP_THRESHOLD = 160;
 function ProjectDescription({ text, canOpen, onOpen }: { text: string; canOpen: boolean; onOpen: () => void }) {
   const { t } = useLang();
   return (
-    <div className="text-slate-500 text-sm leading-relaxed mb-4 flex-1">
+    <div className="text-body text-sm leading-relaxed mb-4 flex-1">
       <span className="line-clamp-3">{text}</span>
       {canOpen && (
         <button

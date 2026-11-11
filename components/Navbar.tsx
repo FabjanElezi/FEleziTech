@@ -84,12 +84,12 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden lg:flex items-center gap-5 xl:gap-6 mx-4">
+        <ul className="hidden lg:flex items-center gap-4 xl:gap-6 mx-4">
           {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="nav-link text-sm text-slate-400"
+                className="nav-link whitespace-nowrap text-[13px] xl:text-sm text-slate-400"
                 ref={(el) => {
                   if (el) linkRefs.current.set(l.href.slice(1), el);
                   else linkRefs.current.delete(l.href.slice(1));
@@ -100,7 +100,7 @@ export default function Navbar() {
             </li>
           ))}
           <li>
-            <Link href="/services" className="nav-link text-sm text-slate-400 inline-flex items-center gap-0.5">
+            <Link href="/services" className="nav-link whitespace-nowrap text-[13px] xl:text-sm text-slate-400 inline-flex items-center gap-0.5">
               {t('nav.services')} <ArrowUpRight size={13} aria-hidden="true" />
             </Link>
           </li>

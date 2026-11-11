@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, FileText } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { useLang } from '@/components/LanguageProvider';
@@ -15,7 +15,8 @@ const links = [
   { href: '#contact',    label: 'nav.contact' },
 ];
 
-export default function Navbar() {
+/** `hasCv`: a CV is uploaded, so the menu can offer it. Admin is reached at /admin, without a public link. */
+export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
   const { t } = useLang();
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -110,22 +111,35 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
-          <Link href="/admin" className="btn-ghost text-xs py-1.5 px-4">
-            Admin
-          </Link>
+          {hasCv && (
+            <a
+              href="/api/cv"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t('hero.viewCv')}
+              className="btn-ghost text-xs py-1.5 px-4 inline-flex items-center gap-1.5"
+            >
+              CV <FileText size={13} aria-hidden="true" />
+            </a>
+          )}
         </div>
 
-        {/* Mobile right — theme toggle + admin link */}
+        {/* Mobile right: language, theme, CV */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
-          <Link
-            href="/admin"
-            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors"
-            style={{ minHeight: 44, display: 'flex', alignItems: 'center', padding: '0 6px' }}
-          >
-            Admin
-          </Link>
+          {hasCv && (
+            <a
+              href="/api/cv"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t('hero.viewCv')}
+              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+              style={{ minHeight: 44, display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px' }}
+            >
+              CV <FileText size={13} aria-hidden="true" />
+            </a>
+          )}
         </div>
       </nav>
     </header>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Globe } from 'lucide-react';
 import { Portfolio } from '@/types';
+import JourneyGlobe from '@/components/JourneyGlobe';
 
 interface Props { portfolio: Portfolio | null }
 
@@ -111,6 +112,25 @@ export default function About({ portfolio }: Props) {
             </div>
           </div>
         </div>
+
+        {/* His path so far, on a globe. The empty box tells the globe where to sit and how tall to be. */}
+        <motion.div
+          className="mt-14"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-8 h-px bg-cyan-500" />
+            <h3 className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('path.title')}</h3>
+          </div>
+          <div className="path-card">
+            <JourneyGlobe />
+            <div data-globe-slot data-zoom="1.3" aria-hidden="true" className="h-[clamp(300px,84vw,400px)]" />
+            <noscript><style>{'.path-card{display:none}'}</style></noscript>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

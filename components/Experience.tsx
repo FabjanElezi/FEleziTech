@@ -26,16 +26,18 @@ interface EntryProps {
   index: number;
   dotClass: string;
   dotStyle: React.CSSProperties;
+  /** Jobs start opened: what he did there is the point. Education and awards start closed. */
+  startOpen: boolean;
   onCertificate: (url: string) => void;
 }
 
 /**
  * One card on a timeline. Closed, it says what, where and when, so the list
- * reads at a glance. The explanation opens on "Read more".
+ * reads at a glance. The explanation opens and closes with "Read more" / "Show less".
  */
-function TimelineEntry({ exp, index, dotClass, dotStyle, onCertificate }: EntryProps) {
+function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificate }: EntryProps) {
   const { t, L } = useLang();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const panelId = useId();
   // Descriptions are stored as "Place — what he did there".
   const text = L(exp, 'description') || '';
@@ -160,7 +162,7 @@ function Timeline({ items, kind, onCertificate }: TimelineProps) {
         <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: lineColor }} />
         <div className="space-y-4 sm:space-y-5 pl-6">
           {items.map((exp, i) => (
-            <TimelineEntry key={exp.id} exp={exp} index={i} dotClass={dotClass} dotStyle={dotStyle} onCertificate={onCertificate} />
+            <TimelineEntry key={exp.id} exp={exp} index={i} dotClass={dotClass} dotStyle={dotStyle} startOpen={isWork} onCertificate={onCertificate} />
           ))}
         </div>
       </div>

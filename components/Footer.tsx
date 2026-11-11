@@ -8,7 +8,7 @@ import { Portfolio } from '@/types';
 
 interface Props { portfolio?: Portfolio | null }
 
-// The hero's trend line, drawn once more as a quiet closing line.
+// A rising trend line, drawn as a quiet closing line.
 const TREND =
   'M0 53.4C25 52.3 100 47.6 150 46.9C200 46.2 250 50.3 300 49C350 47.7 400 40.5 450 39.3C500 38.1 550 43.4 600 42C650 40.6 700 32.2 750 30.7C800 29.2 850 34.6 900 32.8C950 31 1000 23.4 1050 19.9C1100 16.4 1175 13.2 1200 11.8';
 

@@ -829,47 +829,100 @@ html.theme-transitioning .input-dark {
   .hero-in { animation: none; }
 }
 
-/* ── Hero: the data story (components/HeroDataStory.tsx) ─────────────────── */
+/* ── Hero: the journey globe (components/HeroJourney.tsx) ────────────────── */
 
-.ds-plot { position: relative; width: 100%; aspect-ratio: 16 / 11; }
-.ds-plot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hj { --hj-bg: 7,11,18; position: absolute; inset: 0; z-index: 1; opacity: 0; transition: opacity 0.9s ease 0.1s; }
+.hj[data-ready] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .hj { transition: none; } }
+[data-theme="light"] .hj { --hj-bg: 242,243,255; }
 
-.ds-steps { display: flex; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
-.ds-steps li { flex: 1; min-width: 0; }
-.ds-step {
+/* The canvases. A sideways drag turns the globe; up and down still scrolls the page. */
+.hj-stage { position: absolute; left: 0; top: 0; touch-action: pan-y pinch-zoom; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+.hj-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* Keeps the text side calm so the headline always reads, and lets the globe sink into the page at the bottom. */
+.hj-shade { position: absolute; inset: 0; pointer-events: none; }
+.hj[data-mode="side"] .hj-shade {
+  background:
+    linear-gradient(90deg, rgba(var(--hj-bg),0.94) 0, rgba(var(--hj-bg),0.88) calc(var(--hj-x, 50%) - 170px), rgba(var(--hj-bg),0.32) calc(var(--hj-x, 50%) + 20px), rgba(var(--hj-bg),0) calc(var(--hj-x, 50%) + 190px)),
+    linear-gradient(0deg, rgba(var(--hj-bg),0.96) 0, rgba(var(--hj-bg),0) 150px);
+}
+.hj[data-mode="stack"] .hj-shade { background: linear-gradient(0deg, rgba(var(--hj-bg),1) 0, rgba(var(--hj-bg),0.82) 46px, rgba(var(--hj-bg),0) 170px); }
+
+/* The labels: real text, moved along with their dots by the component. */
+.hj-places { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.hj-place {
+  position: absolute; left: 0; top: 0;
+  padding: 6px 10px 7px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 9px;
+  background: rgba(7,11,18,0.74);
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.hj-place b { display: block; font-size: 13px; font-weight: 600; color: #f1f5f9; }
+.hj-place span { display: block; margin-top: 1px; font-size: 11px; color: #94a3b8; }
+.hj-place.is-main { border-color: rgba(34,211,238,0.5); }
+.hj-place.is-main b { color: #a5f3fc; }
+/* name only, where there is no room for four full labels */
+.hj-place[data-min] { padding: 3px 8px 4px; border-radius: 7px; }
+.hj-place[data-min] b { font-size: 12px; }
+.hj-place[data-min] span { display: none; }
+/* the stop that is highlighted right now */
+.hj-place[data-on] { border-color: rgba(103,232,249,0.8); box-shadow: 0 0 18px rgba(34,211,238,0.2); }
+
+/* The four stops as a bar: shows where the story is, and a click jumps there. */
+.hj-bar {
+  position: absolute; left: 0; top: 0;
+  display: flex; gap: 10px;
+  margin: 0; padding: 10px 14px 9px;
+  list-style: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  background: rgba(7,11,18,0.68);
+}
+.hj-bar li { flex: 1; min-width: 0; }
+.hj-step {
   position: relative;
   display: block;
   width: 100%;
-  padding: 10px 0 0;
+  padding: 8px 0 0;
   border: 0;
-  border-top: 1px solid rgba(255,255,255,0.12);
+  border-top: 1px solid rgba(255,255,255,0.14);
   background: none;
   font: inherit;
   text-align: left;
-  color: #64748b;
+  color: #7c8aa0;
   cursor: pointer;
   transition: color 0.3s ease;
 }
-.ds-step b { display: block; font-family: var(--font-geist-mono), ui-monospace, monospace; font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.08em; }
-.ds-step span { display: block; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* progress line: fills while the step is showing */
-.ds-step::before { content: ''; position: absolute; left: 0; top: -1px; height: 2px; width: 0; background: #22d3ee; box-shadow: 0 0 12px #22d3ee; }
-.ds-step:hover { color: #cbd5e1; }
-.ds-step:focus-visible { outline: 2px solid #22d3ee; outline-offset: 4px; border-radius: 4px; }
-.ds-step.is-on { color: #fff; }
-.ds-step.is-on b { color: #22d3ee; }
-.ds-step.is-on::before { animation: ds-fill var(--ds-hold, 3s) linear both; }
-.ds-step.is-done::before { width: 100%; opacity: 0.35; }
-@keyframes ds-fill { from { width: 0; } to { width: 100%; } }
-@media (pointer: coarse) { .ds-step { min-height: 44px; } }
-@media (max-width: 639px) { .ds-plot { aspect-ratio: 16 / 10; } .ds-step span { font-size: 0.75rem; } }
-@media (prefers-reduced-motion: reduce) { .ds-step.is-on::before { animation: none; width: 100%; } }
+.hj-step b { display: block; font-family: var(--font-geist-mono), ui-monospace, monospace; font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.08em; }
+.hj-step span { display: block; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* progress line: the component stretches it while the stop is highlighted */
+.hj-step i { position: absolute; left: 0; top: -1px; width: 100%; height: 2px; background: #22d3ee; box-shadow: 0 0 12px #22d3ee; transform: scaleX(0); transform-origin: left center; }
+.hj-step.is-done i { opacity: 0.35; }
+.hj-step:hover { color: #cbd5e1; }
+.hj-step:focus-visible { outline: 2px solid #22d3ee; outline-offset: 4px; border-radius: 4px; }
+.hj-step.is-on { color: #fff; }
+.hj-step.is-on b { color: #22d3ee; }
+@media (pointer: coarse) { .hj-step { min-height: 44px; } }
+@media (max-width: 639px) { .hj-bar { gap: 8px; padding: 9px 12px 8px; } .hj-step span { font-size: 0.75rem; } }
 
-[data-theme="light"] .ds-step { border-top-color: rgba(15,23,42,0.14); color: #64748b; }
-[data-theme="light"] .ds-step:hover { color: #334155; }
-[data-theme="light"] .ds-step.is-on { color: #0b1220; }
-[data-theme="light"] .ds-step.is-on b { color: #0e7490; }
-[data-theme="light"] .ds-step::before { background: #0891b2; box-shadow: none; }
+[data-theme="light"] .hj-place { background: rgba(255,255,255,0.9); border-color: rgba(15,23,42,0.12); box-shadow: 0 4px 14px rgba(15,23,42,0.06); }
+[data-theme="light"] .hj-place b { color: #0b1220; }
+[data-theme="light"] .hj-place span { color: #475569; }
+[data-theme="light"] .hj-place.is-main { border-color: rgba(8,145,178,0.55); }
+[data-theme="light"] .hj-place.is-main b { color: #0e7490; }
+[data-theme="light"] .hj-place[data-on] { border-color: #0891b2; box-shadow: 0 4px 18px rgba(8,145,178,0.2); }
+[data-theme="light"] .hj-bar { background: rgba(255,255,255,0.84); border-color: rgba(15,23,42,0.1); }
+[data-theme="light"] .hj-step { border-top-color: rgba(15,23,42,0.14); color: #64748b; }
+[data-theme="light"] .hj-step:hover { color: #334155; }
+[data-theme="light"] .hj-step.is-on { color: #0b1220; }
+[data-theme="light"] .hj-step.is-on b { color: #0e7490; }
+[data-theme="light"] .hj-step i { background: #0891b2; box-shadow: none; }
 
 /* Body copy inside cards: one step brighter than the meta text, so it reads easily on the dark page */
 .text-body { color: #94a3b8; }

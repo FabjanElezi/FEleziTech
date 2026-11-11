@@ -1,6 +1,6 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
-import HeroDataStory from '@/components/HeroDataStory';
+import HeroJourney from '@/components/HeroJourney';
 import { useState, useEffect } from 'react';
 import { FileText, ArrowDown, Mail } from 'lucide-react';
 import { Portfolio } from '@/types';
@@ -86,10 +86,13 @@ export default function Hero({ portfolio }: Props) {
         }}
       />
 
-      {/* Text on the left, the data story on the right (from 1024px, and in wide-but-short windows: `mdl`).
-          One centred column otherwise. */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mdl:px-16 lg:px-20 2xl:px-12 grid items-center gap-y-8 mdl:gap-x-6 mdl:gap-y-0 mdl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] mdl:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto]">
-      <div className="text-center mdl:text-left mdl:col-start-1 mdl:row-start-1 mdl:self-end lg:text-left lg:col-start-1 lg:row-start-1 lg:self-end">
+      {/* The globe with his path: behind the right half on wide screens, below the text otherwise. */}
+      <HeroJourney />
+
+      {/* Text on the left, room for the globe on the right (from 1024px, and in wide-but-short windows: `mdl`).
+          One centred column otherwise. Only the text takes clicks, so the globe behind stays draggable. */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mdl:px-16 lg:px-20 2xl:px-12 grid items-center gap-y-8 pointer-events-none mdl:gap-x-6 mdl:gap-y-0 mdl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] mdl:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto]">
+      <div className="pointer-events-auto text-center mdl:text-left mdl:col-start-1 mdl:row-start-1 mdl:self-end lg:text-left lg:col-start-1 lg:row-start-1 lg:self-end">
         {portfolio?.availableForWork !== false && (
           <div className="mb-6 hero-in" style={reveal(0)}>
             <span
@@ -158,13 +161,8 @@ export default function Hero({ portfolio }: Props) {
         </div>
       </div>
 
-      <HeroDataStory
-        className="hero-in w-full max-w-md sm:max-w-xl mx-auto mdl:max-w-none mdl:col-start-2 mdl:row-start-1 mdl:row-span-2 mdl:self-center lg:max-w-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-center"
-        style={reveal(0.45)}
-      />
-
-      {/* Social links: under the buttons on desktop, after the animation on phones */}
-      <div className="flex items-center justify-center mdl:justify-start mdl:mt-6 mdl:col-start-1 mdl:row-start-2 mdl:self-start lg:justify-start gap-3 lg:mt-8 lg:col-start-1 lg:row-start-2 lg:self-start hero-in" style={reveal(0.55)}>
+      {/* Social links, under the buttons */}
+      <div className="pointer-events-auto flex items-center justify-center mdl:justify-start mdl:mt-6 mdl:col-start-1 mdl:row-start-2 mdl:self-start lg:justify-start gap-3 lg:mt-8 lg:col-start-1 lg:row-start-2 lg:self-start hero-in" style={reveal(0.5)}>
         {portfolio?.linkedin && (
           <a
             href={portfolio.linkedin}
@@ -201,6 +199,16 @@ export default function Hero({ portfolio }: Props) {
           </a>
         )}
       </div>
+
+      {/* Where the globe goes: HeroJourney reads this box. Beside the text it is just the right-hand
+          column; below the text it also holds the height the globe needs. */}
+      <div
+        data-globe-slot
+        aria-hidden="true"
+        className="h-[clamp(300px,84vw,480px)] mdl:h-auto mdl:self-stretch mdl:col-start-2 mdl:row-start-1 mdl:row-span-2 lg:h-auto lg:self-stretch lg:col-start-2 lg:row-start-1 lg:row-span-2"
+      />
+      {/* Without JavaScript there is no globe, so no room is kept for it either. */}
+      <noscript><style>{'[data-globe-slot]{display:none}'}</style></noscript>
       </div>
     </section>
   );

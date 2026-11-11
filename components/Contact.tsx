@@ -2,7 +2,7 @@
 import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2, ArrowRight } from 'lucide-react';
+import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText } from 'lucide-react';
 import NextLink from 'next/link';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -207,9 +207,16 @@ export default function Contact({ portfolio }: Props) {
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               {t('contact.readyText')}
             </p>
-            <a href={`mailto:${email}`} className="btn-primary self-start">
-              {t('contact.sendEmail')} <Send size={14} />
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a href={`mailto:${email}`} className="btn-primary">
+                {t('contact.sendEmail')} <Send size={14} />
+              </a>
+              {portfolio?.cvUrl && (
+                <a href="/api/cv" target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  {t('hero.viewCv')} <FileText size={14} />
+                </a>
+              )}
+            </div>
           </motion.div>
         </div>
       </div>

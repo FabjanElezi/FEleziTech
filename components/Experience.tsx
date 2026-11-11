@@ -81,7 +81,7 @@ function Timeline({ items, kind, onCertificate }: TimelineProps) {
                   </div>
                 </div>
                 {L(exp, 'description') && (
-                  <p className="text-slate-500 text-xs sm:text-sm mt-2 leading-relaxed">
+                  <p className="text-body text-xs sm:text-sm mt-2 leading-relaxed">
                     {L(exp, 'description').includes(' — ')
                       ? L(exp, 'description').split(' — ').slice(1).join(' — ')
                       : L(exp, 'description')}

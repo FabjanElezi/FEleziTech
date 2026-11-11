@@ -108,6 +108,12 @@ export function tagFromReferer(referer: string | null) {
   }
 }
 
+/**
+ * Only the live site counts visits. A local copy or a preview build reads the
+ * same database, and must never add its own test visits to the statistics.
+ */
+export const countsVisits = () => process.env.VERCEL_ENV === 'production';
+
 /** Daily-rotating pseudonymous id. Not reversible, not stable across days. */
 export function visitorHash(ip: string, userAgent: string) {
   const day = new Date().toISOString().slice(0, 10);

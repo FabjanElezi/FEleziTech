@@ -1,5 +1,5 @@
 import {
-  recordVisit, recordEngagement, visitorHash, arrivalBotReason, parseAgent,
+  recordVisit, recordEngagement, visitorHash, arrivalBotReason, parseAgent, countsVisits,
   referrerHost, referrerUrl, cleanTag, clean, coords, primaryLang,
 } from '@/lib/visits';
 import { getAuthEmail } from '@/lib/auth-server';
@@ -13,6 +13,7 @@ const NO = () => new Response(null, { status: 204 });
 // pseudonymous hash and to spot cloud/data-centre networks (bots).
 export async function POST(req: Request) {
   try {
+    if (!countsVisits()) return NO();
     if (req.headers.get('dnt') === '1') return NO();
 
     const ua = req.headers.get('user-agent') ?? '';

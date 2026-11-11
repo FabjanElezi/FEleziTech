@@ -68,6 +68,8 @@ const en: Dict = {
   'experience.other': 'Other experience',
   'experience.present': 'Present',
   'experience.certificate': 'View Certificate',
+  'experience.more': 'Read more',
+  'experience.less': 'Show less',
 
   'projects.headline': 'My',
   'projects.headlineAccent': 'Work',
@@ -184,6 +186,8 @@ const de: Dict = {
   'experience.other': 'Weitere Erfahrung',
   'experience.present': 'heute',
   'experience.certificate': 'Zeugnis ansehen',
+  'experience.more': 'Mehr lesen',
+  'experience.less': 'Weniger anzeigen',
 
   'projects.headline': 'Meine',
   'projects.headlineAccent': 'Arbeit',
@@ -300,6 +304,8 @@ const sq: Dict = {
   'experience.other': 'Përvojë tjetër',
   'experience.present': 'tani',
   'experience.certificate': 'Shih certifikatën',
+  'experience.more': 'Lexo më shumë',
+  'experience.less': 'Shfaq më pak',
 
   'projects.headline': 'Puna',
   'projects.headlineAccent': 'ime',

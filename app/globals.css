@@ -590,6 +590,15 @@ body {
   transform: translateY(-1px);
 }
 
+/* ── Logo ───────────────────────────────────────────────────────────────── */
+/* The name under "FE" is part of the picture, so CSS cannot recolour it. The
+   logo is in the page twice (components/Logo.tsx): a light name for the dark
+   theme, a dark name for the light theme. Only the one that fits is shown. */
+
+.logo-for-light { display: none; }
+[data-theme="light"] .logo-for-dark { display: none; }
+[data-theme="light"] .logo-for-light { display: block; }
+
 /* ── Admin lock ─────────────────────────────────────────────────────────── */
 /* His own way in: a quiet lock at the far edge of the header. The negative
    margins let it sit in the bar's own padding, so it costs the menu little room. */

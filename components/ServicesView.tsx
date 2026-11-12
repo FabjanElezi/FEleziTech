@@ -9,6 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import ServiceCards from '@/components/Services';
 import CornerAccents from '@/components/CornerAccents';
 import Footer from '@/components/Footer';
+import RevoWebLogo from '@/components/RevoWebLogo';
 import { Portfolio, Service } from '@/types';
 
 const INSTAGRAM = { handle: 'revoweb_official', href: 'https://www.instagram.com/revoweb_official/' };
@@ -196,11 +197,14 @@ export default function ServicesView({ portfolio, services }: { portfolio: Portf
       />
 
       <div className="relative z-10">
-        <header className="max-w-5xl mx-auto px-6 pt-6 flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors min-h-11">
-            <ArrowLeft size={15} /> {c.back}
-          </Link>
-          <div className="flex items-center gap-2">
+        <header className="max-w-5xl mx-auto px-6 pt-6 flex items-center justify-between gap-3">
+          {/* These services run under RevoWeb, his web studio, so the page opens with its logo:
+              a visitor who comes from the RevoWeb Instagram knows the place at once. */}
+          <RevoWebLogo />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link href="/" className="rw-back inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-cyan-400 transition-colors min-h-11 px-1">
+              <ArrowLeft size={15} className="hidden sm:block" aria-hidden="true" /> {c.back}
+            </Link>
             <LanguageSwitch compact />
             <ThemeToggle />
           </div>

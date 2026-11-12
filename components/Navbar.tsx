@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, FileText } from 'lucide-react';
+import { ArrowUpRight, FileText, Lock } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { useLang } from '@/components/LanguageProvider';
@@ -15,7 +15,16 @@ const links = [
   { href: '#contact',    label: 'nav.contact' },
 ];
 
-/** `hasCv`: a CV is uploaded, so the menu can offer it. Admin is reached at /admin, without a public link. */
+/** His own way into Admin: a quiet lock at the far edge of the bar. Not prefetched, and not for crawlers. */
+function AdminLock({ label }: { label: string }) {
+  return (
+    <Link href="/admin" prefetch={false} rel="nofollow" aria-label={label} title={label} className="nav-lock">
+      <Lock size={14} aria-hidden="true" />
+    </Link>
+  );
+}
+
+/** `hasCv`: a CV is uploaded, so the menu can offer it. */
 export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
   const { t } = useLang();
   const headerRef = useRef<HTMLElement>(null);
@@ -108,7 +117,7 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
         </ul>
 
         {/* Desktop right */}
-        <div className="hidden lg:flex items-center gap-3 shrink-0">
+        <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
           {hasCv && (
@@ -117,14 +126,15 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t('hero.viewCv')}
-              className="btn-ghost text-xs py-1.5 px-4 inline-flex items-center gap-1.5"
+              className="btn-ghost nav-cv text-xs py-1.5 px-4 inline-flex items-center gap-1.5"
             >
               CV <FileText size={13} aria-hidden="true" />
             </a>
           )}
+          <AdminLock label={t('nav.admin')} />
         </div>
 
-        {/* Mobile right: language, theme, CV */}
+        {/* Mobile right: language, theme, CV, and the lock from 360px */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
@@ -140,6 +150,7 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
               CV <FileText size={13} aria-hidden="true" />
             </a>
           )}
+          <AdminLock label={t('nav.admin')} />
         </div>
       </nav>
     </header>

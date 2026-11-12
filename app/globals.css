@@ -590,6 +590,41 @@ body {
   transform: translateY(-1px);
 }
 
+/* ── Admin lock ─────────────────────────────────────────────────────────── */
+/* His own way in: a quiet lock at the far edge of the header. The negative
+   margins let it sit in the bar's own padding, so it costs the menu little room. */
+
+.nav-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 36px;
+  margin: 0 -8px 0 -4px;
+  border-radius: 8px;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+.nav-lock:hover,
+.nav-lock:focus-visible { color: #22d3ee; }
+.nav-lock:focus-visible { outline: 2px solid #22d3ee; outline-offset: -3px; }
+[data-theme="light"] .nav-lock:hover,
+[data-theme="light"] .nav-lock:focus-visible { color: #0891b2; }
+[data-theme="light"] .nav-lock:focus-visible { outline-color: #0891b2; }
+/* Compact header: a full-height tap target. The smallest phones have no room for it. */
+@media (width < 64rem) {
+  .nav-lock { width: 26px; height: 44px; margin: 0 -4px 0 -2px; }
+}
+@media (width < 360px) {
+  .nav-lock { display: none; }
+}
+/* The CV button beside it gives up some width on small laptops (1024–1279px),
+   where the German menu needs the room. */
+@media (width >= 64rem) and (width < 80rem) {
+  .nav-cv { padding-inline: 1rem; }
+}
+
 /* ── Theme transition (applied briefly on toggle) ───────────────────────── */
 
 /* View Transitions API — compositor cross-fade, no per-element cost */

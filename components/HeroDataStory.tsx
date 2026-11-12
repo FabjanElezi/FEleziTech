@@ -11,10 +11,13 @@ import { useLang } from '@/components/LanguageProvider';
 // something is moving: off screen, in a background tab, and while the finished
 // logo is simply being shown, nothing runs.
 
-// FE monogram outline, taken from public/logo.svg.
+// FE monogram outline, in the coordinates of public/logo.svg, without the middle bar of the E.
+// That bar is the RevoWeb infinity, as in the logo: FE_LOOP is its centre line (a lemniscate,
+// 2s wide, a little taller by ky) and the width of its band.
 const FE_PATH =
-  'M229.97 50.97L229.97 63.03L192.13 63.03L192.13 50.97L229.97 50.97ZM235.31 24L235.31 35.97L187.35 35.97L187.35 90L175.38 90L175.38 30.03Q175.38 28.79 175.84 27.68Q176.30 26.58 177.11 25.75Q177.91 24.92 179.02 24.46Q180.12 24 181.41 24L181.41 24L235.31 24ZM299.23 50.97L299.23 63.03L261.45 63.03L261.45 50.97L299.23 50.97ZM304.62 78.03L304.62 90L261.45 90Q258.96 90 256.02 89.13Q253.07 88.25 250.56 86.25Q248.05 84.25 246.37 81.05Q244.69 77.85 244.69 73.20L244.69 73.20L244.69 30.03Q244.69 28.79 245.15 27.68Q245.62 26.58 246.42 25.75Q247.23 24.92 248.33 24.46Q249.44 24 250.72 24L250.72 24L304.62 24L304.62 35.97L256.66 35.97L256.66 73.20Q256.66 75.55 257.90 76.79Q259.15 78.03 261.54 78.03L261.54 78.03L304.62 78.03Z';
+  'M229.97 50.97L229.97 63.03L192.13 63.03L192.13 50.97L229.97 50.97ZM235.31 24L235.31 35.97L187.35 35.97L187.35 90L175.38 90L175.38 30.03Q175.38 28.79 175.84 27.68Q176.30 26.58 177.11 25.75Q177.91 24.92 179.02 24.46Q180.12 24 181.41 24L181.41 24L235.31 24ZM304.62 78.03L304.62 90L261.45 90Q258.96 90 256.02 89.13Q253.07 88.25 250.56 86.25Q248.05 84.25 246.37 81.05Q244.69 77.85 244.69 73.20L244.69 73.20L244.69 30.03Q244.69 28.79 245.15 27.68Q245.62 26.58 246.42 25.75Q247.23 24.92 248.33 24.46Q249.44 24 250.72 24L250.72 24L304.62 24L304.62 35.97L256.66 35.97L256.66 73.20Q256.66 75.55 257.90 76.79Q259.15 78.03 261.54 78.03L261.54 78.03L304.62 78.03Z';
 const FE_BOX = { x: 175.38, y: 24, w: 129.24, h: 66 };
+const FE_LOOP = { cx: 283.03, cy: 57, s: 21.59, ky: 1.2, w: 5.84 };
 
 // hold: how long a step stays before the next one starts. After the last one the story starts over.
 const PHASES = [
@@ -130,6 +133,16 @@ function shape(key: PhaseKey, K: number, R: Box): Target[] {
   g.scale(k, k);
   g.fillStyle = '#fff';
   g.fill(new Path2D(FE_PATH));
+  // the infinity that is the middle bar of the E
+  g.beginPath();
+  for (let i = 0; i <= 96; i++) {
+    const t = (i / 96) * Math.PI * 2, d = 1 + Math.sin(t) ** 2;
+    const x = FE_LOOP.cx + (FE_LOOP.s * Math.cos(t)) / d, y = FE_LOOP.cy + (FE_LOOP.ky * FE_LOOP.s * Math.sin(t) * Math.cos(t)) / d;
+    if (i) g.lineTo(x, y); else g.moveTo(x, y);
+  }
+  g.closePath();
+  g.lineWidth = FE_LOOP.w; g.lineJoin = 'round'; g.strokeStyle = '#fff';
+  g.stroke();
   const data = g.getImageData(0, 0, w, h).data;
   return gridFill(K, R, (x, y) => {
     const ix = Math.round(x - R.x), iy = Math.round(y - R.y);

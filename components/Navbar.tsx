@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, FileText, Lock } from 'lucide-react';
+import { ArrowUpRight, Lock } from 'lucide-react';
 import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
@@ -24,8 +24,8 @@ function AdminLock({ label }: { label: string }) {
   );
 }
 
-/** `hasCv`: a CV is uploaded, so the menu can offer it. */
-export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
+/** The bar: logo, menu, language, theme and the lock. The CV is one click away in the hero, in Contact and in the footer. */
+export default function Navbar() {
   const { t } = useLang();
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -120,36 +120,13 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
         <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
-          {hasCv && (
-            <a
-              href="/api/cv"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={t('hero.viewCv')}
-              className="btn-ghost nav-cv text-xs py-1.5 px-4 inline-flex items-center gap-1.5"
-            >
-              CV <FileText size={13} aria-hidden="true" />
-            </a>
-          )}
           <AdminLock label={t('nav.admin')} />
         </div>
 
-        {/* Mobile right: language, theme, CV, and the lock */}
+        {/* Mobile right: language, theme and the lock */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
-          {hasCv && (
-            <a
-              href="/api/cv"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={t('hero.viewCv')}
-              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
-              style={{ minHeight: 44, display: 'flex', alignItems: 'center', gap: 4, padding: '0 6px' }}
-            >
-              CV <FileText size={13} aria-hidden="true" />
-            </a>
-          )}
           <AdminLock label={t('nav.admin')} />
         </div>
       </nav>

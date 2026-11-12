@@ -35,7 +35,7 @@ export default async function HomePage() {
       />
       <div className="relative z-10">
         <SocialSidebar linkedin={portfolio?.linkedin} github={portfolio?.github} email={portfolio?.email} />
-        <Navbar hasCv={Boolean(portfolio?.cvUrl)} />
+        <Navbar />
         <Hero portfolio={portfolio} />
         <SectionDivider />
         <About portfolio={portfolio} />

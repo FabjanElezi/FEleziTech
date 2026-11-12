@@ -17,7 +17,10 @@ export const metadata: Metadata = {
     url: url('/services'),
   },
   // The root layout sets the portfolio title for X/Twitter; override it here.
+  // This block replaces the root one as a whole, so the card size is named again:
+  // without it X and Discord show the share card as a small square, cut off.
   twitter: {
+    card: 'summary_large_image',
     title: 'Services | Fabjan Elezi',
     description:
       'Websites, data dashboards, IT setup and database design. Free first consultation, price on request.',

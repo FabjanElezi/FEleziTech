@@ -383,7 +383,7 @@ body {
       rgba(6,182,212,0.03) 75%,
       rgba(255,255,255,0.06) 100%
     ),
-    linear-gradient(rgba(8,12,20,0.86), rgba(8,12,20,0.86)) !important;
+    linear-gradient(rgba(8,12,20,0.9), rgba(8,12,20,0.9)) !important;
   border-color: rgba(6,182,212,0.22);
   box-shadow:
     inset 0 2.5px 0 rgba(255,255,255,0.64),
@@ -627,12 +627,10 @@ body {
 [data-theme="light"] .nav-lock:hover,
 [data-theme="light"] .nav-lock:focus-visible { color: #0891b2; }
 [data-theme="light"] .nav-lock:focus-visible { outline-color: #0891b2; }
-/* Compact header: a full-height tap target. The smallest phones have no room for it. */
+/* Compact header: a full-height tap target. Since the logo is the mark alone,
+   there is room for it on every phone. */
 @media (width < 64rem) {
   .nav-lock { width: 26px; height: 44px; margin: 0 -4px 0 -2px; }
-}
-@media (width < 360px) {
-  .nav-lock { display: none; }
 }
 /* The CV button beside it gives up some width on small laptops (1024–1279px),
    where the German menu needs the room. */

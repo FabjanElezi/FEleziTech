@@ -83,6 +83,7 @@ export default function MobileDock() {
           borderRadius: '100px',
           background: 'rgba(9,13,21,0.6)',
           backdropFilter: 'blur(48px) saturate(210%) brightness(1.12) contrast(0.94)',
+          WebkitBackdropFilter: 'blur(48px) saturate(210%) brightness(1.12) contrast(0.94)',
           border: '1px solid rgba(255,255,255,0.14)',
           boxShadow:
             'inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(6,182,212,0.08), 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.2)',

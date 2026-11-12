@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowUpRight, FileText, Lock } from 'lucide-react';
+import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { useLang } from '@/components/LanguageProvider';
@@ -90,7 +90,7 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
       <nav className="h-14 flex items-center justify-between px-3 sm:px-5">
         {/* Logo */}
         <Link href="/" className="hover:opacity-80 transition-opacity flex items-center mt-1 shrink-0">
-          <Image src="/logo.svg" alt="Fabjan Elezi" width={160} height={53} className="object-contain w-[112px] sm:w-[160px] h-auto" priority fetchPriority="high" />
+          <Logo width={160} height={53} className="object-contain w-[112px] sm:w-[160px] h-auto" priority />
         </Link>
 
         {/* Desktop links */}

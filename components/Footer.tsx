@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FileText, Mail } from 'lucide-react';
+import Logo from '@/components/Logo';
 import { useLang } from '@/components/LanguageProvider';
 import { Portfolio } from '@/types';
 
@@ -69,7 +69,7 @@ export default function Footer({ portfolio }: Props) {
       {/* Phones: brand on top, the two link lists side by side below it */}
       <div className="max-w-5xl mx-auto grid gap-x-6 gap-y-10 grid-cols-2 text-center md:text-left md:grid-cols-[1.5fr_1fr_1fr]">
         <div className="col-span-2 md:col-span-1">
-          <Image src="/logo.svg" alt="Fabjan Elezi" width={130} height={43} className="h-auto w-[130px] mx-auto md:mx-0" />
+          <Logo width={130} height={43} className="h-auto w-[130px] mx-auto md:mx-0" />
           <p className="text-body text-sm mt-4 max-w-xs mx-auto md:mx-0">{t('hero.role1')}.</p>
           <p className="mt-3 text-xs text-slate-500 inline-flex items-center gap-2">
             <span className="footer-dot" aria-hidden="true" />

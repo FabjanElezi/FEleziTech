@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  *
  *  - a specular highlight follows the cursor across cards and buttons
  *  - cards lean towards the cursor, with real perspective
- *  - buttons drift towards the cursor when it comes close (not in Admin)
+ *  - buttons lean a few pixels towards the cursor once it is almost on them (not in Admin)
  *
  * Everything is done by writing CSS custom properties, never `transform`, so
  * nothing here can fight framer-motion for control of an element.
@@ -14,8 +14,8 @@ import { useEffect } from 'react';
 
 const SURFACE = '.glass, .btn-primary, .btn-ghost';
 const MAGNETIC = '.btn-primary, .btn-ghost';
-const REACH = 110;   // px around a button where it starts to feel the cursor
-const PULL = 0.28;   // how far it follows
+const REACH = 36;    // px outside a button's edge where it starts to feel the cursor
+const DRIFT = 4;     // px: the furthest a button ever moves towards it
 const TILT = 7;      // degrees at the corner of a card
 
 export default function SurfaceFX() {
@@ -112,8 +112,8 @@ export default function SurfaceFX() {
         }
       }
 
-      // 3: buttons drift towards a cursor that comes near (public site only;
-      // in Admin, buttons stay where they are).
+      // 3: buttons lean towards a cursor that is almost on them (public site
+      // only; in Admin, buttons stay where they are).
       const still = window.location.pathname.startsWith('/admin');
       for (const b of magnets) {
         const r = still ? null : b.getBoundingClientRect();
@@ -122,15 +122,23 @@ export default function SurfaceFX() {
           b.style.removeProperty('--magy');
           continue;
         }
-        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        const dx = mx - cx, dy = my - cy;
-        const near = Math.max(0, 1 - Math.hypot(dx, dy) / (Math.max(r.width, r.height) / 2 + REACH));
+        const hw = r.width / 2, hh = r.height / 2;
+        const dx = mx - (r.left + hw), dy = my - (r.top + hh);
+        // 1 while the cursor is on the button, fading to 0 at REACH px from its edge.
+        const gap = Math.hypot(Math.max(0, Math.abs(dx) - hw), Math.max(0, Math.abs(dy) - hh));
+        const near = Math.max(0, 1 - gap / REACH);
         if (near <= 0) {
           b.style.removeProperty('--magx');
           b.style.removeProperty('--magy');
         } else {
-          b.style.setProperty('--magx', `${(dx * PULL * near).toFixed(1)}px`);
-          b.style.setProperty('--magy', `${(dy * PULL * near).toFixed(1)}px`);
+          // Where on the button the cursor is, -1 → 1 each way, never longer than 1 in total.
+          let ox = Math.max(-1, Math.min(1, dx / hw)), oy = Math.max(-1, Math.min(1, dy / hh));
+          const len = Math.hypot(ox, oy);
+          if (len > 1) { ox /= len; oy /= len; }
+          // Small buttons move less than big ones.
+          const far = Math.min(DRIFT, r.height * 0.09) * near;
+          b.style.setProperty('--magx', `${(ox * far).toFixed(1)}px`);
+          b.style.setProperty('--magy', `${(oy * far).toFixed(1)}px`);
         }
       }
     };

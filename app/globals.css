@@ -1147,7 +1147,7 @@ html[data-admin] body { background-image: none; }
   rotate: var(--tx, 0) var(--ty, 0) 0 var(--ta, 0deg);
 }
 
-/* ── Buttons drift towards the cursor ───────────────────────────────────── */
+/* ── Buttons lean a few pixels towards the cursor ───────────────────────── */
 
 .btn-primary,
 .btn-ghost {

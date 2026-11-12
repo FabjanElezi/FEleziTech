@@ -88,9 +88,9 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
   return (
     <header ref={headerRef} className="navbar fixed z-50">
       <nav className="h-14 flex items-center justify-between px-3 sm:px-5">
-        {/* Logo */}
-        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center mt-1 shrink-0">
-          <Logo width={160} height={53} className="object-contain w-[112px] sm:w-[160px] h-auto" priority />
+        {/* Logo: the mark alone. His name is the headline right below the bar, so it is not repeated here. */}
+        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center shrink-0">
+          <Logo mark width={60} height={34} className="h-7 sm:h-[34px] w-auto" priority />
         </Link>
 
         {/* Desktop links */}
@@ -134,7 +134,7 @@ export default function Navbar({ hasCv = false }: { hasCv?: boolean }) {
           <AdminLock label={t('nav.admin')} />
         </div>
 
-        {/* Mobile right: language, theme, CV, and the lock from 360px */}
+        {/* Mobile right: language, theme, CV, and the lock */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />

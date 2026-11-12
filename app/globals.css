@@ -632,11 +632,6 @@ body {
 @media (width < 64rem) {
   .nav-lock { width: 26px; height: 44px; margin: 0 -4px 0 -2px; }
 }
-/* The CV button beside it gives up some width on small laptops (1024–1279px),
-   where the German menu needs the room. */
-@media (width >= 64rem) and (width < 80rem) {
-  .nav-cv { padding-inline: 1rem; }
-}
 
 /* ── Theme transition (applied briefly on toggle) ───────────────────────── */
 

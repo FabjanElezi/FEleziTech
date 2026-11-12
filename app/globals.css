@@ -907,6 +907,11 @@ html.theme-transitioning .input-dark {
 @keyframes ds-fill { from { width: 0; } to { width: 100%; } }
 @media (pointer: coarse) { .ds-step { min-height: 44px; } }
 @media (max-width: 639px) { .ds-plot { aspect-ratio: 16 / 10; } .ds-step span { font-size: 0.75rem; } }
+/* Where the story is narrow (phones, and beside the text in a phone held sideways), four equal steps would cut
+   the long labels off ("Entscheidung", "Të dhëna bruto"). There each step is as wide as its own label and they
+   share the room that is left. */
+@media (max-width: 479px), (min-width: 768px) and (max-width: 1023.98px) and (orientation: landscape) { .ds-steps li { flex: 1 1 auto; } }
+@media (max-width: 359px) { .ds-steps { gap: 8px; } }
 @media (prefers-reduced-motion: reduce) { .ds-step.is-on::before { animation: none; width: 100%; } }
 
 [data-theme="light"] .ds-step { border-top-color: rgba(15,23,42,0.14); color: #64748b; }

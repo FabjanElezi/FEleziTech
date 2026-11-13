@@ -186,7 +186,7 @@ export default function ServicesEditor({ services, onChanged }: Props) {
           if (editing === s.id) return <div key={s.id}>{formBlock}</div>;
           const Icon = iconFor(s.icon);
           return (
-            <div key={s.id} className="glass rounded-xl p-4 flex items-start gap-3">
+            <div key={s.id} className="glass rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-start gap-x-3 gap-y-1">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(8,145,178,0.15)' }}>
                 <Icon size={16} className="text-cyan-400" />
               </div>
@@ -197,11 +197,11 @@ export default function ServicesEditor({ services, onChanged }: Props) {
                   DE {s.title_de ? '✓' : '—'} · SQ {s.title_sq ? '✓' : '—'}
                 </p>
               </div>
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up" className="p-1.5 text-slate-500 hover:text-cyan-400 disabled:opacity-30"><ArrowUp size={14} /></button>
-                <button onClick={() => move(i, 1)} disabled={i === services.length - 1} aria-label="Move down" className="p-1.5 text-slate-500 hover:text-cyan-400 disabled:opacity-30"><ArrowDown size={14} /></button>
-                <button onClick={() => startEdit(s)} aria-label="Edit" className="p-1.5 text-slate-500 hover:text-cyan-400"><Pencil size={14} /></button>
-                <button onClick={() => remove(s.id)} aria-label="Delete" className="p-1.5 text-slate-500 hover:text-red-400"><Trash2 size={14} /></button>
+              <div className="flex items-center justify-end gap-1 flex-shrink-0 w-full sm:w-auto">
+                <button onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up" className="admin-icon-btn p-1.5 text-slate-500 hover:text-cyan-400 disabled:opacity-30"><ArrowUp size={14} /></button>
+                <button onClick={() => move(i, 1)} disabled={i === services.length - 1} aria-label="Move down" className="admin-icon-btn p-1.5 text-slate-500 hover:text-cyan-400 disabled:opacity-30"><ArrowDown size={14} /></button>
+                <button onClick={() => startEdit(s)} aria-label="Edit" className="admin-icon-btn p-1.5 text-slate-500 hover:text-cyan-400"><Pencil size={14} /></button>
+                <button onClick={() => remove(s.id)} aria-label="Delete" className="admin-icon-btn p-1.5 text-slate-500 hover:text-red-400"><Trash2 size={14} /></button>
               </div>
             </div>
           );

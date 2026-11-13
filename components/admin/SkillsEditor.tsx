@@ -174,11 +174,11 @@ export default function SkillsEditor({ skills, onChanged }: Props) {
                       <span className="text-white text-sm font-medium">{skill.name}</span>
                       {skill.level && <span className="text-xs text-slate-500">· {skill.level}</span>}
                     </div>
-                    <div className="flex gap-1.5 flex-shrink-0">
-                      <button onClick={() => startEdit(skill)} className="p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
+                    <div className="flex gap-0.5 sm:gap-1.5 flex-shrink-0">
+                      <button onClick={() => startEdit(skill)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
                         <Pencil size={13} />
                       </button>
-                      <button onClick={() => remove(skill.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
+                      <button onClick={() => remove(skill.id)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
                         <Trash2 size={13} />
                       </button>
                     </div>

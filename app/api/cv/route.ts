@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import { recordCvOpen, visitorHash, arrivalBotReason, parseAgent, tagFromReferer, countsVisits } from '@/lib/visits';
-import { getAuthEmail } from '@/lib/auth-server';
 
-export async function GET(req: Request) {
+// Hands over the CV. Nothing about the request is recorded.
+export async function GET() {
   const { rows } = await query('SELECT cv_url FROM portfolio WHERE id = $1', ['main']);
   const cvUrl = rows[0]?.cv_url as string | undefined;
 
@@ -19,32 +18,7 @@ export async function GET(req: Request) {
     return new NextResponse('CV file unavailable', { status: 502 });
   }
 
-  const blob = await res.blob();
-  const buffer = await blob.arrayBuffer();
-
-  // Count the opening. Recorded here rather than on the click, so a CV link
-  // opened directly — pasted, bookmarked, forwarded — is counted too.
-  try {
-    const ua = req.headers.get('user-agent') ?? '';
-    const owner = await getAuthEmail();   // the owner's own opens don't count
-    if (countsVisits() && !owner && req.headers.get('dnt') !== '1') {
-      const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
-      const { device, browser, os } = parseAgent(ua);
-      const city = req.headers.get('x-vercel-ip-city');
-      await recordCvOpen({
-        country: req.headers.get('x-vercel-ip-country'),
-        region: req.headers.get('x-vercel-ip-country-region'),
-        city: city ? decodeURIComponent(city) : null,
-        refTag: tagFromReferer(req.headers.get('referer')),
-        device, browser, os,
-        visitorHash: visitorHash(ip, ua),
-        // Link previews (WhatsApp, LinkedIn, ...) fetch the CV too: kept, but marked.
-        botReason: arrivalBotReason(ua, ip),
-      });
-    }
-  } catch {
-    // Never let counting get in the way of handing over the CV.
-  }
+  const buffer = await (await res.blob()).arrayBuffer();
 
   return new NextResponse(buffer, {
     headers: {

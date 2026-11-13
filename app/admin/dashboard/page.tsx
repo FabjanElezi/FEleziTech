@@ -13,14 +13,13 @@ import ProjectForm from '@/components/admin/ProjectForm';
 import ExperienceEditor from '@/components/admin/ExperienceEditor';
 import SkillsEditor from '@/components/admin/SkillsEditor';
 import ServicesEditor from '@/components/admin/ServicesEditor';
-import VisitorsPanel from '@/components/admin/VisitorsPanel';
 import {
   User, FolderOpen, Briefcase, Code2, LogOut, Handshake,
-  Plus, Pencil, Trash2, ExternalLink, Eye,
+  Plus, Pencil, Trash2, ExternalLink,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type Tab = 'bio' | 'projects' | 'experience' | 'skills' | 'services' | 'visitors';
+type Tab = 'bio' | 'projects' | 'experience' | 'skills' | 'services';
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -92,7 +91,6 @@ export default function Dashboard() {
     { id: 'experience', label: 'Experience', icon: <Briefcase size={16} /> },
     { id: 'skills', label: 'Skills', icon: <Code2 size={16} /> },
     { id: 'services', label: 'Services', icon: <Handshake size={16} /> },
-    { id: 'visitors', label: 'Visitors', icon: <Eye size={16} /> },
 ];
 
   return (
@@ -118,17 +116,18 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
         {/* Tabs */}
         <div
-          className="flex gap-1 p-1 rounded-xl mb-8 w-fit"
+          // Phones: a grid that shows every tab (as one row they ran off the screen and could not be reached).
+          className="grid grid-cols-3 sm:flex gap-1 p-1 rounded-xl mb-6 sm:mb-8 sm:w-fit"
           style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 min-h-11 sm:min-h-0 px-2 sm:px-4 py-2 rounded-lg text-[13px] sm:text-sm font-medium transition-all duration-200"
               style={
                 tab === t.id
                   ? { background: 'linear-gradient(135deg, #0891b2, #0e7490)', color: 'white' }
@@ -145,7 +144,7 @@ export default function Dashboard() {
             <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="glass rounded-2xl p-6 sm:p-8">
+          <div className="glass rounded-2xl p-4 sm:p-8">
             {/* ── Bio ── */}
             {tab === 'bio' && (
               <div>
@@ -196,11 +195,11 @@ export default function Dashboard() {
                           <p className="text-slate-500 text-xs truncate">{p.techStack.slice(0, 3).join(', ')}</p>
                         </div>
                       </div>
-                      <div className="flex gap-2 flex-shrink-0">
-                        <button onClick={() => setEditingProject(p)} className="p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
+                      <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+                        <button onClick={() => setEditingProject(p)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
                           <Pencil size={14} />
                         </button>
-                        <button onClick={() => handleDeleteProject(p.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
+                        <button onClick={() => handleDeleteProject(p.id)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -236,13 +235,6 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* ── Visitors ── */}
-            {tab === 'visitors' && (
-              <div>
-                <h2 className="text-lg font-bold text-white mb-6">Visitors</h2>
-                <VisitorsPanel />
-              </div>
-            )}
           </div>
         )}
       </div>

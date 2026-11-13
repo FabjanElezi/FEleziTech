@@ -75,6 +75,8 @@ const COPY = {
     title: 'Websites, dashboards',
     titleAccent: '& IT for your business',
     sub: 'I take on a small number of projects for businesses and professionals. You get one person from the first call to launch.',
+    // Says plainly whose brand this is: the page carries the RevoWeb logo on a site under his own name.
+    studio: 'RevoWeb is the web studio of Fabjan Elezi.',
     chips: ['Albania · Europe · Worldwide', 'Free first consultation', 'Price on request'],
     whatsapp: 'Message on WhatsApp',
     instagram: 'See my work',
@@ -100,6 +102,7 @@ const COPY = {
     title: 'Websites, Dashboards',
     titleAccent: '& IT für Ihr Unternehmen',
     sub: 'Ich übernehme eine kleine Zahl von Projekten für Unternehmen und Selbstständige. Vom ersten Gespräch bis zum Launch haben Sie eine Ansprechperson.',
+    studio: 'RevoWeb ist das Webstudio von Fabjan Elezi.',
     chips: ['Albanien · Europa · weltweit', 'Kostenloses Erstgespräch', 'Preis auf Anfrage'],
     whatsapp: 'Auf WhatsApp schreiben',
     instagram: 'Meine Arbeiten',
@@ -125,6 +128,7 @@ const COPY = {
     title: 'Faqe web, dashboard-e',
     titleAccent: '& IT për biznesin tuaj',
     sub: 'Marr përsipër një numër të vogël projektesh për biznese dhe profesionistë. Keni një person të vetëm nga biseda e parë deri në publikim.',
+    studio: 'RevoWeb është studioja web e Fabjan Elezit.',
     chips: ['Shqipëri · Europë · Mbarë botën', 'Konsulta e parë falas', 'Çmimi sipas kërkesës'],
     whatsapp: 'Shkruani në WhatsApp',
     instagram: 'Shikoni punët',
@@ -239,6 +243,7 @@ export default function ServicesView({ portfolio, services }: { portfolio: Portf
               {c.title} <span className="gradient-text">{c.titleAccent}</span>
             </h1>
             <p className="text-slate-400 mt-5 max-w-2xl leading-relaxed">{c.sub}</p>
+            <p className="text-slate-500 text-sm mt-3">{c.studio}</p>
 
             <ul className="flex flex-wrap gap-2 mt-6">
               {c.chips.map((chip) => (

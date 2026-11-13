@@ -232,7 +232,7 @@ export default function BioEditor({ portfolio, onSaved }: Props) {
               {form.cvUrl && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-green-400">CV uploaded ✓</span>
-                  <button type="button" onClick={() => set('cvUrl', '')} className="text-xs text-red-400 hover:text-red-300 transition-colors">Remove</button>
+                  <button type="button" onClick={() => set('cvUrl', '')} className="text-xs text-red-400 hover:text-red-300 transition-colors py-2 px-1 -my-2">Remove</button>
                 </div>
               )}
               <label className="flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer text-sm text-slate-400 hover:text-white transition-colors w-fit" style={{ border: '1px dashed rgba(255,255,255,0.15)' }}>

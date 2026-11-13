@@ -1111,6 +1111,17 @@ html[data-admin] body::after { display: none; }
 html[data-admin] body { background-image: none; }
 
 /* Admin header actions: compact, icon-only on phones */
+/* The small pencil / bin / arrow buttons in the admin lists. On a phone or any touch
+   screen each one is a 40px target. On phones the form fields are 16px, so iOS does not
+   zoom the page when one is tapped. */
+.admin-icon-btn { display: inline-flex; align-items: center; justify-content: center; }
+@media (width < 40rem), (pointer: coarse) {
+  .admin-icon-btn { min-width: 40px; min-height: 40px; }
+}
+@media (width < 40rem) {
+  html[data-admin] .input-dark { font-size: 16px; }
+}
+
 .admin-action {
   height: 34px;
   min-height: 34px !important;

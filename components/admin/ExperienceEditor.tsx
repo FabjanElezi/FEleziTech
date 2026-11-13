@@ -287,14 +287,14 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
       {/* Header row */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
         {/* Filter tabs */}
-        <div className="flex gap-1 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex flex-wrap gap-1 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
           {FILTERS.map((f) => {
             const count = f.id === 'all' ? experiences.length : experiences.filter((e) => e.type === f.id).length;
             return (
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+                className="flex items-center gap-1.5 min-h-9 sm:min-h-0 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
                 style={filter === f.id
                   ? { background: 'linear-gradient(135deg,#0891b2,#0e7490)', color: 'white' }
                   : { color: '#64748b' }}
@@ -332,7 +332,8 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
           return (
             <div key={exp.id}>
               <div
-                className="group rounded-xl p-4 flex items-center gap-3 transition-all duration-200"
+                // Phones: the buttons go on a line of their own, so the text keeps the full width.
+                className="group rounded-xl p-3 sm:p-4 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-1 transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.03)',
                   border: '1px solid rgba(255,255,255,0.06)',
@@ -361,13 +362,13 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 flex-shrink-0">
+                <div className="flex items-center justify-end gap-1 flex-shrink-0 w-full sm:w-auto">
                   {filter === 'all' && (
-                    <div className="flex flex-col">
+                    <div className="flex flex-row sm:flex-col">
                       <button
                         onClick={() => move(exp.id, 'up')}
                         disabled={isFirst || moving === exp.id}
-                        className="p-1 rounded text-slate-600 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                        className="admin-icon-btn p-1 rounded text-slate-600 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                         title="Move up"
                       >
                         {moving === exp.id ? <span className="w-3 h-3 border border-slate-500 border-t-white rounded-full animate-spin inline-block" /> : <ChevronUp size={14} />}
@@ -375,17 +376,17 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                       <button
                         onClick={() => move(exp.id, 'down')}
                         disabled={isLast || moving === exp.id}
-                        className="p-1 rounded text-slate-600 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                        className="admin-icon-btn p-1 rounded text-slate-600 hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                         title="Move down"
                       >
                         <ChevronDown size={14} />
                       </button>
                     </div>
                   )}
-                  <button onClick={() => startEdit(exp)} className="p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
+                  <button onClick={() => startEdit(exp)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-white transition-colors" aria-label="Edit">
                     <Pencil size={14} />
                   </button>
-                  <button onClick={() => remove(exp.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
+                  <button onClick={() => remove(exp.id)} className="admin-icon-btn p-1.5 text-slate-500 hover:text-red-400 transition-colors" aria-label="Delete">
                     <Trash2 size={14} />
                   </button>
                 </div>

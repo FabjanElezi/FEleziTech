@@ -6,14 +6,14 @@ import { url } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Privacy',
   description:
-    'What this site records and what it does not: no cookies, no third-party requests, no IP address stored. Privacy notice for the portfolio of Fabjan Elezi.',
+    'This site does not track its visitors: no visit records, no cookies, no third-party requests. Privacy notice for the portfolio of Fabjan Elezi.',
   alternates: {
     canonical: url('/privacy'),
   },
   openGraph: {
     title: 'Privacy | Fabjan Elezi',
     description:
-      'No cookies, no third-party requests, no IP address stored. The complete list of what this site records.',
+      'No tracking, no cookies, no third-party requests. What this site does with data, in full.',
     url: url('/privacy'),
   },
 };

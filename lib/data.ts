@@ -3,8 +3,8 @@ import { Portfolio, Project, Experience, Skill, Service, ServiceIcon } from '@/t
 
 type Row = Record<string, unknown>;
 
-// One column per language for everything a visitor reads. Added lazily, the
-// same way the visits table is, so there is no migration step to remember.
+// One column per language for everything a visitor reads. Added lazily on
+// first use, so there is no migration step to remember.
 let translationsReady = false;
 const TRANSLATED: [string, string[]][] = [
   ['portfolio', ['title_de', 'title_sq', 'bio_de', 'bio_sq', 'hero_tagline_de', 'hero_tagline_sq']],

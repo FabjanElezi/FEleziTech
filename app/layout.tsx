@@ -74,10 +74,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
-  icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
-  },
+  // No icons here on purpose. The files app/favicon.ico, app/icon.png and app/apple-icon.png are linked
+  // by Next itself, each with a version in its address. A fixed address ('/logo.png') let browsers keep
+  // showing an old logo long after it was replaced, because for them nothing had changed.
 };
 
 const jsonLd = {

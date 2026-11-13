@@ -25,16 +25,21 @@ const EDGES: [number, number][] = [
   [15, 16], [16, 17], [17, 18], [10, 18], [11, 18], [4, 9],
 ];
 
+// The logo mark in the footer: public/logo-mark.svg is 155.11 x 88, with 9 units of air on each side.
+const MARK_H = 44;
+const MARK = { h: MARK_H, w: Math.round((MARK_H * 155.11) / 88), pad: Math.round((MARK_H * 9) / 88) };
+
 export default async function Image() {
   const allText = `Fabjan Elezi${EYEBROW}${TAGLINE}${NOTE}${SITE_HOST}`;
-  const [bold, medium, photo, logo] = await Promise.all([
+  const [bold, medium, photo, mark] = await Promise.all([
     googleFont('Space Grotesk', 700, allText),
     googleFont('Space Grotesk', 500, allText),
     readFile(join(process.cwd(), 'public/og-photo.jpg')),
-    readFile(join(process.cwd(), 'public/logo.png')),
+    // The logo of the menu bar (FE, the bar of the E is the infinity) as a drawing, so it stays sharp.
+    readFile(join(process.cwd(), 'public/logo-mark.svg')),
   ]);
   const photoSrc = `data:image/jpeg;base64,${photo.toString('base64')}`;
-  const logoSrc = `data:image/png;base64,${logo.toString('base64')}`;
+  const markSrc = `data:image/svg+xml;base64,${mark.toString('base64')}`;
   const font = bold ? 'Space Grotesk' : 'sans-serif';
 
   return new ImageResponse(
@@ -91,10 +96,10 @@ export default async function Image() {
           <img src={photoSrc} width={364} height={364} alt="" style={{ borderRadius: 9999, objectFit: 'cover' }} />
         </div>
 
-        {/* footer */}
-        <div style={{ position: 'absolute', left: 84, bottom: 46, display: 'flex', alignItems: 'center' }}>
-          <img src={logoSrc} width={34} height={34} alt="" style={{ borderRadius: 8 }} />
-          <span style={{ marginLeft: 14, fontSize: 24, color: '#cbd5e1', fontWeight: 500 }}>{SITE_HOST}</span>
+        {/* footer: the logo and the address. The drawing has 10% air around the letters, so it starts a little further left. */}
+        <div style={{ position: 'absolute', left: 84 - MARK.pad, bottom: 40, display: 'flex', alignItems: 'center' }}>
+          <img src={markSrc} width={MARK.w} height={MARK.h} alt="" />
+          <span style={{ marginLeft: 16 - MARK.pad, fontSize: 24, color: '#cbd5e1', fontWeight: 500 }}>{SITE_HOST}</span>
         </div>
       </div>
     ),

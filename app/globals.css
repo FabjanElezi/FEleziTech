@@ -605,6 +605,34 @@ body {
 [data-theme="light"] .logo-for-dark { display: none; }
 [data-theme="light"] .logo-for-light { display: block; }
 
+/* ── Owner lock ──────────────────────────────────────────────────────── */
+/* The owner's way into the admin: a quiet lock at the far edge of the header, drawn only in a
+   browser where he has signed in (components/Navbar.tsx). The negative margins let it sit in
+   the bar's own padding, so it costs the menu little room. */
+
+.nav-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 36px;
+  margin: 0 -8px 0 -4px;
+  border-radius: 8px;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+.nav-lock:hover,
+.nav-lock:focus-visible { color: #22d3ee; }
+.nav-lock:focus-visible { outline: 2px solid #22d3ee; outline-offset: -3px; }
+[data-theme="light"] .nav-lock:hover,
+[data-theme="light"] .nav-lock:focus-visible { color: #0891b2; }
+[data-theme="light"] .nav-lock:focus-visible { outline-color: #0891b2; }
+/* Compact header: a full-height tap target. */
+@media (width < 64rem) {
+  .nav-lock { width: 26px; height: 44px; margin: 0 -4px 0 -2px; }
+}
+
 /* ── RevoWeb logo (services page) ─────────────────────────────────────────── */
 /* components/RevoWebLogo.tsx. Everything is sized in em, so one font-size scales the
    whole logo. Proportions from the RevoWeb brand sheet: mark 59 high beside 76px type,

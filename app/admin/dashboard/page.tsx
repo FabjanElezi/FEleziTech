@@ -64,8 +64,16 @@ export default function Dashboard() {
 
   useEffect(() => { if (user) load(); }, [user, load]);
 
+  // This browser belongs to the owner: the public menu bar may show the lock here (see Navbar).
+  useEffect(() => {
+    if (!user) return;
+    try { localStorage.setItem('fe-owner', '1'); } catch { /* private window */ }
+  }, [user]);
+
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
+    // Signing out also takes the lock off the menu bar in this browser.
+    try { localStorage.removeItem('fe-owner'); } catch { /* private window */ }
     router.push('/admin/login');
   }
 

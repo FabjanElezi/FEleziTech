@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Lock } from 'lucide-react';
 import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
@@ -15,14 +15,35 @@ const links = [
   { href: '#contact',    label: 'nav.contact' },
 ];
 
+// Set by the sign-in page and the dashboard on a device where the owner has signed in.
+const OWNER_KEY = 'fe-owner';
+
+/** The owner's way into the admin: a quiet lock at the far edge of the bar. Not prefetched, and not for crawlers. */
+function AdminLock({ label }: { label: string }) {
+  return (
+    <Link href="/admin" prefetch={false} rel="nofollow" aria-label={label} title={label} className="nav-lock">
+      <Lock size={14} aria-hidden="true" />
+    </Link>
+  );
+}
+
 /**
  * The bar: logo, menu, language and theme. The CV is one click away in the hero, in Contact and in the footer.
- * There is no link to the owner sign-in here on purpose: on 13 Nov 2026 Google Safe Browsing marked the
- * site as deceptive one day after a lock linking to the password form went into this bar. The owner
- * reaches the sign-in by typing /admin.
+ *
+ * The page as it is served has no link to the owner sign-in. On 13 Nov 2026 Google Safe Browsing marked
+ * the site as deceptive one day after a lock linking to the password form went into this bar for everyone;
+ * the warning was lifted after the link was removed. The lock is now drawn only in a browser where the
+ * owner has signed in before, so visitors and scanners never get it. On a new device the owner types /admin once.
  */
 export default function Navbar() {
   const { t } = useLang();
+  const [owner, setOwner] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      try { setOwner(localStorage.getItem(OWNER_KEY) === '1'); } catch { /* private window */ }
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
@@ -116,12 +137,14 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
+          {owner && <AdminLock label={t('nav.admin')} />}
         </div>
 
-        {/* Mobile right: language and theme */}
+        {/* Mobile right: language and theme (and the lock on the owner's devices) */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
+          {owner && <AdminLock label={t('nav.admin')} />}
         </div>
       </nav>
     </header>

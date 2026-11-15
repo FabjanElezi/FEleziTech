@@ -606,9 +606,9 @@ body {
 [data-theme="light"] .logo-for-light { display: block; }
 
 /* ── Owner lock ──────────────────────────────────────────────────────── */
-/* The owner's way into the admin: a quiet lock at the far edge of the header, drawn only in a
-   browser where he has signed in (components/Navbar.tsx). The negative margins let it sit in
-   the bar's own padding, so it costs the menu little room. */
+/* The way into the admin: a quiet lock at the far edge of the header, shown to everyone. It is a
+   button without an address (components/Navbar.tsx). The negative margins let it sit in the
+   bar's own padding, so it costs the menu little room. */
 
 .nav-lock {
   display: inline-flex;
@@ -618,8 +618,12 @@ body {
   width: 28px;
   height: 36px;
   margin: 0 -8px 0 -4px;
+  padding: 0;
+  border: 0;
   border-radius: 8px;
+  background: none;
   color: #64748b;
+  cursor: pointer;
   transition: color 0.2s ease;
 }
 .nav-lock:hover,

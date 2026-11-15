@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowUpRight, Lock } from 'lucide-react';
 import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -15,35 +16,44 @@ const links = [
   { href: '#contact',    label: 'nav.contact' },
 ];
 
-// Set by the sign-in page and the dashboard on a device where the owner has signed in.
-const OWNER_KEY = 'fe-owner';
-
-/** The owner's way into the admin: a quiet lock at the far edge of the bar. Not prefetched, and not for crawlers. */
+/**
+ * The way into the admin: a quiet lock at the far edge of the bar, shown to everyone.
+ *
+ * It is a button and not a link on purpose. The page as it is served carries no address of the
+ * sign-in, and nothing is fetched before a click, so a scanner that reads the page and follows its
+ * links does not reach the sign-in from here.
+ */
 function AdminLock({ label }: { label: string }) {
+  const router = useRouter();
   return (
-    <Link href="/admin" prefetch={false} rel="nofollow" aria-label={label} title={label} className="nav-lock">
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      className="nav-lock"
+      onClick={(e) => {
+        // Cmd- or Ctrl-click opens it in a new tab, as a link would.
+        if (e.metaKey || e.ctrlKey) window.open('/admin', '_blank', 'noopener');
+        else router.push('/admin');
+      }}
+    >
       <Lock size={14} aria-hidden="true" />
-    </Link>
+    </button>
   );
 }
 
 /**
- * The bar: logo, menu, language and theme. The CV is one click away in the hero, in Contact and in the footer.
+ * The bar: logo, menu, language, theme and the lock. The CV is one click away in the hero, in Contact and in the footer.
  *
- * The page as it is served has no link to the owner sign-in. On 13 Nov 2026 Google Safe Browsing marked
- * the site as deceptive one day after a lock linking to the password form went into this bar for everyone;
- * the warning was lifted after the link was removed. The lock is now drawn only in a browser where the
- * owner has signed in before, so visitors and scanners never get it. On a new device the owner types /admin once.
+ * The lock has a history. On 13 Nov 2026 Google Safe Browsing marked the site as deceptive one day after a
+ * lock linking to the password form went into this bar for everyone; the warning was lifted after the link
+ * was removed. From 14 Nov the lock was drawn only in a browser where the owner had signed in before. Since
+ * 15 Nov 2026 everyone sees it again, because the owner wants it on every device without signing in first.
+ * Two things are different from the first time: the lock is a button without an address (see AdminLock),
+ * and the sign-in page shows no password field until someone asks for it.
  */
 export default function Navbar() {
   const { t } = useLang();
-  const [owner, setOwner] = useState(false);
-  useEffect(() => {
-    const id = setTimeout(() => {
-      try { setOwner(localStorage.getItem(OWNER_KEY) === '1'); } catch { /* private window */ }
-    }, 0);
-    return () => clearTimeout(id);
-  }, []);
   const headerRef = useRef<HTMLElement>(null);
   const linkRefs  = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
@@ -137,14 +147,14 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
           <LanguageSwitch />
           <ThemeToggle />
-          {owner && <AdminLock label={t('nav.admin')} />}
+          <AdminLock label={t('nav.admin')} />
         </div>
 
-        {/* Mobile right: language and theme (and the lock on the owner's devices) */}
+        {/* Mobile right: language, theme and the lock */}
         <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
           <LanguageSwitch compact />
           <ThemeToggle />
-          {owner && <AdminLock label={t('nav.admin')} />}
+          <AdminLock label={t('nav.admin')} />
         </div>
       </nav>
     </header>

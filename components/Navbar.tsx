@@ -143,16 +143,10 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {/* Desktop right */}
-        <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+        {/* Right: language, theme and the lock. One set for every screen size, so the page
+            carries each control once (two hidden copies read as "EN EN" to screen readers and crawlers). */}
+        <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 shrink-0">
           <LanguageSwitch />
-          <ThemeToggle />
-          <AdminLock label={t('nav.admin')} />
-        </div>
-
-        {/* Mobile right: language, theme and the lock */}
-        <div className="lg:hidden flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <LanguageSwitch compact />
           <ThemeToggle />
           <AdminLock label={t('nav.admin')} />
         </div>

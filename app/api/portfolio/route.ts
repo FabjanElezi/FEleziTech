@@ -10,12 +10,15 @@ export async function GET() {
   const { rows } = await query('SELECT * FROM portfolio WHERE id = $1', ['main']);
   if (!rows[0]) return Response.json(null, NO_STORE);
   const d = rows[0];
+  // The phone number is for Admin only. Admin loads this same address to fill its form and saves
+  // the whole form back, so a signed-in owner gets the number; everyone else gets an empty field.
+  const owner = await getAuthEmail();
   return Response.json({
     name: d.name ?? '',
     title: d.title ?? '',
     bio: d.bio ?? '',
     email: d.email ?? '',
-    phone: d.phone ?? '',
+    phone: owner ? (d.phone ?? '') : '',
     linkedin: d.linkedin ?? '',
     github: d.github,
     location: d.location,

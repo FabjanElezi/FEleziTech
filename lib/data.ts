@@ -93,6 +93,17 @@ export async function getPortfolio(): Promise<Portfolio | null> {
   };
 }
 
+/**
+ * The portfolio as visitors may see it: everything except the phone number.
+ * The number stays in the database (Admin still shows and saves it), but it is
+ * never sent to the browser on the public pages, not even inside the page data.
+ * (The Services page reads the full portfolio on purpose: it keeps its WhatsApp button.)
+ */
+export async function getPublicPortfolio(): Promise<Portfolio | null> {
+  const p = await getPortfolio();
+  return p ? { ...p, phone: '' } : null;
+}
+
 export async function getProjects(): Promise<Project[]> {
   await ensureTranslationColumns();
   const { rows } = await query('SELECT * FROM projects ORDER BY "order" ASC');

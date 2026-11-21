@@ -2,7 +2,7 @@
 import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText } from 'lucide-react';
+import { Mail, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText } from 'lucide-react';
 import NextLink from 'next/link';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -12,20 +12,22 @@ interface Props { portfolio: Portfolio | null }
 export default function Contact({ portfolio }: Props) {
   const { t } = useLang();
   const email = portfolio?.email || 'fabio.elezi485@icloud.com';
-  const phone = portfolio?.phone || '';
   const linkedin = portfolio?.linkedin || '';
   const github = portfolio?.github || '';
   const location = portfolio?.location || 'Tirana, Albania';
   const [copied, setCopied] = useState(false);
 
-  const copyEmail = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // A click on the email card copies the address and says so for two seconds.
+  // Where the clipboard is not available (old browsers, some in-app browsers)
+  // the click opens the mail app instead, so it never does nothing.
+  const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {}
+    } catch {
+      window.location.href = `mailto:${email}`;
+    }
   };
 
   return (
@@ -62,60 +64,41 @@ export default function Contact({ portfolio }: Props) {
         <div className="grid md:grid-cols-2 gap-8 perspective-field">
           {/* Contact cards — min-w-0 lets the long email truncate on narrow phones */}
           <div className="space-y-4 min-w-0">
-            <motion.div
-              className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
+            <motion.button
+              type="button"
+              onClick={copyEmail}
+              aria-label={`${t('contact.copy')}: ${email}`}
+              className="glass rounded-xl p-5 flex items-center gap-4 glass-hover w-full text-left cursor-pointer"
               initial={{ opacity: 0, x: -18 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0 }}
             >
-              <a href={`mailto:${email}`} className="flex items-center gap-4 flex-1 min-w-0">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(8,145,178,0.2)' }}
-                >
-                  <Mail size={18} className="text-cyan-400" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-500 mb-0.5">Email</p>
-                  <p className="text-white text-sm font-medium truncate">{email}</p>
-                </div>
-              </a>
-              <button
-                onClick={copyEmail}
-                aria-label={copied ? t('contact.copied') : t('contact.copy')}
-                className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'rgba(8,145,178,0.2)' }}
+              >
+                <Mail size={18} className="text-cyan-400" aria-hidden="true" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-slate-500 mb-0.5">{t('contact.email')}</p>
+                <p className="text-white text-sm font-medium truncate">{email}</p>
+              </div>
+              <span
+                aria-hidden="true"
+                className="flex-shrink-0 inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-all"
                 style={{
                   background: copied ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
                   border: `1px solid ${copied ? 'rgba(16,185,129,0.35)' : 'rgba(255,255,255,0.1)'}`,
-                  color: copied ? '#6ee7b7' : '#64748b',
+                  color: copied ? '#6ee7b7' : '#94a3b8',
                 }}
               >
                 {copied ? <Check size={13} /> : <Copy size={13} />}
-              </button>
-            </motion.div>
-
-            {phone && (
-              <motion.a
-                href={`tel:${phone}`}
-                className="glass rounded-xl p-5 flex items-center gap-4 glass-hover"
-                initial={{ opacity: 0, x: -18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.08 }}
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(6,182,212,0.15)' }}
-                >
-                  <Phone size={18} className="text-cyan-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 mb-0.5">Phone</p>
-                  <p className="text-white text-sm font-medium">{phone}</p>
-                </div>
-              </motion.a>
-            )}
+                {copied ? t('contact.copiedShort') : t('contact.copyShort')}
+              </span>
+            </motion.button>
+            {/* Read out by screen readers when the address has been copied. */}
+            <p className="sr-only" aria-live="polite">{copied ? t('contact.copied') : ''}</p>
 
             {linkedin && (
               <motion.a
@@ -179,7 +162,7 @@ export default function Contact({ portfolio }: Props) {
                 <MapPin size={18} className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-0.5">Location</p>
+                <p className="text-xs text-slate-500 mb-0.5">{t('contact.location')}</p>
                 <p className="text-white text-sm font-medium">{location}</p>
               </div>
             </motion.div>

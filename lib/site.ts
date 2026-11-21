@@ -38,6 +38,9 @@ export const SITE_URL = toOrigin(process.env.NEXT_PUBLIC_SITE_URL);
 /** Host on its own, for showing to people: "fabjanelezi.me" */
 export const SITE_HOST = SITE_URL.replace(/^https:\/\//, '');
 
+/** Shown in the footer as "Last updated …". Change it when the content changes. */
+export const SITE_UPDATED = { en: 'November 2026', de: 'November 2026', sq: 'nëntor 2026' } as const;
+
 /** Absolute URL for a path: url('/sitemap.xml') */
 export function url(path = '/'): string {
   if (!path || path === '/') return SITE_URL;

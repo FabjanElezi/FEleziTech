@@ -173,7 +173,7 @@ export default function ProjectDialog({ project, onClose }: Props) {
                 )}
                 {project.documentUrl && (
                   <a href={project.documentUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost text-sm">
-                    <FileText size={15} /> {t('projects.docs')}
+                    <FileText size={15} aria-hidden="true" /> {t('projects.docs')}
                   </a>
                 )}
               </div>

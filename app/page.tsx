@@ -7,7 +7,7 @@ import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import SectionDivider from '@/components/SectionDivider';
-import { getPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
+import { getPublicPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 import SocialSidebar from '@/components/SocialSidebar';
 
 // Always render from the database so Admin edits show up on the very next visit.
@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [portfolio, projects, experiences, skills] = await Promise.all([
-    getPortfolio(),
+    getPublicPortfolio(),
     getProjects(),
     getExperiences(),
     getSkills(),

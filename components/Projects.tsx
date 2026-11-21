@@ -153,8 +153,9 @@ export default function Projects({ projects }: Props) {
                           textDecoration: 'none',
                         }}
                         whileHover={{ scale: 1.07 }}
+                        aria-label={`${t('projects.view')} – ${project.title}`}
                       >
-                        <ExternalLink size={15} /> {t('projects.view')}
+                        <ExternalLink size={15} aria-hidden="true" /> {t('projects.view')}
                       </motion.a>
                     </motion.div>
                   )}
@@ -191,9 +192,10 @@ export default function Projects({ projects }: Props) {
                       href={project.githubLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${t('projects.code')} – ${project.title}`}
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[44px]"
                     >
-                      <GitBranch size={13} /> {t('projects.code')}
+                      <GitBranch size={13} aria-hidden="true" /> {t('projects.code')}
                     </a>
                   )}
                   {project.dbDesignImages && project.dbDesignImages.length > 0 && (
@@ -218,7 +220,7 @@ export default function Projects({ projects }: Props) {
                         e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
-                      <Database size={12} /> DB Design
+                      <Database size={12} aria-hidden="true" /> {t('projects.dbSchema')}
                     </button>
                   )}
                   {/* On touch devices show View Project here since hover overlay won't trigger */}
@@ -227,9 +229,10 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${t('projects.view')} – ${project.title}`}
                       className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors min-h-[44px]"
                     >
-                      <ExternalLink size={13} /> {t('projects.view')}
+                      <ExternalLink size={13} aria-hidden="true" /> {t('projects.view')}
                     </a>
                   )}
                   {!isTouch && project.liveDemoLink && (
@@ -237,9 +240,10 @@ export default function Projects({ projects }: Props) {
                       href={project.liveDemoLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${t('projects.liveDemo')} – ${project.title}`}
                       className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors min-h-[44px]"
                     >
-                      <ExternalLink size={13} /> {t('projects.liveDemo')}
+                      <ExternalLink size={13} aria-hidden="true" /> {t('projects.liveDemo')}
                     </a>
                   )}
                   {project.documentUrl && (
@@ -247,9 +251,10 @@ export default function Projects({ projects }: Props) {
                       href={project.documentUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${t('projects.docs')} – ${project.title}`}
                       className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[44px]"
                     >
-                      <FileText size={13} /> {t('projects.docs')}
+                      <FileText size={13} aria-hidden="true" /> {t('projects.docs')}
                     </a>
                   )}
                 </div>
@@ -268,7 +273,9 @@ export default function Projects({ projects }: Props) {
             >
               {showAll
                 ? t('projects.showFewer')
-                : `${t('projects.showMore')} (${projects.length - VISIBLE})`}
+                : projects.length - VISIBLE === 1
+                  ? t('projects.showMoreOne')
+                  : t('projects.showMoreN').replace('{n}', String(projects.length - VISIBLE))}
             </button>
           </div>
         )}

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Briefcase, GraduationCap, Calendar, MapPin, Award, Trophy, ChevronDown } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import { dateRange } from '@/lib/dates';
 
 const CertificateLightbox = dynamic(() => import('@/components/CertificateLightbox'), { ssr: false });
 // Only loaded if someone actually asks for the terminal view, so the default
@@ -68,7 +69,7 @@ function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificat
           <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 sm:flex-col sm:items-end sm:gap-1 shrink-0">
             <span className="flex items-center gap-1 text-xs text-slate-500">
               <Calendar size={11} />
-              {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
+              {dateRange(exp, t('experience.present'))}
             </span>
             {place && (
               <span className="flex items-center gap-1 text-xs text-slate-600">
@@ -253,7 +254,7 @@ export default function Experience({ experiences }: Props) {
                         {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
                       </span>
                       <span className="text-xs text-slate-600 whitespace-nowrap sm:text-right">
-                        {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? t('experience.present') : exp.endDate}` : ''}
+                        {dateRange(exp, t('experience.present'))}
                       </span>
                     </motion.li>
                   );

@@ -7,6 +7,7 @@ import {
   ChevronUp, ChevronDown, Briefcase, GraduationCap, Trophy,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { dateRange } from '@/lib/dates';
 
 type FilterType = 'all' | 'work' | 'education' | 'award' | 'other';
 
@@ -356,7 +357,7 @@ export default function ExperienceEditor({ experiences, onChanged }: Props) {
                   </div>
                   <p className="text-xs mt-0.5" style={{ color: style.text }}>{exp.company}</p>
                   <p className="text-slate-600 text-xs mt-0.5">
-                    {exp.startDate}{(exp.current || exp.endDate) ? ` – ${exp.current ? 'Present' : exp.endDate}` : ''}
+                    {dateRange(exp, 'Present')}
                     {exp.description && <span className="ml-2 text-slate-700">· {exp.description.slice(0, 40)}{exp.description.length > 40 ? '…' : ''}</span>}
                   </p>
                 </div>

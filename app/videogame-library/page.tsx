@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowLeft, Database, GitBranch } from 'lucide-react';
+import LegalBar from '@/components/LegalBar';
 
 const MermaidDiagram = dynamic(() => import('@/components/MermaidDiagram'), { ssr: false });
 
@@ -226,6 +227,10 @@ CREATE TABLE borrowing (
 );`}
           </pre>
         </div>
+
+        <footer className="mt-16 pt-5 border-t border-white/5">
+          <LegalBar />
+        </footer>
 
       </div>
     </div>

@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useLang } from '@/components/LanguageProvider';
+import LegalBar from '@/components/LegalBar';
 
 /**
  * What the site actually does with data, in the visitor's own language.
@@ -13,7 +14,7 @@ const COPY = {
   en: {
     back: 'Back to portfolio',
     title: 'Privacy',
-    updated: 'Last updated 13 November 2026',
+    updated: 'Last updated 21 November 2026',
     intro:
       'This is a personal portfolio. It does not track its visitors. It sets no cookies, loads nothing from other companies, and shows no advertising.',
     sections: [
@@ -31,11 +32,11 @@ const COPY = {
       },
       {
         h: 'Hosting',
-        p: 'The site runs on Vercel and its content is stored with Neon, both acting as processors. To deliver a page, their servers handle your IP address for that moment, as every web server does, and may keep short-lived technical logs. Nothing is sold, shared or sent to advertisers.',
+        p: 'The site runs on Vercel and its content is stored with Neon, both acting as processors. To deliver a page, their servers handle your IP address for that moment, as every web server does, and may keep short-lived technical logs. Nothing is sold, shared or sent to advertisers. My CV and the project PDFs and screenshots are stored on Vercel Blob, Vercel’s file storage, and are delivered from there when you open them.',
       },
       {
         h: 'If you contact me',
-        p: 'When you write to me by email, WhatsApp, Telegram or LinkedIn, I use what you send only to answer you.',
+        p: 'When you write to me by email or LinkedIn, or by WhatsApp or Telegram from the Services page, I use what you send only to answer you.',
       },
       {
         h: 'Security',
@@ -45,12 +46,17 @@ const COPY = {
         h: 'Your rights',
         p: 'The security record above rests on legitimate interest (Art. 6(1)(f) GDPR). You can ask what is held about you, ask for it to be deleted, or object to its use. Write to the email address in the contact section and it will be done.',
       },
+      {
+        h: 'Who is responsible',
+        p: 'Fabjan Elezi. Postal address and contact details are in the Impressum.',
+        link: '/impressum',
+      },
     ],
   },
   de: {
     back: 'Zurück zum Portfolio',
     title: 'Datenschutz',
-    updated: 'Zuletzt aktualisiert am 13. November 2026',
+    updated: 'Zuletzt aktualisiert am 21. November 2026',
     intro:
       'Dies ist ein persönliches Portfolio. Es erfasst seine Besucher nicht. Es setzt keine Cookies, lädt nichts von anderen Unternehmen und zeigt keine Werbung.',
     sections: [
@@ -68,11 +74,11 @@ const COPY = {
       },
       {
         h: 'Hosting',
-        p: 'Die Seite läuft bei Vercel, die Inhalte liegen bei Neon; beide handeln als Auftragsverarbeiter. Um eine Seite auszuliefern, verarbeiten ihre Server für diesen Moment Ihre IP-Adresse, wie jeder Webserver, und führen gegebenenfalls kurzlebige technische Protokolle. Es wird nichts verkauft, weitergegeben oder an Werbenetzwerke gesendet.',
+        p: 'Die Seite läuft bei Vercel, die Inhalte liegen bei Neon; beide handeln als Auftragsverarbeiter. Um eine Seite auszuliefern, verarbeiten ihre Server für diesen Moment Ihre IP-Adresse, wie jeder Webserver, und führen gegebenenfalls kurzlebige technische Protokolle. Es wird nichts verkauft, weitergegeben oder an Werbenetzwerke gesendet. Mein Lebenslauf sowie die PDFs und Screenshots der Projekte liegen bei Vercel Blob, dem Dateispeicher von Vercel, und werden von dort ausgeliefert, wenn Sie sie öffnen.',
       },
       {
         h: 'Wenn Sie mich kontaktieren',
-        p: 'Wenn Sie mir per E-Mail, WhatsApp, Telegram oder LinkedIn schreiben, verwende ich Ihre Angaben nur, um Ihnen zu antworten.',
+        p: 'Wenn Sie mir per E-Mail, über LinkedIn oder – auf der Seite „Leistungen“ – per WhatsApp oder Telegram schreiben, verwende ich Ihre Angaben nur, um Ihnen zu antworten.',
       },
       {
         h: 'Sicherheit',
@@ -82,12 +88,17 @@ const COPY = {
         h: 'Ihre Rechte',
         p: 'Der Sicherheitseintrag oben beruht auf berechtigtem Interesse (Art. 6 Abs. 1 lit. f DSGVO). Sie können Auskunft verlangen, die Löschung verlangen oder der Verarbeitung widersprechen — eine E-Mail an die im Kontaktbereich genannte Adresse genügt.',
       },
+      {
+        h: 'Verantwortlich',
+        p: 'Fabjan Elezi. Postanschrift und Kontaktdaten finden Sie im Impressum.',
+        link: '/impressum',
+      },
     ],
   },
   sq: {
     back: 'Kthehu te portofoli',
     title: 'Privatësia',
-    updated: 'Përditësuar më 13 nëntor 2026',
+    updated: 'Përditësuar më 21 nëntor 2026',
     intro:
       'Kjo është një faqe personale portofoli. Nuk i gjurmon vizitorët. Nuk vendos cookie, nuk ngarkon asgjë nga kompani të tjera dhe nuk shfaq reklama.',
     sections: [
@@ -105,11 +116,11 @@ const COPY = {
       },
       {
         h: 'Hosting',
-        p: 'Faqja funksionon në Vercel dhe përmbajtja ruhet në Neon, të dy si përpunues. Për të dërguar një faqe, serverët e tyre e përdorin adresën tuaj IP për atë çast, si çdo server web, dhe mund të mbajnë regjistra teknikë për një kohë të shkurtër. Asgjë nuk shitet, nuk ndahet dhe nuk u dërgohet rrjeteve reklamuese.',
+        p: 'Faqja funksionon në Vercel dhe përmbajtja ruhet në Neon, të dy si përpunues. Për të dërguar një faqe, serverët e tyre e përdorin adresën tuaj IP për atë çast, si çdo server web, dhe mund të mbajnë regjistra teknikë për një kohë të shkurtër. Asgjë nuk shitet, nuk ndahet dhe nuk u dërgohet rrjeteve reklamuese. CV-ja ime dhe PDF-të e pamjet e ekranit të projekteve ruhen në Vercel Blob, hapësira e skedarëve e Vercel-it, dhe dërgohen prej andej kur i hapni.',
       },
       {
         h: 'Nëse më kontaktoni',
-        p: 'Kur më shkruani me email, WhatsApp, Telegram ose LinkedIn, ato që dërgoni i përdor vetëm për t’ju përgjigjur.',
+        p: 'Kur më shkruani me email ose LinkedIn, ose me WhatsApp a Telegram nga faqja e Shërbimeve, ato që dërgoni i përdor vetëm për t’ju përgjigjur.',
       },
       {
         h: 'Siguria',
@@ -119,12 +130,17 @@ const COPY = {
         h: 'Të drejtat tuaja',
         p: 'Regjistrimi i sigurisë më sipër bazohet në interesin legjitim (neni 6(1)(f) i GDPR-së). Mund të kërkoni çfarë mbahet për ju, të kërkoni fshirjen ose të kundërshtoni — mjafton një email në adresën te seksioni i kontaktit.',
       },
+      {
+        h: 'Kush është përgjegjës',
+        p: 'Fabjan Elezi. Adresa postare dhe të dhënat e kontaktit janë te Impressum.',
+        link: '/impressum',
+      },
     ],
   },
 } as const;
 
 export default function PrivacyPage() {
-  const { lang } = useLang();
+  const { t, lang } = useLang();
   const c = COPY[lang] ?? COPY.en;
 
   return (
@@ -147,9 +163,19 @@ export default function PrivacyPage() {
             <section key={s.h}>
               <h2 className="text-white font-semibold mb-2">{s.h}</h2>
               <p className="text-slate-400 text-sm leading-relaxed">{s.p}</p>
+              {/* Only "Who is responsible" carries a link: the address itself is in the Impressum. */}
+              {'link' in s && (
+                <Link href={s.link} className="inline-flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 mt-3">
+                  {t('footer.impressum')}
+                </Link>
+              )}
             </section>
           ))}
         </div>
+
+        <footer className="mt-16 pt-5 border-t border-white/5">
+          <LegalBar />
+        </footer>
       </div>
     </main>
   );

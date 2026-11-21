@@ -8,7 +8,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
 import MobileDock from '@/components/MobileDock';
 import MotionProvider from '@/components/MotionProvider';
-import { SITE_URL, SITE_HOST } from '@/lib/site';
+import { SITE_URL } from '@/lib/site';
 import './globals.css';
 
 const geistSans  = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -28,14 +28,6 @@ export const metadata: Metadata = {
   },
   description:
     'Fabjan Elezi – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
-  keywords: [
-    'Fabjan Elezi', 'fabjan elezi',
-    'developer portfolio', 'information systems student', 'business informatics', 'FH Aachen',
-    'web developer', 'data analyst', 'junior developer',
-    'cybersecurity', 'data analytics', 'business intelligence', 'IT systems', 'software development', 'werkstudent',
-    'React developer', 'Next.js developer', 'TypeScript',
-    'Aachen', SITE_HOST,
-  ],
   authors: [{ name: 'Fabjan Elezi', url: SITE_URL }],
   creator: 'Fabjan Elezi',
   publisher: 'Fabjan Elezi',

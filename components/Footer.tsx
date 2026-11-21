@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { FileText, Mail } from 'lucide-react';
 import Logo from '@/components/Logo';
+import LegalBar from '@/components/LegalBar';
 import { useLang } from '@/components/LanguageProvider';
 import { Portfolio } from '@/types';
 
@@ -53,9 +54,10 @@ export default function Footer({ portfolio }: Props) {
     return () => { clearTimeout(first); clearInterval(every); };
   }, [lang]);
 
-  // The scroll-to-top button is fixed at bottom 2rem, right 1.5rem, so on a
-  // phone it parks exactly where the last lines sit. The extra bottom padding
-  // lifts them clear of it and of the bottom bar.
+  // The scroll-to-top button is fixed at right 1.5rem: bottom 2rem on desktop,
+  // bottom 6rem on phones and tablets, above the bottom bar (globals.css).
+  // On phones the extra bottom padding keeps the last lines clear of the
+  // button and the bar; on wider screens md:pr-20 keeps them out from under it.
   return (
     <footer ref={ref} className="site-footer relative px-6 pt-24 pb-28 lg:pb-8">
       <div
@@ -121,8 +123,7 @@ export default function Footer({ portfolio }: Props) {
       </div>
 
       <div className="footer-bottom max-w-5xl mx-auto mt-10 pt-5 md:pr-20 xl:pr-0 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-600">
-        <p>© {new Date().getFullYear()} Fabjan Elezi. {t('footer.rights')}</p>
-        <Link href="/privacy" className="hover:text-cyan-400 transition-colors">{t('footer.privacy')}</Link>
+        <LegalBar />
       </div>
     </footer>
   );

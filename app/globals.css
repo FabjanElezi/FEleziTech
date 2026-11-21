@@ -1439,3 +1439,9 @@ html[data-admin] body { background-image: none; }
   .dock-item { padding-left: 3px !important; padding-right: 3px !important; min-width: 42px !important; }
   .dock-item span { letter-spacing: 0 !important; }
 }
+
+/* Phones and tablets: lift the ↑ button above the bottom bar, which it covered.
+   Its inline style sets bottom: 2rem, hence !important. */
+@media (max-width: 1023px) {
+  .scroll-top-btn { bottom: 6rem !important; }
+}

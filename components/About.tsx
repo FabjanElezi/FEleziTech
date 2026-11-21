@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Globe } from 'lucide-react';
 import { Portfolio } from '@/types';
 import JourneyGlobe from '@/components/JourneyGlobe';
+import SectionNumber from '@/components/SectionNumber';
 
 interface Props { portfolio: Portfolio | null }
 
@@ -73,7 +74,7 @@ export default function About({ portfolio }: Props) {
               transition={{ duration: 0.45, ease, delay: 0.08 }}
             >
               <span className="w-8 h-px bg-cyan-500" />
-              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('about.eyebrow')}</span>
+              <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="about" />{t('about.eyebrow')}</span>
             </motion.div>
 
             <motion.h2

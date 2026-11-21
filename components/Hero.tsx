@@ -1,66 +1,27 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
 import HeroDataStory from '@/components/HeroDataStory';
-import { useState, useEffect } from 'react';
-import { FileText, ArrowDown, Mail } from 'lucide-react';
-import { Portfolio } from '@/types';
+import { FileText, ArrowDown, ArrowRight, Mail } from 'lucide-react';
+import { Portfolio, Project } from '@/types';
+import { projectAnchor } from '@/lib/sections';
 
-interface Props { portfolio: Portfolio | null }
+interface Props { portfolio: Portfolio | null; projects: Project[] }
 
-function Typewriter({ roles }: { roles: string[] }) {
-  // Start with the first role fully shown so the text is in the server HTML
-  // and visible before JavaScript loads; the cycle then holds, deletes and continues.
-  const [displayed, setDisplayed] = useState(roles[0]);
-  const [idx, setIdx] = useState(0);
-  const [typing, setTyping] = useState(true);
-
-  useEffect(() => {
-    const current = roles[idx];
-    let t: ReturnType<typeof setTimeout>;
-    if (typing) {
-      if (displayed.length < current.length) {
-        t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 42);
-      } else {
-        t = setTimeout(() => setTyping(false), 1800);
-      }
-    } else {
-      if (displayed.length > 0) {
-        t = setTimeout(() => setDisplayed(d => d.slice(0, -1)), 22);
-      } else {
-        setIdx(i => (i + 1) % roles.length);
-        setTyping(true);
-      }
-    }
-    return () => clearTimeout(t);
-  }, [displayed, typing, idx, roles]);
-
-  return (
-    <span>
-      {displayed}
-      <span
-        className="inline-block w-0.5 h-4 ml-0.5 align-middle animate-pulse"
-        style={{ background: '#22d3ee', borderRadius: 1 }}
-      />
-    </span>
-  );
-}
+// The project the first button points to ("Start here: FETech Analytics →").
+// If it is ever renamed or removed, the button falls back to "View projects".
+const START_HERE = 'FETech Analytics';
 
 // Entrance animation is CSS-driven (.hero-in in globals.css) so the hero is
 // visible as soon as the HTML paints, instead of waiting for JS to hydrate.
 const reveal = (delay: number) => ({ '--d': `${delay}s` } as React.CSSProperties);
 
-export default function Hero({ portfolio }: Props) {
-  const { t, L } = useLang();
+export default function Hero({ portfolio, projects }: Props) {
+  const { t } = useLang();
   const name = portfolio?.name || 'Fabjan Elezi';
-  const title = L(portfolio, 'title') || 'Information Systems M.Sc. Student · Data, IT & Business';
   const cvUrl = portfolio?.cvUrl;
-
-  const roles = [
-    t('hero.role1'),
-    t('hero.role2'),
-    t('hero.role3'),
-    t('hero.role4'),
-  ];
+  const startHere = projects.find((p) => p.title === START_HERE);
+  // The "available for work" switch in /admin hides the open-to line.
+  const openTo = portfolio?.availableForWork !== false;
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-10 mdl:pb-8 lg:pt-28 lg:pb-12">
@@ -90,38 +51,35 @@ export default function Hero({ portfolio }: Props) {
           One centred column otherwise. */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mdl:px-16 lg:px-20 2xl:px-12 grid items-center gap-y-8 mdl:gap-x-6 mdl:gap-y-0 mdl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] mdl:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:grid-rows-[auto_auto]">
       <div className="text-center mdl:text-left mdl:col-start-1 mdl:row-start-1 mdl:self-end lg:text-left lg:col-start-1 lg:row-start-1 lg:self-end">
-        {portfolio?.availableForWork !== false && (
-          <div className="mb-6 hero-in" style={reveal(0)}>
-            <span
-              className="hero-badge inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
-              style={{
-                background: 'rgba(8,145,178,0.1)',
-                border: '1px solid rgba(34,211,238,0.35)',
-                color: '#67e8f9',
-                backdropFilter: 'blur(16px) saturate(160%)',
-                WebkitBackdropFilter: 'blur(16px) saturate(160%)',
-                boxShadow: '0 2px 0 rgba(255,255,255,0.12) inset, 0 0 24px rgba(8,145,178,0.18)',
-              }}
-            >
-              <span className="relative flex h-2 w-2">
-                <span
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: '#22d3ee' }}
-                />
-                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#0891b2' }} />
-              </span>
-              {t('hero.badge')}
+        {/* The badge names his focus, so it always shows; availability is the open-to line below. */}
+        <div className="mb-6 hero-in" style={reveal(0)}>
+          <span
+            className="hero-badge inline-flex items-center gap-2 text-xs font-semibold tracking-wide px-4 py-1.5 rounded-full"
+            style={{
+              background: 'rgba(8,145,178,0.1)',
+              border: '1px solid rgba(34,211,238,0.35)',
+              color: '#67e8f9',
+              backdropFilter: 'blur(16px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(16px) saturate(160%)',
+              boxShadow: '0 2px 0 rgba(255,255,255,0.12) inset, 0 0 24px rgba(8,145,178,0.18)',
+            }}
+          >
+            <span className="relative flex h-2 w-2">
+              <span
+                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                style={{ background: '#22d3ee' }}
+              />
+              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#0891b2' }} />
             </span>
-          </div>
-        )}
+            {t('hero.badge')}
+          </span>
+        </div>
 
         <h1
           className="text-4xl sm:text-6xl mdl:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight text-white mb-4 leading-tight hero-in"
           style={reveal(0.1)}
         >
-          {t('hero.greeting')}{' '}
-          <span className="gradient-text">{name.split(' ')[0]}</span>
-          <br />
+          <span className="gradient-text">{name.split(' ')[0]}</span>{' '}
           <span className="text-slate-300">{name.split(' ').slice(1).join(' ')}</span>
         </h1>
 
@@ -129,23 +87,38 @@ export default function Hero({ portfolio }: Props) {
           className="text-lg sm:text-xl text-slate-400 mb-2 font-medium hero-in"
           style={reveal(0.2)}
         >
-          {title}
+          {t('hero.degree')}
         </p>
 
         <p
-          className="hero-tagline text-base mb-10 mdl:mb-7 max-w-xl mx-auto mdl:mx-0 lg:mx-0 font-medium hero-in"
+          className={`hero-tagline text-base ${openTo ? 'mb-4' : 'mb-10 mdl:mb-7'} max-w-xl mx-auto mdl:mx-0 lg:mx-0 font-medium hero-in`}
           style={{ color: 'rgba(34,211,238,0.75)', ...reveal(0.3) }}
         >
-          <Typewriter roles={roles} />
+          {t('hero.pitch')}
         </p>
+
+        {openTo && (
+          <p
+            className="text-sm text-slate-400 mb-10 mdl:mb-7 max-w-xl mx-auto mdl:mx-0 lg:mx-0 hero-in"
+            style={reveal(0.35)}
+          >
+            {t('hero.openTo')}
+          </p>
+        )}
 
         <div
           className="flex flex-wrap items-center justify-center mdl:justify-start lg:justify-start gap-4 hero-in"
           style={reveal(0.4)}
         >
-          <a href="#projects" className="btn-primary">
-            {t('hero.viewProjects')} <ArrowDown size={16} />
-          </a>
+          {startHere ? (
+            <a href={`#${projectAnchor(startHere.title)}`} className="btn-primary">
+              {t('hero.startHere')} {startHere.title} <ArrowRight size={16} />
+            </a>
+          ) : (
+            <a href="#projects" className="btn-primary">
+              {t('hero.viewProjects')} <ArrowDown size={16} />
+            </a>
+          )}
           {cvUrl ? (
             <a href="/api/cv" target="_blank" rel="noopener noreferrer" className="btn-ghost">
               {t('hero.viewCv')} <FileText size={16} />

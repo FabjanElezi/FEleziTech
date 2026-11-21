@@ -3,6 +3,7 @@ import { useLang } from '@/components/LanguageProvider';
 import { motion } from 'framer-motion';
 import { Skill } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import SectionNumber from '@/components/SectionNumber';
 
 interface Props { skills: Skill[] }
 
@@ -61,7 +62,7 @@ export default function Skills({ skills }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('skills.eyebrow')}</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="skills" />{t('skills.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

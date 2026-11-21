@@ -36,7 +36,7 @@ export default async function HomePage() {
       <div className="relative z-10">
         <SocialSidebar linkedin={portfolio?.linkedin} github={portfolio?.github} email={portfolio?.email} />
         <Navbar />
-        <Hero portfolio={portfolio} />
+        <Hero portfolio={portfolio} projects={projects} />
         <SectionDivider />
         <About portfolio={portfolio} />
         <SectionDivider flip />

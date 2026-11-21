@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Briefcase, GraduationCap, Calendar, MapPin, Award, Trophy, ChevronDown } from 'lucide-react';
 import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import SectionNumber from '@/components/SectionNumber';
 import { dateRange } from '@/lib/dates';
 
 const CertificateLightbox = dynamic(() => import('@/components/CertificateLightbox'), { ssr: false });
@@ -202,7 +203,7 @@ export default function Experience({ experiences }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('experience.eyebrow')}</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="experience" />{t('experience.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">

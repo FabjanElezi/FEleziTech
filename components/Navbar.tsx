@@ -7,14 +7,10 @@ import Logo from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { useLang } from '@/components/LanguageProvider';
+import { SECTIONS } from '@/lib/sections';
 
-const links = [
-  { href: '#about',      label: 'nav.about' },
-  { href: '#skills',     label: 'nav.skills' },
-  { href: '#experience', label: 'nav.experience' },
-  { href: '#projects',   label: 'nav.projects' },
-  { href: '#contact',    label: 'nav.contact' },
-];
+// Built from the shared list, so the menu order and the numbered section headings always agree.
+const links = SECTIONS.map((s) => ({ href: `#${s.id}`, label: s.label }));
 
 /**
  * The way into the admin: a quiet lock at the far edge of the bar, shown to everyone.

@@ -7,6 +7,8 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import SectionNumber from '@/components/SectionNumber';
+import { projectAnchor } from '@/lib/sections';
 
 const DbDesignLightbox = dynamic(() => import('@/components/DbDesignLightbox'), { ssr: false });
 const ProjectDialog = dynamic(() => import('@/components/ProjectDialog'), { ssr: false });
@@ -56,7 +58,7 @@ export default function Projects({ projects }: Props) {
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('projects.eyebrow')}</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="projects" />{t('projects.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-4">
@@ -79,7 +81,7 @@ export default function Projects({ projects }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('projects.eyebrow')}</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="projects" />{t('projects.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white">
@@ -91,7 +93,10 @@ export default function Projects({ projects }: Props) {
           {(showAll ? projects : projects.slice(0, VISIBLE)).map((project, i) => (
             <motion.article
               key={project.id}
-              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative"
+              // The id lets the hero's "Start here" button link straight to this card;
+              // scroll-mt keeps the card clear of the menu bar when the page jumps to it.
+              id={projectAnchor(project.title)}
+              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative scroll-mt-24"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

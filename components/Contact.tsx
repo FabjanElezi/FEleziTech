@@ -6,6 +6,7 @@ import { Mail, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText } fr
 import NextLink from 'next/link';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
+import SectionNumber from '@/components/SectionNumber';
 
 interface Props { portfolio: Portfolio | null }
 
@@ -47,7 +48,7 @@ export default function Contact({ portfolio }: Props) {
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-8 h-px bg-cyan-500" />
-            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('contact.eyebrow')}</span>
+            <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider"><SectionNumber id="contact" />{t('contact.eyebrow')}</span>
             <span className="w-8 h-px bg-cyan-400" />
           </div>
           <h2 className="section-title text-white mb-3">

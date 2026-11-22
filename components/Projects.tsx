@@ -2,13 +2,16 @@
 import { useLang } from '@/components/LanguageProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ExternalLink, GitBranch, FileText, Star, Database } from 'lucide-react';
+import { ExternalLink, GitBranch, FileText, Star, Database, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 import SectionNumber from '@/components/SectionNumber';
 import { projectAnchor } from '@/lib/sections';
+import { FEATURED, liveHref } from '@/lib/featured';
+import { splitProjects } from '@/lib/archive';
 
 const DbDesignLightbox = dynamic(() => import('@/components/DbDesignLightbox'), { ssr: false });
 const ProjectDialog = dynamic(() => import('@/components/ProjectDialog'), { ssr: false });
@@ -38,15 +41,13 @@ function ProjectDescription({ text, canOpen, onOpen }: { text: string; canOpen: 
 }
 
 export default function Projects({ projects }: Props) {
-  const { t, L } = useLang();
+  const { t, L, lang } = useLang();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isTouch, setIsTouch] = useState(false);
   const [dbLightbox, setDbLightbox] = useState<string[] | null>(null);
   const [openProject, setOpenProject] = useState<Project | null>(null);
-  // Six fills two complete rows of the 3-column grid (and three of the
-  // 2-column one); the rest stay one click away.
-  const [showAll, setShowAll] = useState(false);
-  const VISIBLE = 6;
+  // The featured projects show here as cards; the rest are in the project archive.
+  const { shown, rest } = splitProjects(projects);
 
   useEffect(() => {
     setIsTouch(window.matchMedia('(hover: none)').matches);
@@ -90,7 +91,12 @@ export default function Projects({ projects }: Props) {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 perspective-field">
-          {(showAll ? projects : projects.slice(0, VISIBLE)).map((project, i) => (
+          {shown.map((project, i) => {
+            // A featured project with texts in lib/featured.ts gets the case-study card;
+            // any other project keeps the normal card.
+            const card = FEATURED[project.title];
+            const live = card ? liveHref(card, project.liveDemoLink) : project.liveDemoLink;
+            return (
             <motion.article
               key={project.id}
               // The id lets the hero's "Start here" button link straight to this card;
@@ -130,7 +136,7 @@ export default function Projects({ projects }: Props) {
 
                 {/* Overlay — only over the image */}
                 <AnimatePresence>
-                  {hoveredId === project.id && project.liveDemoLink && (
+                  {hoveredId === project.id && live && (
                     <motion.div
                       className="absolute inset-0 flex items-center justify-center"
                       initial={{ opacity: 0 }}
@@ -144,7 +150,7 @@ export default function Projects({ projects }: Props) {
                       }}
                     >
                       <motion.a
-                        href={project.liveDemoLink}
+                        href={live}
                         target="_blank"
                         rel="noopener noreferrer"
                         initial={{ scale: 0.82, opacity: 0 }}
@@ -167,6 +173,53 @@ export default function Projects({ projects }: Props) {
                 </AnimatePresence>
               </div>
 
+              {card ? (
+                <div className="p-5 flex flex-col flex-1">
+                  <p className="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-1.5">{card.role[lang]}</p>
+                  <h3 className="text-white font-semibold text-base leading-tight mb-2">{project.title}</h3>
+                  <p className="text-body text-sm leading-relaxed mb-4 flex-1">{card.line[lang]}</p>
+
+                  {project.techStack?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {project.techStack.map((tag) => (
+                        <span key={tag} className="tech-tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3 pt-3 border-t border-white/5 flex-wrap">
+                    {live && (
+                      <a
+                        href={live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${card.liveLabel === 'site' ? t('projects.liveSite') : t('projects.liveDemo')} – ${project.title}`}
+                        className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 transition-colors min-h-[44px]"
+                      >
+                        <ExternalLink size={13} aria-hidden="true" /> {card.liveLabel === 'site' ? t('projects.liveSite') : t('projects.liveDemo')}
+                      </a>
+                    )}
+                    {project.githubLink && (
+                      <a
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${t('projects.code')} – ${project.title}`}
+                        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors min-h-[44px]"
+                      >
+                        <GitBranch size={13} aria-hidden="true" /> {t('projects.code')}
+                      </a>
+                    )}
+                    <Link
+                      href={`/${card.caseStudy}`}
+                      aria-label={`${t('projects.caseStudy')} – ${project.title}`}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors ml-auto min-h-[44px]"
+                    >
+                      <FileText size={13} aria-hidden="true" /> {t('projects.caseStudy')}
+                    </Link>
+                  </div>
+                </div>
+              ) : (
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <h3 className="text-white font-semibold text-base leading-tight">{project.title}</h3>
@@ -264,24 +317,17 @@ export default function Projects({ projects }: Props) {
                   )}
                 </div>
               </div>
+              )}
             </motion.article>
-          ))}
+            );
+          })}
         </div>
 
-        {projects.length > VISIBLE && (
+        {rest.length > 0 && (
           <div className="flex justify-center mt-10">
-            <button
-              type="button"
-              onClick={() => setShowAll((v) => !v)}
-              aria-expanded={showAll}
-              className="btn-ghost text-sm"
-            >
-              {showAll
-                ? t('projects.showFewer')
-                : projects.length - VISIBLE === 1
-                  ? t('projects.showMoreOne')
-                  : t('projects.showMoreN').replace('{n}', String(projects.length - VISIBLE))}
-            </button>
+            <Link href="/archive" className="btn-ghost text-sm">
+              {t('projects.archive')} <ArrowRight size={16} />
+            </Link>
           </div>
         )}
       </div>

@@ -3,14 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useLang } from '@/components/LanguageProvider';
 
 interface Props {
   images: string[];
   onClose: () => void;
+  /** Heading in the top bar; the database schema button leaves it as "Database Design". */
+  title?: string;
+  /** One caption per image, shown under it (case-study screenshots). */
+  captions?: string[];
+  /** The image to open first. */
+  startIndex?: number;
 }
 
-export default function DbDesignLightbox({ images, onClose }: Props) {
-  const [idx, setIdx] = useState(0);
+export default function DbDesignLightbox({ images, onClose, title, captions, startIndex = 0 }: Props) {
+  const { t } = useLang();
+  const [idx, setIdx] = useState(startIndex);
   const closeRef = useRef<HTMLButtonElement>(null);
   // Track which src finished loading so each slide shows the spinner until ready
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
@@ -47,7 +55,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
         className="fixed inset-0 z-[99999] overflow-y-auto"
         role="dialog"
         aria-modal="true"
-        aria-label="Database design"
+        aria-label={title ?? 'Database design'}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -67,11 +75,11 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                  Database Design
+                  {title ?? 'Database Design'}
                 </span>
                 {images.length > 1 && (
                   <span className="text-slate-500 text-xs">
-                    — {labels[idx] ?? `${idx + 1} / ${images.length}`}
+                    — {captions ? `${idx + 1} / ${images.length}` : labels[idx] ?? `${idx + 1} / ${images.length}`}
                   </span>
                 )}
               </div>
@@ -82,14 +90,14 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   rel="noopener noreferrer"
                   className="text-slate-400 hover:text-white transition-colors"
                 >
-                  Open full size ↗
+                  {t('projects.openFull')}
                 </a>
                 <button
                   ref={closeRef}
                   onClick={onClose}
                   className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
                 >
-                  <X size={16} /> Close
+                  <X size={16} /> {t('projects.close')}
                 </button>
               </div>
             </div>
@@ -114,12 +122,12 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                 >
                   {failed ? (
                     <p className="text-slate-400 text-sm text-center">
-                      Couldn&apos;t load this diagram. Try &quot;Open full size&quot;.
+                      {t('projects.loadFailed')}
                     </p>
                   ) : (
                     <Image
                       src={src}
-                      alt={`DB Design ${idx + 1}`}
+                      alt={captions?.[idx] ?? `DB Design ${idx + 1}`}
                       width={1600}
                       height={1600}
                       sizes="(max-width: 896px) 100vw, 896px"
@@ -146,7 +154,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                 <>
                   <button
                     onClick={prev}
-                    aria-label="Previous diagram"
+                    aria-label={t('projects.prevImage')}
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                     style={{ background: 'rgba(9,13,21,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
@@ -156,7 +164,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   </button>
                   <button
                     onClick={next}
-                    aria-label="Next diagram"
+                    aria-label={t('projects.nextImage')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all"
                     style={{ background: 'rgba(9,13,21,0.7)', border: '1px solid rgba(6,182,212,0.3)' }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(6,182,212,0.15)'; }}
@@ -168,6 +176,10 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
               )}
             </div>
 
+            {captions?.[idx] && (
+              <p className="text-slate-400 text-xs text-center mt-3">{captions[idx]}</p>
+            )}
+
             {/* Dots */}
             {images.length > 1 && (
               <div className="flex items-center justify-center gap-2 mt-4">
@@ -175,7 +187,7 @@ export default function DbDesignLightbox({ images, onClose }: Props) {
                   <button
                     key={i}
                     onClick={() => setIdx(i)}
-                    aria-label={`Show ${labels[i] ?? `diagram ${i + 1}`}`}
+                    aria-label={captions ? `${t('projects.image')} ${i + 1}` : `Show ${labels[i] ?? `diagram ${i + 1}`}`}
                     aria-current={i === idx}
                     className="w-2 h-2 rounded-full transition-all"
                     style={{ background: i === idx ? '#22d3ee' : 'rgba(255,255,255,0.2)' }}

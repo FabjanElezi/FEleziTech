@@ -3,7 +3,7 @@ import { useLang } from '@/components/LanguageProvider';
 import { useEffect, useRef, useState } from 'react';
 import { Home, User, Code2, FolderOpen, Mail, Briefcase } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const sections = [
   { id: 'hero',     label: 'nav.home',     Icon: Home },
@@ -16,6 +16,7 @@ const sections = [
 export default function MobileDock() {
   const { t } = useLang();
   const pathname = usePathname();
+  const router = useRouter();
   const [active, setActive] = useState('hero');
   const dockRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +64,9 @@ export default function MobileDock() {
   const handleClick = (id: string) => {
     if (id === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (pathname !== '/') {
+      // The sections only exist on the home page; from any other page the button goes there.
+      router.push(`/#${id}`);
     } else {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }

@@ -8,6 +8,7 @@ import { Experience as Exp } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 import SectionNumber from '@/components/SectionNumber';
 import { dateRange } from '@/lib/dates';
+import { descriptionLines, mergeByCompany } from '@/lib/experience';
 
 const CertificateLightbox = dynamic(() => import('@/components/CertificateLightbox'), { ssr: false });
 // Only loaded if someone actually asks for the terminal view, so the default
@@ -46,6 +47,10 @@ function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificat
   const cut = text.indexOf(' — ');
   const place = cut >= 0 ? text.slice(0, cut) : '';
   const detail = cut >= 0 ? text.slice(cut + 3) : text;
+  // Written as separate lines in /admin, a description shows as a bullet list.
+  const lines = descriptionLines(detail);
+  // A Credly badge can be checked there; a PDF certificate is simply shown.
+  const verifiable = /credly\.com/i.test(exp.certificateUrl ?? '');
 
   return (
     <motion.div
@@ -120,7 +125,7 @@ function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificat
                   e.currentTarget.style.textShadow = '0 0 8px rgba(212,175,55,0.5)';
                 }}
               >
-                <Award size={12} /> {t('experience.certificate')}
+                <Award size={12} /> {verifiable ? t('experience.verify') : t('experience.certificate')}
               </button>
             )}
           </div>
@@ -128,7 +133,13 @@ function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificat
         {detail && (
           <div id={panelId} className="exp-more" data-open={open ? '' : undefined} aria-hidden={!open}>
             <div>
-              <p className="text-body text-xs sm:text-sm pt-3 leading-relaxed">{detail}</p>
+              {lines.length > 1 ? (
+                <ul className="text-body text-xs sm:text-sm pt-3 leading-relaxed list-disc pl-5 space-y-1">
+                  {lines.map((line) => <li key={line}>{line}</li>)}
+                </ul>
+              ) : (
+                <p className="text-body text-xs sm:text-sm pt-3 leading-relaxed">{detail}</p>
+              )}
             </div>
           </div>
         )}
@@ -191,6 +202,8 @@ export default function Experience({ experiences }: Props) {
   const education = experiences.filter((e) => e.type === 'education');
   const awards    = experiences.filter((e) => e.type === 'award');
   const other     = experiences.filter((e) => e.type === 'other');
+  // Seasons with the same employer (Work & Travel) share one line, their dates side by side.
+  const otherLines = mergeByCompany(other, t('experience.present'));
 
   return (
     <section id="experience" className="py-20 px-6">
@@ -235,7 +248,7 @@ export default function Experience({ experiences }: Props) {
                 {t('experience.other')}
               </h3>
               <ul className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                {other.map((exp, i) => {
+                {otherLines.map(({ first: exp, dates }, i) => {
                   const hasLoc = L(exp, 'description')?.includes(' — ');
                   const loc = hasLoc ? L(exp, 'description').split(' — ')[0] : null;
                   return (
@@ -255,7 +268,7 @@ export default function Experience({ experiences }: Props) {
                         {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
                       </span>
                       <span className="text-xs text-slate-600 whitespace-nowrap sm:text-right">
-                        {dateRange(exp, t('experience.present'))}
+                        {dates}
                       </span>
                     </motion.li>
                   );

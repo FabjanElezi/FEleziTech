@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FileText, Mail } from 'lucide-react';
 import Logo from '@/components/Logo';
 import LegalBar from '@/components/LegalBar';
+import { cvLabel } from '@/lib/cv';
 import { useLang } from '@/components/LanguageProvider';
 import { Portfolio } from '@/types';
 
@@ -116,7 +117,7 @@ export default function Footer({ portfolio }: Props) {
               </li>
             )}
             {portfolio?.cvUrl && (
-              <li><a href="/api/cv" target="_blank" rel="noopener noreferrer"><FileText size={14} aria-hidden="true" />{t('hero.viewCv')}</a></li>
+              <li><a href="/api/cv" target="_blank" rel="noopener noreferrer"><FileText size={14} aria-hidden="true" />{cvLabel(portfolio.cvUrl, t)}</a></li>
             )}
           </ul>
         </div>

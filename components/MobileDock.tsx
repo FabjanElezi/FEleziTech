@@ -62,11 +62,11 @@ export default function MobileDock() {
   if (pathname.startsWith('/admin') || pathname.startsWith('/services')) return null;
 
   const handleClick = (id: string) => {
-    if (id === 'hero') {
+    if (pathname !== '/') {
+      // The sections only exist on the home page; from any other page the buttons go there.
+      router.push(id === 'hero' ? '/' : `/#${id}`);
+    } else if (id === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (pathname !== '/') {
-      // The sections only exist on the home page; from any other page the button goes there.
-      router.push(`/#${id}`);
     } else {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }

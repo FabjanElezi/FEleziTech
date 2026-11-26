@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { url } from '@/lib/site';
+import { SHARE_IMAGE, url } from '@/lib/site';
 
 // page.tsx is a client component (it reads the chosen language), so its
 // metadata lives here. The root template turns this into "Privacy | Fabjan Elezi".
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     description:
       'No tracking, no cookies, no third-party requests. What this site does with data, in full.',
     url: url('/privacy'),
+    images: [SHARE_IMAGE],
   },
 };
 

@@ -46,3 +46,9 @@ export function url(path = '/'): string {
   if (!path || path === '/') return SITE_URL;
   return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
+
+/**
+ * The site's share image (app/opengraph-image.tsx). A page that sets its own
+ * openGraph must list it again: Next.js replaces the whole openGraph block, image included.
+ */
+export const SHARE_IMAGE = { url: '/opengraph-image', width: 1200, height: 630, alt: 'Fabjan Elezi – Data Analytics & IT Systems' };

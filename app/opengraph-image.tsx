@@ -9,9 +9,9 @@ export const alt = 'Fabjan Elezi – Data Analytics & IT Systems';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const EYEBROW = 'M.SC. INFORMATION SYSTEMS · FH AACHEN';
+const EYEBROW = 'M.SC. INFORMATION SYSTEMS STUDENT · FH AACHEN';
 const TAGLINE = 'Data Analytics & IT Systems';
-const NOTE = 'Open to Werkstudent & internship roles · Aachen';
+const NOTE = 'Open to Werkstudent roles · Aachen or remote';
 
 // A fixed constellation in the spirit of the hero's network, drawn once.
 const NODES: [number, number][] = [
@@ -73,7 +73,7 @@ export default async function Image() {
 
         {/* text */}
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 84, width: 700 }}>
-          <div style={{ display: 'flex', fontSize: 21, letterSpacing: 4, color: '#67e8f9', fontWeight: 500 }}>
+          <div style={{ display: 'flex', fontSize: 21, letterSpacing: 2, color: '#67e8f9', fontWeight: 500 }}>
             {EYEBROW}
           </div>
           <div style={{ display: 'flex', fontSize: 104, fontWeight: 700, lineHeight: 1, marginTop: 26, letterSpacing: -2 }}>

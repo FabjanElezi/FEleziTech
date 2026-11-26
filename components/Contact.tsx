@@ -55,7 +55,7 @@ export default function Contact({ portfolio }: Props) {
           <h2 className="section-title text-white mb-3">
             {t('contact.headline')} <span className="gradient-text">{t('contact.headlineAccent')}</span>
           </h2>
-          <p className="text-slate-500 text-base max-w-md mx-auto">
+          <p className="text-body text-base max-w-md mx-auto">
             {t('contact.sub')}
           </p>
           <NextLink href="/services" className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 mt-3 transition-colors">
@@ -83,7 +83,7 @@ export default function Contact({ portfolio }: Props) {
                 <Mail size={18} className="text-cyan-400" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-slate-500 mb-0.5">{t('contact.email')}</p>
+                <p className="text-xs text-body mb-0.5">{t('contact.email')}</p>
                 <p className="text-white text-sm font-medium truncate">{email}</p>
               </div>
               <span
@@ -120,7 +120,7 @@ export default function Contact({ portfolio }: Props) {
                   <Link size={18} className="text-cyan-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500 mb-0.5">LinkedIn</p>
+                  <p className="text-xs text-body mb-0.5">LinkedIn</p>
                   <p className="text-white text-sm font-medium">{t('contact.connect')}</p>
                 </div>
               </motion.a>
@@ -144,7 +144,7 @@ export default function Contact({ portfolio }: Props) {
                   <Code2 size={18} className="text-cyan-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500 mb-0.5">{t('contact.github')}</p>
+                  <p className="text-xs text-body mb-0.5">{t('contact.github')}</p>
                   <p className="text-white text-sm font-medium">{t('contact.viewCode')}</p>
                 </div>
               </motion.a>
@@ -164,7 +164,7 @@ export default function Contact({ portfolio }: Props) {
                 <MapPin size={18} className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-0.5">{t('contact.location')}</p>
+                <p className="text-xs text-body mb-0.5">{t('contact.location')}</p>
                 <p className="text-white text-sm font-medium">{location}</p>
               </div>
             </motion.div>
@@ -185,7 +185,7 @@ export default function Contact({ portfolio }: Props) {
                   <Clock size={18} className="text-cyan-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-slate-500 mb-0.5">{t('contact.availability')}</p>
+                  <p className="text-xs text-body mb-0.5">{t('contact.availability')}</p>
                   <p className="text-white text-sm font-medium">{t('contact.availabilityText')}</p>
                 </div>
               </motion.div>

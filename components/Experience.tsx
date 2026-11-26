@@ -73,12 +73,12 @@ function TimelineEntry({ exp, index, dotClass, dotStyle, startOpen, onCertificat
           </div>
           {/* One line on phones, a right-hand column from 640px */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 sm:flex-col sm:items-end sm:gap-1 shrink-0">
-            <span className="flex items-center gap-1 text-xs text-slate-500">
+            <span className="flex items-center gap-1 text-xs text-body">
               <Calendar size={11} />
               {dateRange(exp, t('experience.present'))}
             </span>
             {place && (
-              <span className="flex items-center gap-1 text-xs text-slate-600">
+              <span className="flex items-center gap-1 text-xs text-body">
                 <MapPin size={11} />
                 {place}
               </span>
@@ -163,7 +163,7 @@ function Timeline({ items, kind, onCertificate }: TimelineProps) {
 
     return (
     <div>
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-body mb-6 flex items-center gap-2">
         {isAward
           ? <Trophy size={14} style={{ color: '#f59e0b' }} />
           : isWork
@@ -243,7 +243,7 @@ export default function Experience({ experiences }: Props) {
           {work.length > 0 && <Timeline items={work} kind="work" onCertificate={openCertificate} />}
           {other.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-body mb-4 flex items-center gap-2">
                 <Briefcase size={14} className="text-slate-500" />
                 {t('experience.other')}
               </h3>
@@ -264,10 +264,10 @@ export default function Experience({ experiences }: Props) {
                       <span className="min-w-0">
                         <span className="text-slate-300 font-medium">{L(exp, 'role')}</span>
                         <span className="text-slate-600"> · </span>
-                        <span className="text-slate-500">{exp.company}</span>
-                        {loc && <span className="text-slate-600 text-xs"> · {loc}</span>}
+                        <span className="text-body">{exp.company}</span>
+                        {loc && <span className="text-body text-xs"> · {loc}</span>}
                       </span>
-                      <span className="text-xs text-slate-600 whitespace-nowrap sm:text-right">
+                      <span className="text-xs text-body whitespace-nowrap sm:text-right">
                         {dates}
                       </span>
                     </motion.li>

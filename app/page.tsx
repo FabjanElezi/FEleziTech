@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import SectionDivider from '@/components/SectionDivider';
 import { getPublicPortfolio, getProjects, getExperiences, getSkills } from '@/lib/data';
 import SocialSidebar from '@/components/SocialSidebar';
+import { SITE_URL } from '@/lib/site';
 
 // Always render from the database so Admin edits show up on the very next visit.
 export const dynamic = 'force-dynamic';
@@ -21,8 +22,41 @@ export default async function HomePage() {
     getSkills(),
   ]);
 
+  // Structured data for search engines: this page is Fabjan's profile. The photo,
+  // university and profile links come from /admin, so they stay current.
+  const profile = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    '@id': `${SITE_URL}/#profile`,
+    url: SITE_URL,
+    mainEntity: {
+      '@type': 'Person',
+      '@id': `${SITE_URL}/#person`,
+      name: 'Fabjan Elezi',
+      url: SITE_URL,
+      ...(portfolio?.profileImage ? { image: portfolio.profileImage } : {}),
+      jobTitle: 'M.Sc. Information Systems student',
+      description:
+        'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Working across data, IT systems and software development.',
+      affiliation: { '@type': 'CollegeOrUniversity', name: portfolio?.university || 'FH Aachen – Aachen University of Applied Sciences' },
+      alumniOf: { '@type': 'CollegeOrUniversity', name: 'University Metropolitan Tirana' },
+      address: { '@type': 'PostalAddress', addressLocality: 'Aachen', addressCountry: 'DE' },
+      knowsAbout: [
+        'Web Development', 'React', 'Next.js', 'TypeScript',
+        'Cybersecurity', 'Data Analytics', 'Business Intelligence',
+        'MySQL', 'Relational Databases',
+      ],
+      sameAs: [portfolio?.linkedin, portfolio?.github].filter(Boolean),
+    },
+  };
+
   return (
     <main className="relative">
+      {/* "<" is escaped so text from /admin can never close the script tag early. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profile).replace(/</g, '\\u003c') }}
+      />
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{

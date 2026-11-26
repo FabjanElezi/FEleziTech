@@ -154,7 +154,7 @@ export default function PrivacyPage() {
           <ShieldCheck size={22} className="text-cyan-400" />
           <h1 className="text-3xl font-bold text-white">{c.title}</h1>
         </div>
-        <p className="text-xs text-slate-600 mb-8">{c.updated}</p>
+        <p className="text-xs text-body mb-8">{c.updated}</p>
 
         <p className="text-slate-400 leading-relaxed mb-10">{c.intro}</p>
 

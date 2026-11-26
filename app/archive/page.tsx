@@ -2,15 +2,21 @@ import type { Metadata } from 'next';
 import ArchiveView, { type ArchiveRow } from '@/components/ArchiveView';
 import { getProjects } from '@/lib/data';
 import { ARCHIVE_INFO, splitProjects } from '@/lib/archive';
-import { url } from '@/lib/site';
+import { SHARE_IMAGE, url } from '@/lib/site';
 
 // Read from the database on every request, like the home page, so /admin edits show up at once.
 export const dynamic = 'force-dynamic';
 
+const TITLE = 'Project archive';
+const DESCRIPTION = 'Projects by Fabjan Elezi with year, context, tools and links.';
+
 export const metadata: Metadata = {
-  title: 'Project archive',
-  description: 'Projects by Fabjan Elezi with year, context, tools and links.',
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: url('/archive') },
+  // A shared link shows this page's own title and text, not the home page's.
+  openGraph: { title: TITLE, description: DESCRIPTION, url: '/archive', siteName: 'Fabjan Elezi', type: 'website', images: [SHARE_IMAGE] },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
 };
 
 export default async function ArchivePage() {

@@ -65,7 +65,7 @@ export default function Projects({ projects }: Props) {
           <h2 className="section-title text-white mb-4">
             {t('projects.headline')} <span className="gradient-text">{t('projects.headlineAccent')}</span>
           </h2>
-          <p className="text-slate-500 mt-8">{t('projects.empty')}</p>
+          <p className="text-body mt-8">{t('projects.empty')}</p>
         </div>
       </section>
     );

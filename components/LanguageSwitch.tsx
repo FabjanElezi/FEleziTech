@@ -61,7 +61,7 @@ export default function LanguageSwitch({ compact = false }: { compact?: boolean 
                 }}
               >
                 <span>{l.label}</span>
-                <span className="text-[10px] text-slate-500">{l.short}</span>
+                <span className="text-[10px] text-body">{l.short}</span>
               </button>
             </li>
           ))}

@@ -72,6 +72,7 @@ export default function MobileDock() {
     }
   };
 
+  // Labels use 75% opacity, like the icons: at 55% they fell below the 4.5:1 contrast text needs.
   return (
     <div
       ref={dockRef}
@@ -132,7 +133,7 @@ export default function MobileDock() {
                 style={{
                   fontSize: '9px',
                   fontFamily: 'var(--font-geist-sans), sans-serif',
-                  color: isActive ? '#22d3ee' : 'rgba(148,163,184,0.55)',
+                  color: isActive ? '#22d3ee' : 'rgba(148,163,184,0.75)',
                   transition: 'color 0.22s ease',
                   letterSpacing: '0.05em',
                   lineHeight: 1,
@@ -167,7 +168,7 @@ export default function MobileDock() {
             style={{
               fontSize: '9px',
               fontFamily: 'var(--font-geist-sans), sans-serif',
-              color: 'rgba(148,163,184,0.55)',
+              color: 'rgba(148,163,184,0.75)',
               letterSpacing: '0.05em',
               lineHeight: 1,
             }}

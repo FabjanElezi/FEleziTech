@@ -60,7 +60,7 @@ export default function CaseStudyView({ study, extra }: { study: CaseStudy; extr
           <Icon size={22} className="text-cyan-400" />
           <h1 className="text-3xl font-bold text-white">{study.title}</h1>
         </div>
-        <p className="text-xs text-slate-600 mb-8">{text(study.subtitle)}</p>
+        <p className="text-xs text-body mb-8">{text(study.subtitle)}</p>
 
         <div className="space-y-7">
           {text(study.problem) && (
@@ -125,7 +125,7 @@ export default function CaseStudyView({ study, extra }: { study: CaseStudy; extr
                         className="rounded-xl w-auto h-auto max-w-full max-h-[32rem]"
                       />
                     </button>
-                    <figcaption className="text-xs text-slate-500 mt-2 text-center">{captions[i]}</figcaption>
+                    <figcaption className="text-xs text-body mt-2 text-center">{captions[i]}</figcaption>
                   </figure>
                 ))}
               </div>

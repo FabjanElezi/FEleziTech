@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import { motionPaused, onMotionChange } from '@/lib/motion';
 
 // ── plexus config ────────────────────────────────────────────
 // Thinned so the network sits behind the headline instead of competing with
@@ -46,6 +47,8 @@ export default function ParticleBackground() {
     if (!ctx) return;
 
     let raf: number;
+    // "Pause animations": nothing moves while it is on; playing again picks up where it stopped.
+    let paused = motionPaused();
     let W = 0, H = 0;
     let dots: Dot[] = [];
     let scrollY = 0;
@@ -66,9 +69,14 @@ export default function ParticleBackground() {
     // Pause the render loop while the tab is in the background (saves CPU/battery).
     const onVisibility = () => {
       cancelAnimationFrame(raf);
-      if (!document.hidden) raf = requestAnimationFrame(tick);
+      if (!document.hidden && !paused) raf = requestAnimationFrame(tick);
     };
     document.addEventListener('visibilitychange', onVisibility);
+    const stopWatching = onMotionChange(() => {
+      paused = motionPaused();
+      cancelAnimationFrame(raf);
+      if (!paused && !document.hidden) raf = requestAnimationFrame(tick);
+    });
 
     function tick() {
       ctx!.clearRect(0, 0, W, H);
@@ -187,9 +195,10 @@ export default function ParticleBackground() {
       raf = requestAnimationFrame(tick);
     }
 
-    raf = requestAnimationFrame(tick);
+    if (!paused) raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
+      stopWatching();
       window.removeEventListener('resize', resize);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);

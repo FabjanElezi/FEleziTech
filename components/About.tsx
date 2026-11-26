@@ -1,10 +1,14 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { MapPin, GraduationCap, Globe } from 'lucide-react';
 import { Portfolio } from '@/types';
-import JourneyGlobe from '@/components/JourneyGlobe';
+// The globe is a large piece of code far down the page: it loads only when About comes near,
+// so it is not part of the work a phone does when the page first opens.
+const JourneyGlobe = dynamic(() => import('@/components/JourneyGlobe'), { ssr: false });
 import SectionNumber from '@/components/SectionNumber';
 
 interface Props { portfolio: Portfolio | null }
@@ -13,6 +17,18 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function About({ portfolio }: Props) {
   const { t, L } = useLang();
+  const pathRef = useRef<HTMLDivElement>(null);
+  const [globeNear, setGlobeNear] = useState(false);
+
+  useEffect(() => {
+    const card = pathRef.current;
+    if (!card) return;
+    const near = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setGlobeNear(true); near.disconnect(); }
+    }, { rootMargin: '600px 0px' });
+    near.observe(card);
+    return () => near.disconnect();
+  }, []);
   const bio        = L(portfolio, 'bio');
   const location   = portfolio?.location || 'Tirana, Albania';
   const university = portfolio?.university || 'Metropolitan University of Tirana';
@@ -101,7 +117,7 @@ export default function About({ portfolio }: Props) {
               {chips.map((chip, i) => (
                 <motion.div
                   key={i}
-                  className="flex items-center gap-2 text-slate-500 text-sm"
+                  className="flex items-center gap-2 text-body text-sm"
                   initial={{ opacity: 0, y: 8 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -126,8 +142,8 @@ export default function About({ portfolio }: Props) {
             <span className="w-8 h-px bg-cyan-500" />
             <h3 className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">{t('path.title')}</h3>
           </div>
-          <div className="path-card">
-            <JourneyGlobe />
+          <div ref={pathRef} className="path-card">
+            {globeNear && <JourneyGlobe />}
             <div data-globe-slot data-zoom="1.3" aria-hidden="true" className="h-[clamp(300px,84vw,400px)]" />
             <noscript><style>{'.path-card{display:none}'}</style></noscript>
           </div>

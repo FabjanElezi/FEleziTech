@@ -8,6 +8,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import ScrollToTop from '@/components/ScrollToTop';
 import MobileDock from '@/components/MobileDock';
 import MotionProvider from '@/components/MotionProvider';
+import SkipLink from '@/components/SkipLink';
 import { SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     template: '%s | Fabjan Elezi',
   },
   description:
-    'Fabjan Elezi – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent, internship and junior roles in IT, data and software development.',
+    'Fabjan Elezi – M.Sc. Information Systems student at FH Aachen with a B.Sc. in Business Informatics. Working where business meets technology: data, IT systems and software. Open to Werkstudent roles in data analytics, BI or IT.',
   authors: [{ name: 'Fabjan Elezi', url: SITE_URL }],
   creator: 'Fabjan Elezi',
   publisher: 'Fabjan Elezi',
@@ -46,68 +47,50 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: SITE_URL,
+    // './' is each page's own address, so a shared link names the page that was shared.
+    url: './',
     siteName: 'Fabjan Elezi',
     title: 'Fabjan Elezi – Data Analytics & IT Systems',
     description:
-      'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data, IT systems and software. Open to Werkstudent and internship roles.',
+      'Information Systems master\'s student (FH Aachen), B.Sc. Business Informatics. Data, IT systems and software. Open to Werkstudent roles in data analytics, BI or IT.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fabjan Elezi – Data Analytics & IT Systems',
     description:
-      'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to Werkstudent and internship roles in IT, data and software.',
+      'M.Sc. Information Systems student at FH Aachen, B.Sc. Business Informatics. Open to Werkstudent roles in data analytics, BI or IT.',
   },
   verification: {
     google: 'ApA9oAURAiu_EPby9jZmU5EqyfNM4A4SxV50uQ1e9j8',
   },
+  // './' resolves to each page's own address. A fixed SITE_URL here told search engines
+  // that every page (/services, /privacy …) was really the home page.
   alternates: {
-    canonical: SITE_URL,
+    canonical: './',
   },
   // No icons here on purpose. The files app/favicon.ico, app/icon.png and app/apple-icon.png are linked
   // by Next itself, each with a version in its address. A fixed address ('/logo.png') let browsers keep
   // showing an old logo long after it was replaced, because for them nothing had changed.
 };
 
+// The site itself. The profile (ProfilePage with the Person) is on the home page,
+// where the photo and profile links from /admin are available.
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Person',
-      '@id': `${SITE_URL}/#person`,
-      name: 'Fabjan Elezi',
-      url: SITE_URL,
-      jobTitle: 'M.Sc. Information Systems Student',
-      description:
-        'Information Systems master\'s student at FH Aachen, Germany, with a B.Sc. in Business Informatics. Working across data, IT systems and software development.',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Aachen',
-        addressCountry: 'DE',
-      },
-      knowsAbout: [
-        'Web Development', 'React', 'Next.js', 'TypeScript',
-        'Cybersecurity', 'Data Analytics', 'Business Intelligence',
-        'MySQL', 'Relational Databases',
-      ],
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: 'Fabjan Elezi',
-      description: 'Developer portfolio of Fabjan Elezi',
-      publisher: { '@id': `${SITE_URL}/#person` },
-    },
-  ],
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: 'Fabjan Elezi',
+  description: 'Developer portfolio of Fabjan Elezi',
+  publisher: { '@type': 'Person', '@id': `${SITE_URL}/#person`, name: 'Fabjan Elezi', url: SITE_URL },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* Set theme before paint to avoid flash */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();` }} />
+        {/* Set the theme (and paused animations) before paint, so nothing flashes or moves first */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);try{if(localStorage.getItem('motion')==='paused')document.documentElement.setAttribute('data-motion','paused');}catch(e){}})();` }} />
         {/* JSON-LD structured data */}
         <script
           type="application/ld+json"
@@ -116,6 +99,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen antialiased pb-24 lg:pb-0" suppressHydrationWarning>
         <LanguageProvider>
+          <SkipLink />
           <MotionProvider>
             <ScrollProgress />
             <SurfaceFX />

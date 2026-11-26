@@ -79,7 +79,7 @@ export default function Traceroute() {
         <span className="tr-dot" style={{ background: 'rgba(248,113,113,0.65)' }} />
         <span className="tr-dot" style={{ background: 'rgba(251,191,36,0.65)' }} />
         <span className="tr-dot" style={{ background: 'rgba(52,211,153,0.65)' }} />
-        <span className="ml-2 text-[11px] text-slate-500 font-mono truncate">
+        <span className="ml-2 text-[11px] text-body font-mono truncate">
           {t('tr.window')}
         </span>
       </div>
@@ -89,7 +89,7 @@ export default function Traceroute() {
         <p className="text-slate-300">
           <span className="text-cyan-400">$</span> traceroute fabjan-elezi
         </p>
-        <p className="text-slate-500 text-[11.5px] sm:text-xs mt-1 mb-4">
+        <p className="text-body text-[11.5px] sm:text-xs mt-1 mb-4">
           {t('tr.preamble')}
         </p>
 
@@ -131,7 +131,7 @@ export default function Traceroute() {
         </ol>
 
         <p className="mt-4 text-emerald-400">{t('tr.done')}</p>
-        <p className="text-slate-600 text-[11px] sm:text-xs mt-2">{t('tr.hint')}</p>
+        <p className="text-body text-[11px] sm:text-xs mt-2">{t('tr.hint')}</p>
       </div>
     </div>
   );

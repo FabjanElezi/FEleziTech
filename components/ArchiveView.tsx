@@ -70,7 +70,7 @@ export default function ArchiveView({ rows }: { rows: ArchiveRow[] }) {
         <ul className="md:hidden space-y-4">
           {rows.map((r) => (
             <li key={r.id} className="glass rounded-2xl p-4 space-y-2">
-              <p className="text-xs text-slate-500">{[r.year, madeAt(r)].filter(Boolean).join(' · ')}</p>
+              <p className="text-xs text-body">{[r.year, madeAt(r)].filter(Boolean).join(' · ')}</p>
               <p className="text-white text-sm font-medium">{r.title}</p>
               {r.techStack.length > 0 && <Tags tags={r.techStack} />}
               <Links row={r} />
@@ -83,7 +83,7 @@ export default function ArchiveView({ rows }: { rows: ArchiveRow[] }) {
             <thead>
               <tr className="border-b border-white/5">
                 {['archive.year', 'archive.project', 'archive.madeAt', 'archive.builtWith', 'archive.link'].map((key) => (
-                  <th key={key} scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  <th key={key} scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-body">
                     {t(key)}
                   </th>
                 ))}

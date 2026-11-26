@@ -74,7 +74,7 @@ export default function Footer({ portfolio }: Props) {
         <div className="col-span-2 md:col-span-1">
           <Logo width={130} height={43} className="h-auto w-[130px] mx-auto md:mx-0" />
           <p className="text-body text-sm mt-4 max-w-xs mx-auto md:mx-0">{t('hero.role1')}.</p>
-          <p className="mt-3 text-xs text-slate-500 inline-flex items-center gap-2">
+          <p className="mt-3 text-xs text-body inline-flex items-center gap-2">
             <span className="footer-dot" aria-hidden="true" />
             {place}{time && ` · ${time} ${t('footer.localTime')}`}
           </p>
@@ -123,7 +123,7 @@ export default function Footer({ portfolio }: Props) {
         </div>
       </div>
 
-      <div className="footer-bottom max-w-5xl mx-auto mt-10 pt-5 md:pr-20 xl:pr-0 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-600">
+      <div className="footer-bottom max-w-5xl mx-auto mt-10 pt-5 md:pr-20 xl:pr-0 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-body">
         <LegalBar />
       </div>
     </footer>

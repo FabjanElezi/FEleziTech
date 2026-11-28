@@ -81,7 +81,7 @@ const jsonLd = {
   '@id': `${SITE_URL}/#website`,
   url: SITE_URL,
   name: 'Fabjan Elezi',
-  description: 'Developer portfolio of Fabjan Elezi',
+  description: 'Portfolio of Fabjan Elezi',
   publisher: { '@type': 'Person', '@id': `${SITE_URL}/#person`, name: 'Fabjan Elezi', url: SITE_URL },
 };
 

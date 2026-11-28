@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '@/components/LanguageProvider';
-import { motionPaused, onMotionChange } from '@/lib/motion';
 
 // His real path, drawn on a globe. Tirana (bachelor's), Brno (exchange
 // semester), New York (two Work & Travel seasons) and Aachen (master's, now).
@@ -230,9 +229,6 @@ export default function JourneyGlobe() {
     const labels = Array.from(list.children) as HTMLElement[];
     const fills = Array.from(bar.querySelectorAll<HTMLElement>('i'));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // "Pause animations" stops the globe where it is. Loaded paused, it starts like reduced motion: at rest on where he is now.
-    let paused = motionPaused();
-    const still = reduced || paused;
     let light = document.documentElement.getAttribute('data-theme') === 'light';
     const land = landDots();
 
@@ -247,10 +243,10 @@ export default function JourneyGlobe() {
     let drag: { x: number; y: number } | null = null;
     // the story. `clock` only runs while frames are drawn, so it never jumps after a pause.
     let clock = 0, last = 0, raf = 0, onScreen = false, disposed = false, ready = false;
-    let phase = still ? MAIN : 0, phaseAt = 0, firstRun = !still;
-    const shownAt = PLACES.map((_, i) => (still || i === 0 ? -1e9 : Infinity));
-    const routeAt = PLACES.map(() => (still ? -1e9 : Infinity));
-    const lit = PLACES.map((_, i) => (still && i === MAIN ? 1 : 0));   // how strongly each stop is highlighted, 0..1
+    let phase = reduced ? MAIN : 0, phaseAt = 0, firstRun = !reduced;
+    const shownAt = PLACES.map((_, i) => (reduced || i === 0 ? -1e9 : Infinity));
+    const routeAt = PLACES.map(() => (reduced ? -1e9 : Infinity));
+    const lit = PLACES.map((_, i) => (reduced && i === MAIN ? 1 : 0));   // how strongly each stop is highlighted, 0..1
     // the labels
     let full: Size[] = PLACES.map(() => ({ w: 120, h: 42 })), small: Size[] = PLACES.map(() => ({ w: 60, h: 24 }));
     let detail = 2, snap = true;   // 2: every label in full, 1: only the highlighted one, 0: names only
@@ -558,7 +554,7 @@ export default function JourneyGlobe() {
       phase = clamp(i, 0, PLACES.length - 1);
       phaseAt = clock;
       if (firstRun && phase > 0) { routeAt[phase] = clock; shownAt[phase] = clock + STEPS[phase].draw * 0.95; }
-      if (reduced || paused) for (let k = 0; k < lit.length; k++) lit[k] = k === phase ? 1 : 0;
+      if (reduced) for (let k = 0; k < lit.length; k++) lit[k] = k === phase ? 1 : 0;
       dress();
       setActive(phase);
       wake();
@@ -587,18 +583,18 @@ export default function JourneyGlobe() {
     };
 
     function start() {
-      if (raf || reduced || paused || disposed || !ready || !onScreen || document.hidden) return;
+      if (raf || reduced || disposed || !ready || !onScreen || document.hidden) return;
       raf = requestAnimationFrame(frame);
     }
     function stop() { cancelAnimationFrame(raf); raf = 0; last = 0; }
     function wake() {
       if (!ready) return;
-      if (reduced || paused) { snap = true; render(1); } else start();
+      if (reduced) { snap = true; render(1); } else start();
     }
 
     goRef.current = (i: number) => go(i, true);
-    // With reduced motion (or animations paused) nothing plays: the picture rests on where he is now.
-    if (still) queueMicrotask(() => { if (!disposed) setActive(MAIN); });
+    // With reduced motion nothing plays: the picture rests on where he is now.
+    if (reduced) queueMicrotask(() => { if (!disposed) setActive(MAIN); });
     refitRef.current = () => { if (ready) { fit(false); wake(); } };
 
     // drag to turn the globe
@@ -621,13 +617,13 @@ export default function JourneyGlobe() {
       userLon += spin;
       userLat = clamp(userLat + dy * k * 0.9, -40, 40);
       touched = performance.now();
-      if (reduced || paused) wake();
+      if (reduced) wake();
     };
     const onUp = () => {
       if (!drag) return;
       drag = null; touched = performance.now();
       userLon = ((((userLon + 180) % 360) + 360) % 360) - 180;   // turn back the short way round
-      if (reduced || paused) spin = 0;
+      if (reduced) spin = 0;
       stage.style.cursor = '';
     };
     stage.addEventListener('pointerdown', onDown);
@@ -647,12 +643,6 @@ export default function JourneyGlobe() {
     });
     theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-    const stopWatching = onMotionChange(() => {
-      paused = motionPaused();
-      if (paused) stop();
-      wake();
-    });
-
     const seen = new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting;
       if (onScreen) wake(); else stop();
@@ -666,7 +656,7 @@ export default function JourneyGlobe() {
     return () => {
       disposed = true;
       stop();
-      resize.disconnect(); theme.disconnect(); seen.disconnect(); stopWatching();
+      resize.disconnect(); theme.disconnect(); seen.disconnect();
       stage.removeEventListener('pointerdown', onDown);
       stage.removeEventListener('pointermove', onMove);
       stage.removeEventListener('pointerup', onUp);

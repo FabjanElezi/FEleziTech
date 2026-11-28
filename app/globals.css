@@ -1446,11 +1446,6 @@ html[data-admin] body { background-image: none; }
   .scroll-top-btn { bottom: 6rem !important; }
 }
 
-/* "Pause animations" (lib/motion.ts): the endless CSS loops stop along with the canvases. */
-[data-motion='paused'] .animate-ping { animation: none; }
-[data-motion='paused'] .tr-packet,
-[data-motion='paused'] .ds-step.is-on::before { animation-play-state: paused; }
-
 /* "Skip to content": off screen until a keyboard user reaches it with Tab.
    After .btn-primary on purpose, so its position wins. */
 .skip-link { position: fixed; left: 1rem; top: -6rem; z-index: 100000; }

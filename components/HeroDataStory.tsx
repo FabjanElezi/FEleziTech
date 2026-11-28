@@ -1,8 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '@/components/LanguageProvider';
-import MotionToggle from '@/components/MotionToggle';
-import { motionPaused, onMotionChange } from '@/lib/motion';
 
 // The hero's picture of the tagline "turning business data into decisions":
 // a cloud of data points sorts itself into a bar chart, then a trend line, then
@@ -170,8 +168,6 @@ export default function HeroDataStory({ className = '', style }: { className?: s
     if (!root || !plot || !canvas || !ctx) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // "Pause animations" freezes the picture where it is; playing again carries on from there.
-    let paused = motionPaused(), pausedAt = 0;
     let light = document.documentElement.getAttribute('data-theme') === 'light';
 
     let W = 0, H = 0, R: Box = { x: 0, y: 0, w: 1, h: 1 };
@@ -333,17 +329,17 @@ export default function HeroDataStory({ className = '', style }: { className?: s
     }
 
     function start() {
-      if (raf || reduced || paused || !onScreen || document.hidden) return;
+      if (raf || reduced || !onScreen || document.hidden) return;
       last = performance.now();
       raf = requestAnimationFrame(frame);
     }
     function stop() { cancelAnimationFrame(raf); raf = 0; window.clearTimeout(timer); timer = 0; }
     function wake() {
       lastActivity = performance.now();
-      if (reduced || paused) draw(lastActivity); else start();
+      if (reduced) draw(lastActivity); else start();
     }
 
-    goRef.current = (i: number) => go(i, reduced || paused);
+    goRef.current = (i: number) => go(i, reduced);
 
     const onMove = (e: PointerEvent) => {
       const r = plot.getBoundingClientRect();
@@ -377,15 +373,8 @@ export default function HeroDataStory({ className = '', style }: { className?: s
     }, { threshold: 0.15 });
     seen.observe(root);
 
-    const stopWatching = onMotionChange(() => {
-      const now = performance.now();
-      paused = motionPaused();
-      if (paused) { stop(); pausedAt = now; draw(now); }
-      else { if (pausedAt) phaseAt += now - pausedAt; pausedAt = 0; wake(); }
-    });
-
     layout();
-    if (reduced || paused) {
+    if (reduced) {
       go(LAST, true);
     } else {
       go(0, true);
@@ -395,7 +384,7 @@ export default function HeroDataStory({ className = '', style }: { className?: s
     return () => {
       disposed = true;
       stop();
-      resize.disconnect(); theme.disconnect(); seen.disconnect(); stopWatching();
+      resize.disconnect(); theme.disconnect(); seen.disconnect();
       plot.removeEventListener('pointermove', onMove);
       plot.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('visibilitychange', onVisibility);
@@ -409,9 +398,7 @@ export default function HeroDataStory({ className = '', style }: { className?: s
       <div ref={plotRef} className="ds-plot" role="img" aria-label={t('hero.storyLabel')}>
         <canvas ref={canvasRef} aria-hidden />
       </div>
-      {/* The pause button sits at the end of the step row, centred with the steps. */}
-      <div className="flex items-center gap-3">
-      <ol className="ds-steps flex-1 min-w-0">
+      <ol className="ds-steps">
         {labels.map((label, i) => (
           <li key={i}>
             <button
@@ -428,8 +415,6 @@ export default function HeroDataStory({ className = '', style }: { className?: s
           </li>
         ))}
       </ol>
-      <div className="mt-3.5"><MotionToggle variant="icon" /></div>
-      </div>
     </div>
   );
 }

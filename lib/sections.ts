@@ -17,16 +17,3 @@ export type SectionId = (typeof SECTIONS)[number]['id'];
 export function sectionNumber(id: SectionId): string {
   return String(SECTIONS.findIndex((s) => s.id === id) + 1).padStart(2, '0');
 }
-
-/**
- * The id a project card carries, so the hero can link straight to it:
- * "FETech Analytics" → "project-fetech-analytics".
- */
-export function projectAnchor(title: string): string {
-  const slug = title
-    .toLowerCase()
-    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')   // ë → e, ü → u
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  return `project-${slug}`;
-}

@@ -89,8 +89,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* Set the theme (and paused animations) before paint, so nothing flashes or moves first */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);try{if(localStorage.getItem('motion')==='paused')document.documentElement.setAttribute('data-motion','paused');}catch(e){}})();` }} />
+        {/* Set theme before paint to avoid flash */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();` }} />
         {/* JSON-LD structured data */}
         <script
           type="application/ld+json"

@@ -2,7 +2,7 @@
 import { useLang } from '@/components/LanguageProvider';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText, Clock } from 'lucide-react';
+import { Mail, Link, Send, MapPin, Copy, Check, Code2, ArrowRight, FileText } from 'lucide-react';
 import NextLink from 'next/link';
 import { Portfolio } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
@@ -168,28 +168,6 @@ export default function Contact({ portfolio }: Props) {
                 <p className="text-white text-sm font-medium">{location}</p>
               </div>
             </motion.div>
-
-            {/* Same card as Location; the "available for work" switch in /admin hides it. */}
-            {portfolio?.availableForWork !== false && (
-              <motion.div
-                className="glass rounded-xl p-5 flex items-center gap-4"
-                initial={{ opacity: 0, x: -18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, ease: [0.22,1,0.36,1], delay: 0.28 }}
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(8,145,178,0.2)' }}
-                >
-                  <Clock size={18} className="text-cyan-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-body mb-0.5">{t('contact.availability')}</p>
-                  <p className="text-white text-sm font-medium">{t('contact.availabilityText')}</p>
-                </div>
-              </motion.div>
-            )}
           </div>
 
           {/* CTA card */}

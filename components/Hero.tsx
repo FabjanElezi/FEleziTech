@@ -1,25 +1,19 @@
 'use client';
 import { useLang } from '@/components/LanguageProvider';
 import HeroDataStory from '@/components/HeroDataStory';
-import { FileText, ArrowDown, ArrowRight, Mail } from 'lucide-react';
-import { Portfolio, Project } from '@/types';
-import { projectAnchor } from '@/lib/sections';
+import { FileText, ArrowDown, Mail } from 'lucide-react';
+import { Portfolio } from '@/types';
 
-interface Props { portfolio: Portfolio | null; projects: Project[] }
-
-// The project the first button points to ("Start here: FETech Analytics →").
-// If it is ever renamed or removed, the button falls back to "View projects".
-const START_HERE = 'FETech Analytics';
+interface Props { portfolio: Portfolio | null }
 
 // Entrance animation is CSS-driven (.hero-in in globals.css) so the hero is
 // visible as soon as the HTML paints, instead of waiting for JS to hydrate.
 const reveal = (delay: number) => ({ '--d': `${delay}s` } as React.CSSProperties);
 
-export default function Hero({ portfolio, projects }: Props) {
+export default function Hero({ portfolio }: Props) {
   const { t } = useLang();
   const name = portfolio?.name || 'Fabjan Elezi';
   const cvUrl = portfolio?.cvUrl;
-  const startHere = projects.find((p) => p.title === START_HERE);
   // The "available for work" switch in /admin hides the open-to line.
   const openTo = portfolio?.availableForWork !== false;
 
@@ -110,15 +104,9 @@ export default function Hero({ portfolio, projects }: Props) {
           className="flex flex-wrap items-center justify-center mdl:justify-start lg:justify-start gap-4 hero-in"
           style={reveal(0.4)}
         >
-          {startHere ? (
-            <a href={`#${projectAnchor(startHere.title)}`} className="btn-primary">
-              {t('hero.startHere')} {startHere.title} <ArrowRight size={16} />
-            </a>
-          ) : (
-            <a href="#projects" className="btn-primary">
-              {t('hero.viewProjects')} <ArrowDown size={16} />
-            </a>
-          )}
+          <a href="#projects" className="btn-primary">
+            {t('hero.viewProjects')} <ArrowDown size={16} />
+          </a>
           {cvUrl ? (
             <a href="/api/cv" target="_blank" rel="noopener noreferrer" className="btn-ghost">
               {t('hero.viewCv')} <FileText size={16} />

@@ -9,7 +9,6 @@ import dynamic from 'next/dynamic';
 import { Project } from '@/types';
 import CornerAccents from '@/components/CornerAccents';
 import SectionNumber from '@/components/SectionNumber';
-import { projectAnchor } from '@/lib/sections';
 import { FEATURED, liveHref } from '@/lib/featured';
 import { splitProjects } from '@/lib/archive';
 
@@ -99,10 +98,7 @@ export default function Projects({ projects }: Props) {
             return (
             <motion.article
               key={project.id}
-              // The id lets the hero's "Start here" button link straight to this card;
-              // scroll-mt keeps the card clear of the menu bar when the page jumps to it.
-              id={projectAnchor(project.title)}
-              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative scroll-mt-24"
+              className="glass rounded-2xl overflow-hidden glass-hover flex flex-col relative"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

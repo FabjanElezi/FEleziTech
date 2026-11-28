@@ -271,7 +271,10 @@ const PARAFLUENT: CaseStudy = {
       },
     },
   ],
-  links: [{ kind: 'live', href: 'https://parafluent.me' }],
+  links: [
+    { kind: 'live', href: 'https://parafluent.me' },
+    { kind: 'code', href: 'https://github.com/FabjanElezi/parafluent' },
+  ],
 };
 
 const VIDEO_GAME_LIBRARY: CaseStudy = {
